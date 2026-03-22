@@ -5,6 +5,7 @@ import { WebhookDispatcher } from "./webhooks.js";
 import { createApiErrorHandler, createErrorHandler } from "./middleware/error-handler.js";
 import { authMiddleware, type AuthFallback, type TokenMap, type AppKeyResolver, type AppEnv } from "./middleware/auth.js";
 import type { ServicePlugin } from "./plugin.js";
+import { registerFontRoutes } from "./fonts.js";
 
 export interface ServerOptions {
   port?: number;
@@ -35,6 +36,8 @@ export function createServer(plugin: ServicePlugin, options: ServerOptions = {})
   }
 
   const docsUrl = options.docsUrl ?? `https://emulate.dev/${plugin.name}`;
+
+  registerFontRoutes(app);
 
   app.onError(createApiErrorHandler(docsUrl));
   app.use("*", cors());

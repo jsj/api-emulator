@@ -16,5 +16,6 @@ export {
 export { authMiddleware, requireAuth, requireAppAuth, type AuthUser, type AuthApp, type AuthInstallation, type AuthFallback, type TokenMap, type AppKeyResolver, type AppEnv } from "./middleware/auth.js";
 export { parsePagination, setLinkHeader, type PaginationParams } from "./middleware/pagination.js";
 export { escapeHtml, escapeAttr, renderCardPage, renderErrorPage, renderSettingsPage, renderUserButton, type UserButtonOptions } from "./ui.js";
+export { registerFontRoutes } from "./fonts.js";
 export { normalizeUri, matchesRedirectUri, constantTimeSecretEqual, bodyStr, parseCookies } from "./oauth-helpers.js";
 export { debug } from "./debug.js";

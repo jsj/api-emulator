@@ -1,4 +1,13 @@
 import { defineConfig } from "tsup";
+import { cpSync, mkdirSync } from "node:fs";
+import { resolve } from "node:path";
+
+const copyFonts = async () => {
+  const src = resolve(__dirname, "../@internal/core/src/fonts");
+  const dest = resolve(__dirname, "dist/fonts");
+  mkdirSync(dest, { recursive: true });
+  cpSync(src, dest, { recursive: true });
+};
 
 export default defineConfig([
   {
@@ -11,6 +20,7 @@ export default defineConfig([
     banner: {
       js: "#!/usr/bin/env node",
     },
+    onSuccess: copyFonts,
   },
   {
     entry: ["src/api.ts"],
@@ -19,5 +29,6 @@ export default defineConfig([
     clean: false,
     sourcemap: true,
     noExternal: [/^@internal\//],
+    onSuccess: copyFonts,
   },
 ]);

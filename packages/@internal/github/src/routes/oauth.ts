@@ -471,7 +471,7 @@ export function oauthRoutes({ app, store, baseUrl, tokenMap }: RouteContext): vo
           </form>
         </div>
         <ul class="perm-list">
-          ${permRows || '<li style="color:#71717a">No specific permissions granted.</li>'}
+          ${permRows || '<li style="color:#1a8c00">No specific permissions granted.</li>'}
         </ul>
       </div>
 
