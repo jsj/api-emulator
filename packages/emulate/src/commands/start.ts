@@ -82,7 +82,7 @@ const SERVICE_PLUGINS: Record<string, ServicePlugin> = {
 const ALL_SERVICES = Object.keys(SERVICE_PLUGINS);
 
 function inferServicesFromConfig(config: SeedConfig): string[] | null {
-  const found = Object.keys(config).filter((k) => k in SERVICE_PLUGINS);
+  const found = ALL_SERVICES.filter((k) => k in config);
   return found.length > 0 ? found : null;
 }
 
