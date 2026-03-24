@@ -106,6 +106,45 @@ const defaultGoogleConfig = {
   },
 };
 
+const defaultSlackConfig = {
+  slack: {
+    team: {
+      name: "My Workspace",
+      domain: "my-workspace",
+    },
+    users: [
+      {
+        name: "developer",
+        real_name: "Developer",
+        email: "dev@example.com",
+      },
+    ],
+    channels: [
+      {
+        name: "general",
+        topic: "General discussion",
+      },
+      {
+        name: "random",
+        topic: "Random stuff",
+      },
+    ],
+    bots: [
+      {
+        name: "my-bot",
+      },
+    ],
+    oauth_apps: [
+      {
+        client_id: "12345.67890",
+        client_secret: "example_client_secret",
+        name: "My Slack App",
+        redirect_uris: ["http://localhost:3000/api/auth/callback/slack"],
+      },
+    ],
+  },
+};
+
 const defaultTokens = {
   tokens: {
     "gho_test_token_admin": {
@@ -123,6 +162,7 @@ const serviceConfigs: Record<string, Record<string, unknown>> = {
   vercel: defaultVercelConfig,
   github: defaultGithubConfig,
   google: defaultGoogleConfig,
+  slack: defaultSlackConfig,
 };
 
 export function initCommand(options: InitOptions): void {
@@ -141,6 +181,7 @@ export function initCommand(options: InitOptions): void {
       ...defaultVercelConfig,
       ...defaultGithubConfig,
       ...defaultGoogleConfig,
+      ...defaultSlackConfig,
     };
   } else {
     const svcConfig = serviceConfigs[options.service];
