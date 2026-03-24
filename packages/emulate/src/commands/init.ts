@@ -196,6 +196,46 @@ const defaultSlackConfig = {
   },
 };
 
+const defaultAwsConfig = {
+  aws: {
+    region: "us-east-1",
+    s3: {
+      buckets: [
+        {
+          name: "my-app-bucket",
+        },
+        {
+          name: "my-app-uploads",
+        },
+      ],
+    },
+    sqs: {
+      queues: [
+        {
+          name: "my-app-events",
+        },
+        {
+          name: "my-app-dlq",
+        },
+      ],
+    },
+    iam: {
+      users: [
+        {
+          user_name: "developer",
+          create_access_key: true,
+        },
+      ],
+      roles: [
+        {
+          role_name: "lambda-execution-role",
+          description: "Role for Lambda function execution",
+        },
+      ],
+    },
+  },
+};
+
 const defaultTokens = {
   tokens: {
     "gho_test_token_admin": {
@@ -214,6 +254,7 @@ const serviceConfigs: Record<string, Record<string, unknown>> = {
   github: defaultGithubConfig,
   google: defaultGoogleConfig,
   slack: defaultSlackConfig,
+  aws: defaultAwsConfig,
 };
 
 export function initCommand(options: InitOptions): void {
@@ -233,6 +274,7 @@ export function initCommand(options: InitOptions): void {
       ...defaultGithubConfig,
       ...defaultGoogleConfig,
       ...defaultSlackConfig,
+      ...defaultAwsConfig,
     };
   } else {
     const svcConfig = serviceConfigs[options.service];
