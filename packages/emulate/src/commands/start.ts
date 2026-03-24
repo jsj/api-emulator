@@ -4,6 +4,7 @@ import { githubPlugin, seedFromConfig as seedGitHub, getGitHubStore, type GitHub
 import { googlePlugin, seedFromConfig as seedGoogle, type GoogleSeedConfig } from "@internal/google";
 import { slackPlugin, seedFromConfig as seedSlack, type SlackSeedConfig } from "@internal/slack";
 import { applePlugin, seedFromConfig as seedApple, type AppleSeedConfig } from "@internal/apple";
+import { microsoftPlugin, seedFromConfig as seedMicrosoft, type MicrosoftSeedConfig } from "@internal/microsoft";
 import { awsPlugin, seedFromConfig as seedAws, type AwsSeedConfig } from "@internal/aws";
 import { serve } from "@hono/node-server";
 import { readFileSync, existsSync } from "fs";
@@ -28,6 +29,7 @@ interface SeedConfig {
   google?: GoogleSeedConfig;
   slack?: SlackSeedConfig;
   apple?: AppleSeedConfig;
+  microsoft?: MicrosoftSeedConfig;
   aws?: AwsSeedConfig;
 }
 
@@ -85,6 +87,7 @@ const SERVICE_PLUGINS: Record<string, ServicePlugin> = {
   google: googlePlugin,
   slack: slackPlugin,
   apple: applePlugin,
+  microsoft: microsoftPlugin,
   aws: awsPlugin,
 };
 
@@ -134,6 +137,7 @@ export function startCommand(options: StartOptions): void {
     if (svc === "google") return seedConfig?.google?.port;
     if (svc === "slack") return seedConfig?.slack?.port;
     if (svc === "apple") return seedConfig?.apple?.port;
+    if (svc === "microsoft") return undefined;
     if (svc === "aws") return seedConfig?.aws?.port;
     return undefined;
   };
@@ -178,6 +182,9 @@ export function startCommand(options: StartOptions): void {
     } else if (svc === "apple") {
       const firstEmail = seedConfig?.apple?.users?.[0]?.email ?? "testuser@icloud.com";
       fallbackUser = { login: firstEmail, id: 1, scopes: ["openid", "email", "name"] };
+    } else if (svc === "microsoft") {
+      const firstEmail = seedConfig?.microsoft?.users?.[0]?.email ?? "testuser@outlook.com";
+      fallbackUser = { login: firstEmail, id: 1, scopes: ["openid", "email", "profile", "User.Read"] };
     } else if (svc === "aws") {
       fallbackUser = { login: "admin", id: 1, scopes: ["s3:*", "sqs:*", "iam:*", "sts:*"] };
     }
@@ -202,6 +209,9 @@ export function startCommand(options: StartOptions): void {
     }
     if (svc === "apple" && seedConfig?.apple) {
       seedApple(store, baseUrl, seedConfig.apple);
+    }
+    if (svc === "microsoft" && seedConfig?.microsoft) {
+      seedMicrosoft(store, baseUrl, seedConfig.microsoft);
     }
     if (svc === "aws" && seedConfig?.aws) {
       seedAws(store, baseUrl, seedConfig.aws);

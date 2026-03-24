@@ -157,6 +157,44 @@ const defaultGoogleConfig = {
   },
 };
 
+const defaultAppleConfig = {
+  apple: {
+    users: [
+      {
+        email: "testuser@icloud.com",
+        name: "Test User",
+      },
+    ],
+    oauth_clients: [
+      {
+        client_id: "com.example.app",
+        team_id: "TEAM001",
+        name: "My Apple App",
+        redirect_uris: ["http://localhost:3000/api/auth/callback/apple"],
+      },
+    ],
+  },
+};
+
+const defaultMicrosoftConfig = {
+  microsoft: {
+    users: [
+      {
+        email: "testuser@outlook.com",
+        name: "Test User",
+      },
+    ],
+    oauth_clients: [
+      {
+        client_id: "example-client-id",
+        client_secret: "example-client-secret",
+        name: "My Microsoft App",
+        redirect_uris: ["http://localhost:3000/api/auth/callback/microsoft-entra-id"],
+      },
+    ],
+  },
+};
+
 const defaultSlackConfig = {
   slack: {
     team: {
@@ -254,6 +292,8 @@ const serviceConfigs: Record<string, Record<string, unknown>> = {
   github: defaultGithubConfig,
   google: defaultGoogleConfig,
   slack: defaultSlackConfig,
+  apple: defaultAppleConfig,
+  microsoft: defaultMicrosoftConfig,
   aws: defaultAwsConfig,
 };
 
@@ -274,6 +314,8 @@ export function initCommand(options: InitOptions): void {
       ...defaultGithubConfig,
       ...defaultGoogleConfig,
       ...defaultSlackConfig,
+      ...defaultAppleConfig,
+      ...defaultMicrosoftConfig,
       ...defaultAwsConfig,
     };
   } else {

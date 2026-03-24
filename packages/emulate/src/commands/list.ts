@@ -24,6 +24,10 @@ const SERVICE_DESCRIPTIONS: Record<string, { label: string; endpoints: string }>
     label: "AWS cloud service emulator",
     endpoints: "S3 (buckets, objects), SQS (queues, messages), IAM (users, roles, access keys), STS (assume role, caller identity)",
   },
+  microsoft: {
+    label: "Microsoft Entra ID OAuth 2.0 / OpenID Connect emulator",
+    endpoints: "OAuth authorize, token exchange, userinfo, OIDC discovery, Graph /me, logout, token revocation",
+  },
 };
 
 export function listCommand(): void {
