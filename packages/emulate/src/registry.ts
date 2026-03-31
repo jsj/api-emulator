@@ -14,7 +14,7 @@ export interface ServiceEntry {
   initConfig: Record<string, unknown>;
 }
 
-const SERVICE_NAME_LIST = ["vercel", "github", "google", "slack", "apple", "microsoft", "okta", "aws", "resend", "stripe"] as const;
+const SERVICE_NAME_LIST = ["vercel", "github", "google", "slack", "apple", "microsoft", "okta", "aws", "resend", "stripe", "mongoatlas"] as const;
 export type ServiceName = (typeof SERVICE_NAME_LIST)[number];
 export const SERVICE_NAMES: readonly ServiceName[] = SERVICE_NAME_LIST;
 
@@ -276,6 +276,25 @@ export const SERVICE_REGISTRY: Record<ServiceName, ServiceEntry> = {
         customers: [{ email: "test@example.com", name: "Test Customer" }],
         products: [{ name: "Pro Plan", description: "Monthly pro subscription" }],
         prices: [{ product_name: "Pro Plan", currency: "usd", unit_amount: 2000 }],
+      },
+    },
+  },
+  mongoatlas: {
+    label: "MongoDB Atlas service emulator",
+    endpoints: "Atlas Admin API v2 (projects, clusters, database users, databases, collections), Atlas Data API v1 (findOne, find, insertOne, insertMany, updateOne, updateMany, deleteOne, deleteMany, aggregate)",
+    async load() {
+      const mod = await import("@emulators/mongoatlas");
+      return { plugin: mod.mongoatlasPlugin, seedFromConfig: mod.seedFromConfig };
+    },
+    defaultFallback() {
+      return { login: "admin", id: 1, scopes: [] };
+    },
+    initConfig: {
+      mongoatlas: {
+        projects: [{ name: "Project0" }],
+        clusters: [{ name: "Cluster0", project: "Project0" }],
+        database_users: [{ username: "admin", project: "Project0" }],
+        databases: [{ cluster: "Cluster0", name: "test", collections: ["items"] }],
       },
     },
   },
