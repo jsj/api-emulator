@@ -14,7 +14,7 @@ export interface ServiceEntry {
   initConfig: Record<string, unknown>;
 }
 
-const SERVICE_NAME_LIST = ["vercel", "github", "google", "slack", "apple", "microsoft", "okta", "aws", "resend"] as const;
+const SERVICE_NAME_LIST = ["vercel", "github", "google", "slack", "apple", "microsoft", "okta", "aws", "resend", "stripe"] as const;
 export type ServiceName = (typeof SERVICE_NAME_LIST)[number];
 export const SERVICE_NAMES: readonly ServiceName[] = SERVICE_NAME_LIST;
 
@@ -258,6 +258,24 @@ export const SERVICE_REGISTRY: Record<ServiceName, ServiceEntry> = {
       resend: {
         domains: [{ name: "example.com", region: "us-east-1" }],
         contacts: [{ email: "test@example.com", first_name: "Test", last_name: "User" }],
+      },
+    },
+  },
+  stripe: {
+    label: "Stripe payments emulator",
+    endpoints: "customers, payment intents, charges, products, prices, checkout sessions, webhooks",
+    async load() {
+      const mod = await import("@emulators/stripe");
+      return { plugin: mod.stripePlugin, seedFromConfig: mod.seedFromConfig };
+    },
+    defaultFallback() {
+      return { login: "sk_test_admin", id: 1, scopes: [] };
+    },
+    initConfig: {
+      stripe: {
+        customers: [{ email: "test@example.com", name: "Test Customer" }],
+        products: [{ name: "Pro Plan", description: "Monthly pro subscription" }],
+        prices: [{ product_name: "Pro Plan", currency: "usd", unit_amount: 2000 }],
       },
     },
   },

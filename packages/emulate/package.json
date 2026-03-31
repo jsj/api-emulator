@@ -66,6 +66,7 @@
     "@emulators/slack": "workspace:*",
     "@emulators/vercel": "workspace:*",
     "@emulators/resend": "workspace:*",
+    "@emulators/stripe": "workspace:*",
     "tsup": "^8",
     "typescript": "^5.7"
   }
