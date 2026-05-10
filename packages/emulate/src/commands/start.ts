@@ -1,5 +1,5 @@
 import { createServer, type AppKeyResolver, type Store } from "@emulators/core";
-import { resolveServiceEntries, getBuiltInServiceNames, type LoadedService, type ServiceEntry } from "../registry.js";
+import { resolveServiceEntries, getDefaultPluginNames, type LoadedService, type ServiceEntry } from "../registry.js";
 import { serve } from "@hono/node-server";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
@@ -106,19 +106,16 @@ export async function startCommand(options: StartOptions): Promise<void> {
     process.exit(1);
   }
 
-  const builtInServices = getBuiltInServiceNames();
-  const externalServices = Object.keys(allEntries).filter((name) => !builtInServices.includes(name));
+  const defaultPlugins = getDefaultPluginNames();
+  const externalServices = Object.keys(allEntries).filter((name) => !defaultPlugins.includes(name));
 
   let services: string[];
   if (options.service) {
     services = options.service.split(",").map((s) => s.trim());
   } else if (seedConfig) {
-    services = inferServicesFromConfig(seedConfig, Object.keys(allEntries)) ?? [
-      ...builtInServices,
-      ...externalServices,
-    ];
+    services = inferServicesFromConfig(seedConfig, Object.keys(allEntries)) ?? [...defaultPlugins, ...externalServices];
   } else {
-    services = [...builtInServices, ...externalServices];
+    services = [...defaultPlugins, ...externalServices];
   }
 
   for (const svc of services) {

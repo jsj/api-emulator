@@ -55,9 +55,7 @@
     "@hono/node-server": "^1",
     "commander": "^14",
     "picocolors": "^1.1.1",
-    "yaml": "^2"
-  },
-  "devDependencies": {
+    "yaml": "^2",
     "@emulators/core": "workspace:*",
     "@emulators/github": "workspace:*",
     "@emulators/apple": "workspace:*",
@@ -70,7 +68,9 @@
     "@emulators/vercel": "workspace:*",
     "@emulators/resend": "workspace:*",
     "@emulators/stripe": "workspace:*",
-    "@emulators/clerk": "workspace:*",
+    "@emulators/clerk": "workspace:*"
+  },
+  "devDependencies": {
     "tsup": "^8",
     "typescript": "^5.7"
   }

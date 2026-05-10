@@ -18,12 +18,12 @@ For one-off CLI usage:
 npx api-emulator
 ```
 
-No API keys, Docker daemon, or external sandbox accounts are required for the built-in emulators.
+No API keys, Docker daemon, or external sandbox accounts are required for the default plugin set.
 
 ## CLI
 
 ```bash
-# Start all built-in services
+# Start all default plugins
 npx api-emulator
 
 # Start a subset
@@ -38,7 +38,7 @@ npx api-emulator --seed api-emulator.config.yaml
 # Generate a starter config
 npx api-emulator init
 
-# List built-in and external services
+# List default and external plugins
 npx api-emulator list
 ```
 
@@ -142,9 +142,9 @@ The CLI auto-detects:
 - `service-emulator.config.yml`
 - `service-emulator.config.json`
 
-## Built-in emulators
+## Default plugins
 
-api-emulator currently includes:
+api-emulator ships with a default plugin set so first run is useful, but these providers live as plugins rather than as the core runtime:
 
 - Vercel API
 - GitHub REST, OAuth, Apps, Actions, checks, statuses, and webhooks
@@ -210,7 +210,7 @@ See:
 - Programmatic test API with reset and close hooks
 - Shared core store, auth, persistence, UI, webhooks, and inspect pages
 - Next.js embedded mode for same-origin OAuth and SDK flows
-- Public, shared, and private plugin workflows
+- Public, shared, default, and private plugin workflows
 
 ## FAQ
 
