@@ -1,6 +1,6 @@
 import type { ServicePlugin, Store, AuthFallback, WebhookDispatcher } from "@emulators/core";
 import { isAbsolute, resolve } from "path";
-import type { ServiceEntry } from "./plugin-types.js";
+import type { PluginModule } from "./plugin-types.js";
 
 export interface ExternalPluginModule {
   plugin?: ServicePlugin;
@@ -12,7 +12,7 @@ export interface ExternalPluginModule {
   initConfig?: Record<string, unknown>;
 }
 
-export async function loadExternalPlugin(specifier: string): Promise<{ name: string; entry: ServiceEntry }> {
+export async function loadExternalPluginModule(specifier: string): Promise<PluginModule> {
   const modulePath = specifier.startsWith(".") || isAbsolute(specifier) ? resolve(specifier) : specifier;
 
   const mod = (await import(modulePath)) as ExternalPluginModule;
@@ -22,7 +22,8 @@ export async function loadExternalPlugin(specifier: string): Promise<{ name: str
   }
 
   const name = plugin.name;
-  const entry: ServiceEntry = {
+  return {
+    name,
     label: mod.label ?? `${name} (external plugin)`,
     endpoints: mod.endpoints ?? "",
     async load() {
@@ -34,6 +35,9 @@ export async function loadExternalPlugin(specifier: string): Promise<{ name: str
     defaultFallback: mod.defaultFallback ?? (() => ({ login: "admin", id: 1, scopes: [] })),
     initConfig: mod.initConfig ?? {},
   };
+}
 
-  return { name, entry };
+export async function loadExternalPlugin(specifier: string): Promise<{ name: string; entry: PluginModule }> {
+  const pluginModule = await loadExternalPluginModule(specifier);
+  return { name: pluginModule.name, entry: pluginModule };
 }

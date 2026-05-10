@@ -1,5 +1,5 @@
 import type { Store, AppKeyResolver } from "@emulators/core";
-import type { ServiceEntry } from "./plugin-types.js";
+import type { PluginModule } from "./plugin-types.js";
 
 const DEFAULT_PLUGIN_NAME_LIST = [
   "vercel",
@@ -19,8 +19,9 @@ export type ServiceName = (typeof DEFAULT_PLUGIN_NAME_LIST)[number];
 export const DEFAULT_PLUGIN_NAMES: readonly ServiceName[] = DEFAULT_PLUGIN_NAME_LIST;
 export const SERVICE_NAMES: readonly ServiceName[] = DEFAULT_PLUGIN_NAMES;
 
-export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
+export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, PluginModule> = {
   vercel: {
+    name: "vercel",
     label: "Vercel REST API emulator",
     endpoints: "projects, deployments, domains, env vars, users, teams, file uploads, protection bypass",
     async load() {
@@ -49,6 +50,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
   },
 
   github: {
+    name: "github",
     label: "GitHub REST API emulator",
     endpoints:
       "users, repos, issues, PRs, comments, reviews, labels, milestones, branches, git data, orgs, teams, releases, webhooks, search, actions, checks, rate limit",
@@ -118,6 +120,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
   },
 
   google: {
+    name: "google",
     label: "Google OAuth 2.0 / OpenID Connect + Gmail, Calendar, and Drive emulator",
     endpoints:
       "OAuth authorize, token exchange, userinfo, OIDC discovery, token revocation, Gmail messages/drafts/threads/labels/history/settings, Calendar lists/events/freebusy, Drive files/uploads",
@@ -202,6 +205,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
   },
 
   slack: {
+    name: "slack",
     label: "Slack API emulator",
     endpoints: "auth, chat, conversations, users, reactions, team, OAuth, incoming webhooks",
     async load() {
@@ -233,6 +237,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
   },
 
   apple: {
+    name: "apple",
     label: "Apple Sign In / OAuth emulator",
     endpoints: "OAuth authorize, token exchange, JWKS",
     async load() {
@@ -259,6 +264,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
   },
 
   microsoft: {
+    name: "microsoft",
     label: "Microsoft Entra ID OAuth 2.0 / OpenID Connect emulator",
     endpoints: "OAuth authorize, token exchange, userinfo, OIDC discovery, Graph /me, logout, token revocation",
     async load() {
@@ -285,6 +291,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
   },
 
   okta: {
+    name: "okta",
     label: "Okta OAuth 2.0 / OpenID Connect + management API emulator",
     endpoints:
       "OIDC discovery, JWKS, OAuth authorize/token/userinfo/introspect/revoke/logout, users, groups, apps, authorization servers",
@@ -318,6 +325,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
   },
 
   aws: {
+    name: "aws",
     label: "AWS cloud service emulator",
     endpoints:
       "S3 (buckets, objects), SQS (queues, messages), IAM (users, roles, access keys), STS (assume role, caller identity)",
@@ -341,6 +349,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
     },
   },
   resend: {
+    name: "resend",
     label: "Resend email API emulator",
     endpoints: "emails, domains, contacts, API keys, inbox UI",
     async load() {
@@ -358,6 +367,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
     },
   },
   stripe: {
+    name: "stripe",
     label: "Stripe payments emulator",
     endpoints:
       "customers, payment methods, customer sessions, payment intents, charges, products, prices, checkout sessions, webhooks",
@@ -377,6 +387,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
     },
   },
   mongoatlas: {
+    name: "mongoatlas",
     label: "MongoDB Atlas service emulator",
     endpoints:
       "Atlas Admin API v2 (projects, clusters, database users, databases, collections), Atlas Data API v1 (findOne, find, insertOne, insertMany, updateOne, updateMany, deleteOne, deleteMany, aggregate)",
@@ -397,6 +408,7 @@ export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
     },
   },
   clerk: {
+    name: "clerk",
     label: "Clerk authentication and user management emulator",
     endpoints:
       "OIDC discovery, JWKS, OAuth authorize/token/userinfo, users, email addresses, organizations, memberships, invitations, sessions",

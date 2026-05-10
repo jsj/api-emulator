@@ -1,4 +1,4 @@
-import { resolveServiceEntries } from "./registry.js";
+import { resolvePluginModules } from "./registry.js";
 export type { ServiceName } from "./registry.js";
 import type { ServiceName } from "./registry.js";
 import { resolveBaseUrl } from "./base-url.js";
@@ -23,13 +23,13 @@ export interface Emulator {
 export async function createEmulator(options: EmulatorOptions): Promise<Emulator> {
   const { service, port = 4000, seed: seedConfig, plugins = [] } = options;
 
-  const registry = await resolveServiceEntries(plugins);
-  const entry = registry[service];
-  if (!entry) {
+  const registry = await resolvePluginModules(plugins);
+  const pluginModule = registry[service];
+  if (!pluginModule) {
     throw new Error(`Unknown service: ${service}`);
   }
 
-  const loaded = await entry.load();
+  const loadedPlugin = await pluginModule.load();
 
   const svcSeedConfig = seedConfig?.[service] as Record<string, unknown> | undefined;
   const seedBaseUrl =
@@ -37,8 +37,8 @@ export async function createEmulator(options: EmulatorOptions): Promise<Emulator
   const baseUrl = resolveBaseUrl({ service, port, baseUrl: options.baseUrl, seedBaseUrl });
   const running = createServiceRuntime({
     service,
-    entry,
-    loadedService: loaded,
+    pluginModule,
+    loadedPlugin,
     port,
     baseUrl,
     tokens: createAuthTokens(seedConfig),

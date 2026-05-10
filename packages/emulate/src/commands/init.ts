@@ -1,7 +1,7 @@
 import { writeFileSync, existsSync } from "fs";
 import { resolve } from "path";
 import { stringify as yamlStringify } from "yaml";
-import { DEFAULT_TOKENS, resolveServiceEntries } from "../registry.js";
+import { DEFAULT_TOKENS, resolvePluginModules } from "../registry.js";
 
 interface InitOptions {
   service: string;
@@ -22,22 +22,22 @@ export async function initCommand(options: InitOptions): Promise<void> {
       ?.split(",")
       .map((s) => s.trim())
       .filter(Boolean) ?? [];
-  const registry = await resolveServiceEntries(pluginSpecifiers);
-  const availableServices = Object.keys(registry);
+  const pluginModules = await resolvePluginModules(pluginSpecifiers);
+  const availableServices = Object.keys(pluginModules);
 
   let config: Record<string, unknown>;
   if (options.service === "all") {
     config = { ...DEFAULT_TOKENS };
     for (const name of availableServices) {
-      Object.assign(config, registry[name].initConfig);
+      Object.assign(config, pluginModules[name].initConfig);
     }
   } else {
-    const entry = registry[options.service];
-    if (!entry) {
+    const pluginModule = pluginModules[options.service];
+    if (!pluginModule) {
       console.error(`Unknown service: ${options.service}. Available: ${availableServices.join(", ")}, all`);
       process.exit(1);
     }
-    config = { ...DEFAULT_TOKENS, ...entry.initConfig };
+    config = { ...DEFAULT_TOKENS, ...pluginModule.initConfig };
   }
 
   const content = yamlStringify(config);

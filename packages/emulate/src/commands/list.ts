@@ -1,4 +1,4 @@
-import { resolveServiceEntries } from "../registry.js";
+import { resolvePluginModules } from "../registry.js";
 
 interface ListOptions {
   plugin?: string;
@@ -10,12 +10,12 @@ export async function listCommand(options: ListOptions = {}): Promise<void> {
       ?.split(",")
       .map((s) => s.trim())
       .filter(Boolean) ?? [];
-  const registry = await resolveServiceEntries(pluginSpecifiers);
+  const pluginModules = await resolvePluginModules(pluginSpecifiers);
 
   console.log("\nAvailable services:\n");
-  for (const [name, entry] of Object.entries(registry)) {
-    console.log(`  ${name.padEnd(10)}${entry.label}`);
-    console.log(`            Endpoints: ${entry.endpoints}`);
+  for (const pluginModule of Object.values(pluginModules)) {
+    console.log(`  ${pluginModule.name.padEnd(10)}${pluginModule.label}`);
+    console.log(`            Endpoints: ${pluginModule.endpoints}`);
     console.log();
   }
 }

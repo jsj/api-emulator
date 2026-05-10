@@ -1,6 +1,6 @@
 import { createServer, type AppKeyResolver, type Store } from "@emulators/core";
 import { serve } from "@hono/node-server";
-import type { LoadedService, ServiceEntry } from "./registry.js";
+import type { LoadedPlugin, PluginModule } from "./registry.js";
 
 export interface SeedConfig {
   tokens?: Record<string, { login: string; scopes?: string[] }>;
@@ -11,8 +11,8 @@ export type TokenMap = Record<string, { login: string; id: number; scopes?: stri
 
 export interface ServiceRuntimeOptions {
   service: string;
-  entry: ServiceEntry;
-  loadedService: LoadedService;
+  pluginModule: PluginModule;
+  loadedPlugin: LoadedPlugin;
   port: number;
   baseUrl: string;
   tokens: TokenMap;
@@ -41,27 +41,27 @@ export function createAuthTokens(seedConfig?: SeedConfig | null): TokenMap {
 }
 
 export function createServiceRuntime(options: ServiceRuntimeOptions): RunningService {
-  const { service, entry, loadedService, port, baseUrl, tokens, seedConfig } = options;
+  const { service, pluginModule, loadedPlugin, port, baseUrl, tokens, seedConfig } = options;
 
   const resolverRef: { current?: AppKeyResolver } = {};
-  const appKeyResolver: AppKeyResolver | undefined = loadedService.createAppKeyResolver
+  const appKeyResolver: AppKeyResolver | undefined = loadedPlugin.createAppKeyResolver
     ? (appId) => resolverRef.current!(appId)
     : undefined;
-  const fallbackUser = entry.defaultFallback(seedConfig);
+  const fallbackUser = pluginModule.defaultFallback(seedConfig);
 
-  const { app, store, webhooks } = createServer(loadedService.plugin, {
+  const { app, store, webhooks } = createServer(loadedPlugin.plugin, {
     port,
     baseUrl,
     tokens,
     appKeyResolver,
     fallbackUser,
   });
-  resolverRef.current = loadedService.createAppKeyResolver?.(store);
+  resolverRef.current = loadedPlugin.createAppKeyResolver?.(store);
 
   const seed = () => {
-    loadedService.plugin.seed?.(store, baseUrl);
-    if (seedConfig && loadedService.seedFromConfig) {
-      loadedService.seedFromConfig(store, baseUrl, seedConfig, webhooks);
+    loadedPlugin.plugin.seed?.(store, baseUrl);
+    if (seedConfig && loadedPlugin.seedFromConfig) {
+      loadedPlugin.seedFromConfig(store, baseUrl, seedConfig, webhooks);
     }
   };
   seed();
