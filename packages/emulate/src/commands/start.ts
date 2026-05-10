@@ -1,12 +1,11 @@
-import { createServer, type AppKeyResolver, type Store } from "@emulators/core";
 import { resolveServiceEntries, getDefaultPluginNames, type LoadedService, type ServiceEntry } from "../registry.js";
-import { serve } from "@hono/node-server";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 import { parse as parseYaml } from "yaml";
 import pc from "picocolors";
 import { ensurePortless, registerAliases, removeAliases, portlessBaseUrl, type PortlessAlias } from "../portless.js";
 import { resolveBaseUrl } from "../base-url.js";
+import { createAuthTokens, createServiceRuntime, type RunningService, type SeedConfig } from "../service-runtime.js";
 
 declare const PKG_VERSION: string;
 const pkg = { version: PKG_VERSION };
@@ -18,11 +17,6 @@ export interface StartOptions {
   baseUrl?: string;
   portless?: boolean;
   plugin?: string;
-}
-
-interface SeedConfig {
-  tokens?: Record<string, { login: string; scopes?: string[] }>;
-  [service: string]: unknown;
 }
 
 interface LoadResult {
@@ -125,15 +119,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
     }
   }
 
-  const tokens: Record<string, { login: string; id: number; scopes?: string[] }> = {};
-  if (seedConfig?.tokens) {
-    let tokenId = 100;
-    for (const [token, user] of Object.entries(seedConfig.tokens)) {
-      tokens[token] = { login: user.login, id: tokenId++, scopes: user.scopes };
-    }
-  } else {
-    tokens["test_token_admin"] = { login: "admin", id: 2, scopes: ["repo", "user", "admin:org", "admin:repo_hook"] };
-  }
+  const tokens = createAuthTokens(seedConfig);
 
   if (options.portless) {
     await ensurePortless();
@@ -178,38 +164,21 @@ export async function startCommand(options: StartOptions): Promise<void> {
   }
 
   const serviceUrls: Array<{ name: string; url: string }> = [];
-  const stores: Store[] = [];
-  const httpServers: ReturnType<typeof serve>[] = [];
+  const runningServices: RunningService[] = [];
 
   for (const { svc, entry, loadedSvc, svcSeedConfig, port, baseUrl } of prepared) {
     serviceUrls.push({ name: svc, url: baseUrl });
 
-    // eslint-disable-next-line prefer-const -- reassigned after closure captures it
-    let cachedResolver: AppKeyResolver | undefined;
-    const appKeyResolver: AppKeyResolver | undefined = loadedSvc.createAppKeyResolver
-      ? (appId) => cachedResolver!(appId)
-      : undefined;
-
-    const fallbackUser = entry.defaultFallback(svcSeedConfig);
-
-    const { app, store, webhooks } = createServer(loadedSvc.plugin, {
+    const running = createServiceRuntime({
+      service: svc,
+      entry,
+      loadedService: loadedSvc,
       port,
       baseUrl,
       tokens,
-      appKeyResolver,
-      fallbackUser,
+      seedConfig: svcSeedConfig,
     });
-    cachedResolver = loadedSvc.createAppKeyResolver?.(store);
-    stores.push(store);
-
-    loadedSvc.plugin.seed?.(store, baseUrl);
-
-    if (svcSeedConfig && loadedSvc.seedFromConfig) {
-      loadedSvc.seedFromConfig(store, baseUrl, svcSeedConfig, webhooks);
-    }
-
-    const httpServer = serve({ fetch: app.fetch, port });
-    httpServers.push(httpServer);
+    runningServices.push(running);
   }
 
   printBanner(serviceUrls, tokens, configSource);
@@ -219,11 +188,8 @@ export async function startCommand(options: StartOptions): Promise<void> {
     if (portlessAliases.length > 0) {
       removeAliases(portlessAliases);
     }
-    for (const store of stores) {
-      store.reset();
-    }
-    for (const srv of httpServers) {
-      srv.close();
+    for (const running of runningServices) {
+      void running.close();
     }
     process.exit(0);
   };

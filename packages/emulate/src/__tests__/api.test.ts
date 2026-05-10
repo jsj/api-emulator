@@ -68,12 +68,16 @@ describe("createEmulator", () => {
       service: "echo",
       port: 14030,
       plugins: [resolve("src/__tests__/fixtures/echo-plugin.ts")],
+      seed: { echo: { message: "hello" } },
     });
 
     const res = await fetch(`${echo.url}/ping`);
     expect(res.status).toBe(200);
     const body = (await res.json()) as { ok: boolean; service: string };
     expect(body).toEqual({ ok: true, service: "echo" });
+
+    const configRes = await fetch(`${echo.url}/config`);
+    expect(await configRes.json()).toEqual({ message: "hello" });
 
     await echo.close();
   });
