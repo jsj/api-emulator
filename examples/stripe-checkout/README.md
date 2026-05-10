@@ -70,3 +70,7 @@ src/
       button-variants.ts        Button variant styles
       card.tsx                  Card layout components
 ```
+
+## External plugins
+
+This example uses providers from the default plugin catalog. To test app flows against additional providers, load plugins from [jsj/api-emulator-plugins](https://github.com/jsj/api-emulator-plugins) with `npx api-emulator --plugin <path> --service <name>`.

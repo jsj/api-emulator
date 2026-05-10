@@ -34,3 +34,7 @@ Open [http://localhost:3000](http://localhost:3000) and click any provider to si
 The `api-emulator.config.yaml` seeds users and OAuth apps for all three providers. The `.env.local` connects the Next.js app to the emulator's ports and provides matching client credentials.
 
 See the root [README](../../README.md) for full emulator configuration options.
+
+## External plugins
+
+This example uses providers from the default plugin catalog. To test app flows against additional providers, load plugins from [jsj/api-emulator-plugins](https://github.com/jsj/api-emulator-plugins) with `npx api-emulator --plugin <path> --service <name>`.
