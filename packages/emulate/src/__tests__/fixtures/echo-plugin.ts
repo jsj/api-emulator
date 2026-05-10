@@ -2,8 +2,9 @@ import type { ServicePlugin, Store } from "@emulators/core";
 
 export const plugin: ServicePlugin = {
   name: "echo",
-  register(app) {
+  register(app, store) {
     app.get("/ping", (c) => c.json({ ok: true, service: "echo" }));
+    app.get("/config", (c) => c.json(store.getData("echo:config") ?? null));
   },
 };
 
