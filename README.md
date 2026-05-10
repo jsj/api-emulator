@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./.README/cover.png" alt="api-emulator" width="1024" />
+</p>
+
 <h1 align="center">api-emulator</h1>
 
 <p align="center">
