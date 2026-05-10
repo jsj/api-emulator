@@ -212,6 +212,7 @@ bun run test
 Release publishing also uses `bun pm pack` before `npm publish` so workspace dependencies resolve in package tarballs.
 
 ## Examples
+These examples use the default plugin catalog. For examples of external provider plugins you can load with `--plugin`, see [jsj/api-emulator-plugins](https://github.com/jsj/api-emulator-plugins).
 
 See:
 
