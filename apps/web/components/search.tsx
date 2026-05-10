@@ -22,14 +22,41 @@ export function Search() {
   const listRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
+  const updateResults = useCallback((nextResults: SearchResult[]) => {
+    setResults(nextResults);
+    setActiveIndex(0);
+  }, []);
+
+  const updateQuery = useCallback(
+    (nextQuery: string) => {
+      setQuery(nextQuery);
+      if (!nextQuery.trim()) {
+        abortRef.current?.abort();
+        updateResults([]);
+        setLoading(false);
+      } else {
+        setLoading(true);
+      }
+    },
+    [updateResults],
+  );
+
+  const updateOpen = useCallback(
+    (nextOpen: boolean) => {
+      setOpen(nextOpen);
+      if (!nextOpen) {
+        updateQuery("");
+      }
+    },
+    [updateQuery],
+  );
+
   const navigate = useCallback(
     (href: string) => {
-      setOpen(false);
-      setQuery("");
-      setResults([]);
+      updateOpen(false);
       router.push(href);
     },
-    [router],
+    [router, updateOpen],
   );
 
   useEffect(() => {
@@ -46,21 +73,15 @@ export function Search() {
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 0);
-    } else {
-      setQuery("");
-      setResults([]);
     }
   }, [open]);
 
   useEffect(() => {
     const q = query.trim();
     if (!q) {
-      setResults([]);
-      setLoading(false);
       return;
     }
 
-    setLoading(true);
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -72,7 +93,7 @@ export function Search() {
         });
         if (res.ok) {
           const data = await res.json();
-          setResults(data.results);
+          updateResults(data.results);
         }
       } catch {
         // aborted or network error
@@ -87,11 +108,7 @@ export function Search() {
       clearTimeout(timeout);
       controller.abort();
     };
-  }, [query]);
-
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [results]);
+  }, [query, updateResults]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "ArrowDown") {
@@ -160,7 +177,7 @@ export function Search() {
         </svg>
       </button>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={updateOpen}>
         <DialogContent showCloseButton={false} className="gap-0 p-0 sm:max-w-lg">
           <DialogTitle className="sr-only">Search documentation</DialogTitle>
           <div className="flex items-center gap-2 border-b border-border/50 px-3">
@@ -182,13 +199,13 @@ export function Search() {
             <input
               ref={inputRef}
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => updateQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Search docs..."
               className="flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
             />
             {query && (
-              <button onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
+              <button onClick={() => updateQuery("")} className="text-muted-foreground hover:text-foreground">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="14"

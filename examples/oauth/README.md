@@ -8,7 +8,7 @@ No real accounts or API keys needed — everything runs against the local emulat
 
 ```bash
 # From the repo root, install dependencies
-pnpm install
+bun install
 
 # Start the emulator with the example config
 cd examples/oauth
@@ -16,7 +16,7 @@ npx api-emulator --seed api-emulator.config.yaml
 
 # In a separate terminal, start the Next.js app
 cd examples/oauth
-pnpm dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) and click any provider to sign in.

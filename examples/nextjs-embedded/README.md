@@ -8,11 +8,11 @@ This demonstrates the solution for **Vercel preview deployments** where OAuth ca
 
 ```bash
 # From the repo root, install dependencies
-pnpm install
+bun install
 
 # Start the Next.js app (emulators are embedded, no separate process needed)
 cd examples/nextjs-embedded
-pnpm dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) and click any provider to sign in.
