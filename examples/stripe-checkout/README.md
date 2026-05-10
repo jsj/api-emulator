@@ -21,8 +21,8 @@ The Stripe SDK is configured with `host: localhost` and `protocol: http` so all 
 From the repository root:
 
 ```bash
-pnpm install
-pnpm --filter stripe-checkout dev
+bun install
+bun --filter stripe-checkout dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).

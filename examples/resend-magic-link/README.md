@@ -19,8 +19,8 @@ The Resend SDK reads `RESEND_BASE_URL` from the environment at module load time.
 From the repository root:
 
 ```bash
-pnpm install
-pnpm --filter resend-magic-link dev
+bun install
+bun --filter resend-magic-link dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).

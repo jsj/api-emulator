@@ -63,27 +63,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.12
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Build
-        run: pnpm build
+        run: bun run build
 
       - name: Publish packages
         run: |
           LOCAL_VERSION="${{ needs.check-release.outputs.version }}"
           FAILED=""
 
-          # pnpm pack resolves workspace:* protocols in the tarball;
+          # bun pm pack resolves workspace:* protocols in the tarball;
           # npm publish handles OIDC trusted-publisher auth.
           publish_pkg() {
             local dir="$1" name="$2"
@@ -93,7 +94,7 @@ jobs:
               return 0
             fi
             echo "Publishing $name@$LOCAL_VERSION..."
-            TARBALL=$(cd "$dir" && pnpm pack --pack-destination /tmp | tail -1)
+            TARBALL=$(cd "$dir" && bun pm pack --destination /tmp --quiet | tail -1)
             if ! npm publish "$TARBALL" --provenance --access public; then
               FAILED="$FAILED $name"
             fi

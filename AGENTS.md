@@ -2,7 +2,7 @@
 
 ## Package Manager
 
-Use `pnpm` for all package management commands (not npm or yarn).
+Use `bun` for all package management commands (not pnpm, npm, or yarn).
 
 Exception: End-user install instructions should use `npm` (e.g. `npx api-emulator`, `npm install api-emulator`) since npm is universal.
 
@@ -12,7 +12,7 @@ Use `npx api-emulator` in user-facing CLI examples, docs, skills, help output, a
 
 ## Dependencies
 
-Always check for the latest npm version when adding dependencies. Use `pnpm add <package>` (without version) to get the latest, or verify with `npm view <package> version` first.
+Always check for the latest npm version when adding dependencies. Use `bun add <package>` (without version) to get the latest, or verify with `npm view <package> version` first.
 
 ## No Emojis
 
@@ -56,7 +56,7 @@ To prepare a release:
 
 1. Create a branch (e.g. `prepare-v0.5.0`)
 2. Bump the version in `packages/emulate/package.json`
-3. Run `pnpm sync-versions` to update all `@emulators/*` packages
+3. Run `bun run sync-versions` to update all `@emulators/*` packages
 4. Write the changelog entry in `CHANGELOG.md`, wrapped in `<!-- release:start -->` and `<!-- release:end -->` markers
 5. Remove the `<!-- release:start -->` and `<!-- release:end -->` markers from the previous release entry (only the latest release should have markers)
 6. Open a PR and merge to `main`
