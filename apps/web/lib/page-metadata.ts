@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import { PAGE_TITLES } from "./page-titles";
 
-const DESCRIPTION =
-  "Local drop-in replacement services for CI and no-network sandboxes. Fully stateful, production-fidelity API emulation.";
+const DESCRIPTION = "A thin spine for provider-shaped API emulators in CI and no-network sandboxes.";
 
 export function pageMetadata(slug: string): Metadata {
   const title = PAGE_TITLES[slug];
   if (!title) return {};
 
   const displayTitle = title.replace(/\n/g, " ");
-  const fullTitle = `${displayTitle} | emulate`;
+  const fullTitle = `${displayTitle} | api-emulator`;
   const ogImageUrl = slug ? `/og/${slug}` : "/og";
 
   return {
@@ -18,7 +17,7 @@ export function pageMetadata(slug: string): Metadata {
     openGraph: {
       type: "website",
       locale: "en_US",
-      siteName: "emulate",
+      siteName: "api-emulator",
       title: fullTitle,
       description: DESCRIPTION,
       images: [
@@ -26,7 +25,7 @@ export function pageMetadata(slug: string): Metadata {
           url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: `${displayTitle} - emulate`,
+          alt: `${displayTitle} - api-emulator`,
         },
       ],
     },

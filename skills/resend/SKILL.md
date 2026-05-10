@@ -1,7 +1,7 @@
 ---
 name: resend
 description: Emulated Resend email API for local development and testing. Use when the user needs to send emails locally, test transactional email flows, implement magic link or verification code auth, inspect sent emails, manage domains/contacts/API keys, or work with the Resend API without sending real emails. Triggers include "Resend API", "emulate Resend", "send email locally", "test email", "magic link", "verification email", "email inbox", "RESEND_BASE_URL", or any task requiring a local email API.
-allowed-tools: Bash(npx emulate:*), Bash(emulate:*), Bash(curl:*)
+allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*), Bash(curl:*)
 ---
 
 # Resend Email API Emulator
@@ -14,7 +14,7 @@ No real emails are sent. Every call to `POST /emails` stores the message locally
 
 ```bash
 # Resend only
-npx emulate --service resend
+npx api-emulator --service resend
 
 # Default port (when run alone)
 # http://localhost:4000
@@ -23,7 +23,7 @@ npx emulate --service resend
 Or programmatically:
 
 ```typescript
-import { createEmulator } from 'emulate'
+import { createEmulator } from 'api-emulator'
 
 const resend = await createEmulator({ service: 'resend', port: 4000 })
 // resend.url === 'http://localhost:4000'
@@ -314,7 +314,7 @@ curl -s $BASE/emails/$EMAIL_ID -H "Authorization: Bearer $TOKEN" | jq -r '.html'
 ### Send and Verify in a Test
 
 ```typescript
-import { createEmulator } from 'emulate'
+import { createEmulator } from 'api-emulator'
 import { Resend } from 'resend'
 
 const emu = await createEmulator({ service: 'resend', port: 4000 })

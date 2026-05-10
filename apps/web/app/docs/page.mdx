@@ -5,7 +5,7 @@ Local drop-in replacement for Vercel, GitHub, Google, Slack, Apple, Microsoft, A
 ## Quick Start
 
 ```bash
-npx emulate
+npx api-emulator
 ```
 
 All services start with sensible defaults. No config file needed:
@@ -26,25 +26,25 @@ All services start with sensible defaults. No config file needed:
 
 ```bash
 # Start all services (zero-config)
-npx emulate
+npx api-emulator
 
 # Start specific services
-npx emulate --service vercel,github
+npx api-emulator --service vercel,github
 
 # Custom port
-npx emulate --port 3000
+npx api-emulator --port 3000
 
 # Use a seed config file
-npx emulate --seed config.yaml
+npx api-emulator --seed config.yaml
 
 # Generate a starter config
-npx emulate init
+npx api-emulator init
 
 # Generate config for a specific service
-npx emulate init --service github
+npx api-emulator init --service github
 
 # List available services
-npx emulate list
+npx api-emulator list
 ```
 
 ## Options
@@ -76,11 +76,11 @@ npx emulate list
   </tbody>
 </table>
 
-The port can also be set via `EMULATE_PORT` or `PORT` environment variables.
+The port can also be set via `API_EMULATOR_PORT` or `PORT` environment variables.
 
 ## Programmatic API
 
-You can also use emulate as a library in your tests. See the [Programmatic API](/docs/programmatic-api) page for `createEmulator`, Vitest/Jest setup, and instance methods.
+You can also use api-emulator as a library in your tests. See the [Programmatic API](/docs/programmatic-api) page for `createEmulator`, Vitest/Jest setup, and instance methods.
 
 ## Next.js Integration
 

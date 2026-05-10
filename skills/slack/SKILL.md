@@ -1,7 +1,7 @@
 ---
 name: slack
 description: Emulated Slack API for local development and testing. Use when the user needs to interact with Slack API endpoints locally, test Slack integrations, emulate channels/messages/users, set up Slack OAuth flows, test incoming webhooks, or work with the Slack Web API without hitting the real Slack API. Triggers include "Slack API", "emulate Slack", "mock Slack", "test Slack OAuth", "Slack bot", "incoming webhook", "local Slack", or any task requiring a local Slack API.
-allowed-tools: Bash(npx emulate:*), Bash(emulate:*), Bash(curl:*)
+allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*), Bash(curl:*)
 ---
 
 # Slack API Emulator
@@ -12,7 +12,7 @@ Fully stateful Slack Web API emulation with channels, messages, threads, reactio
 
 ```bash
 # Slack only
-npx emulate --service slack
+npx api-emulator --service slack
 
 # Default port (when run alone)
 # http://localhost:4000
@@ -21,7 +21,7 @@ npx emulate --service slack
 Or programmatically:
 
 ```typescript
-import { createEmulator } from 'emulate'
+import { createEmulator } from 'api-emulator'
 
 const slack = await createEmulator({ service: 'slack', port: 4003 })
 // slack.url === 'http://localhost:4003'

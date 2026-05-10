@@ -2,7 +2,7 @@
 
 HTTP server, in-memory store, plugin interface, and middleware for emulate service plugins.
 
-Part of [emulate](https://github.com/vercel-labs/emulate) — local drop-in replacement services for CI and no-network sandboxes.
+Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
 
 ## Install
 
@@ -29,7 +29,7 @@ For local development, use the built-in file adapter:
 ```typescript
 import { filePersistence } from '@emulators/core'
 
-persistence: filePersistence('.emulate/state.json')
+persistence: filePersistence('.api-emulator/state.json')
 ```
 
 ### Custom adapter
@@ -38,8 +38,8 @@ Any object with `load` and `save` methods works:
 
 ```typescript
 const kvAdapter = {
-  async load() { return await kv.get('emulate-state') },
-  async save(data: string) { await kv.set('emulate-state', data) },
+  async load() { return await kv.get('api-emulator-state') },
+  async save(data: string) { await kv.set('api-emulator-state', data) },
 }
 ```
 
@@ -47,5 +47,5 @@ The persistence adapter is called on cold start (load) and after every mutating 
 
 ## Links
 
-- [Full documentation](https://emulate.dev)
-- [GitHub](https://github.com/vercel-labs/emulate)
+- [Full documentation](https://api-emulator.jsj.sh)
+- [GitHub](https://github.com/jsj/api-emulator)

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "OAuth Example – emulate",
+  title: "OAuth Example – api-emulator",
   description: "Sign in with GitHub, Google, and Vercel using emulated OAuth",
 };
 

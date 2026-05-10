@@ -4,11 +4,11 @@
 
 Use `pnpm` for all package management commands (not npm or yarn).
 
-Exception: End-user install instructions should use `npm` (e.g. `npx emulate`, `npm install emulate`) since npm is universal.
+Exception: End-user install instructions should use `npm` (e.g. `npx api-emulator`, `npm install api-emulator`) since npm is universal.
 
 ## CLI Invocation
 
-`emulate` is a zsh built-in command (it sets shell emulation mode). Running bare `emulate` in zsh invokes the shell built-in, not the npm binary. Always use `npx emulate` in user-facing CLI examples, docs, skills, help output, and post-command messages. The only exception is when `emulate` appears as a subprocess argument to another tool (e.g. `portless github.emulate emulate start`), where the binary is resolved by the parent process rather than the shell.
+Use `npx api-emulator` in user-facing CLI examples, docs, skills, help output, and post-command messages.
 
 ## Dependencies
 
@@ -35,13 +35,13 @@ Use the appropriate shared render function for each page type:
 - `renderFormPostPage` for OAuth `form_post` auto-submit redirects
 - `renderUserButton` for user selection buttons in OAuth flows
 
-These functions provide the shared `head()` (Geist fonts, favicon, CSS), `emuBar()` header, and "Powered by emulate" footer automatically. Use the existing CSS classes (`.inspector-table`, `.s-card`, `.org-row`, `.badge`, `.empty`, etc.) rather than adding inline styles.
+These functions provide the shared `head()` (Geist fonts, favicon, CSS), `emuBar()` header, and "Powered by api-emulator" footer automatically. Use the existing CSS classes (`.inspector-table`, `.s-card`, `.org-row`, `.badge`, `.empty`, etc.) rather than adding inline styles.
 
 If a new page type cannot be built with the existing render functions and CSS classes, add the new styles and render function to `core/src/ui.ts` so every emulator can reuse them.
 
 ## Docs Updates
 
-When a change affects how humans or agents use emulate (new/changed/removed commands, flags, behavior, routes, seed config, or SDK integration), update all of these:
+When a change affects how humans or agents use api-emulator (new/changed/removed commands, flags, behavior, routes, seed config, or SDK integration), update all of these:
 
 1. `README.md`
 2. `skills/*/SKILL.md` (agent skills for each service)
@@ -50,7 +50,7 @@ When a change affects how humans or agents use emulate (new/changed/removed comm
 
 ## Releasing
 
-Releases are manual, single-PR affairs. The maintainer controls the changelog voice and format. All packages share a single version number (`emulate` + every `@emulators/*`).
+Releases are manual, single-PR affairs. The maintainer controls the changelog voice and format. All packages share a single version number (`api-emulator` + every `@emulators/*`).
 
 To prepare a release:
 

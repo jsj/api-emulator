@@ -34,8 +34,8 @@ The session cookie in this example is a plain base64url-encoded JSON blob with n
 
 | | `examples/oauth` | `examples/nextjs-embedded` |
 |---|---|---|
-| Emulator process | Separate `npx emulate` process | Embedded in the Next.js app |
-| Config | `emulate.config.yaml` + `.env.local` | Seed data in `route.ts` |
+| Emulator process | Separate `npx api-emulator` process | Embedded in the Next.js app |
+| Config | `api-emulator.config.yaml` + `.env.local` | Seed data in `route.ts` |
 | OAuth URLs | `http://localhost:4001/login/oauth/...` | `/emulate/github/login/oauth/...` (same origin) |
 | Client credentials | Must match config | `"any"` (validation skipped) |
 | Preview deploys | Requires fixed callback URL | Works on any URL |

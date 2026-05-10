@@ -76,7 +76,7 @@ describe("requireAuth", () => {
     expect(res.status).toBe(401);
     const body = (await res.json()) as { message: string; documentation_url: string };
     expect(body.message).toBe("Requires authentication");
-    expect(body.documentation_url).toBe("https://emulate.dev");
+    expect(body.documentation_url).toBe("https://api-emulator.jsj.sh");
   });
 
   it("passes through when authUser exists", async () => {
@@ -106,7 +106,7 @@ describe("requireAppAuth", () => {
     expect(res.status).toBe(401);
     const body = (await res.json()) as { message: string; documentation_url: string };
     expect(body.message).toBe("A JSON web token could not be decoded");
-    expect(body.documentation_url).toBe("https://emulate.dev");
+    expect(body.documentation_url).toBe("https://api-emulator.jsj.sh");
   });
 
   it("passes through when authApp exists", async () => {

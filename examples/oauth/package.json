@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "predev": "command -v portless >/dev/null 2>&1 || (echo '\\nportless is required but not installed. Run: npm i -g portless\\nSee: https://github.com/vercel-labs/portless\\n' && exit 1)",
-    "dev": "portless run --name oauth-demo.emulate next dev",
+    "dev": "portless run --name oauth-demo.api-emulator next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

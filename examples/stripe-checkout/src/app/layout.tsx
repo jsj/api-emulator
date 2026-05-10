@@ -8,7 +8,7 @@ import { CartButton } from "@/components/cart-button";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Stripe Checkout with emulate",
+  title: "Stripe Checkout with api-emulator",
   description: "A storefront demonstrating Stripe Checkout against the emulated Stripe API",
 };
 

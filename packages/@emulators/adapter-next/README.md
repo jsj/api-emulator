@@ -2,7 +2,7 @@
 
 Next.js App Router integration for emulate. Embed emulators directly in your Next.js app so they run on the same origin, solving the Vercel preview deployment problem where OAuth callback URLs change with every deployment.
 
-Part of [emulate](https://github.com/vercel-labs/emulate) — local drop-in replacement services for CI and no-network sandboxes.
+Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
 
 ## Install
 
@@ -95,8 +95,8 @@ import { createEmulateHandler } from '@emulators/adapter-next'
 import * as github from '@emulators/github'
 
 const kvAdapter = {
-  async load() { return await kv.get('emulate-state') },
-  async save(data: string) { await kv.set('emulate-state', data) },
+  async load() { return await kv.get('api-emulator-state') },
+  async save(data: string) { await kv.set('api-emulator-state', data) },
 }
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
@@ -111,10 +111,10 @@ For local development, `@emulators/core` ships `filePersistence`:
 import { filePersistence } from '@emulators/core'
 
 // ...
-persistence: filePersistence('.emulate/state.json'),
+persistence: filePersistence('.api-emulator/state.json'),
 ```
 
 ## Links
 
-- [Full documentation](https://emulate.dev)
-- [GitHub](https://github.com/vercel-labs/emulate)
+- [Full documentation](https://api-emulator.jsj.sh)
+- [GitHub](https://github.com/jsj/api-emulator)

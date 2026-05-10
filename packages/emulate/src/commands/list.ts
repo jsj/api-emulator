@@ -5,7 +5,11 @@ interface ListOptions {
 }
 
 export async function listCommand(options: ListOptions = {}): Promise<void> {
-  const pluginSpecifiers = options.plugin?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
+  const pluginSpecifiers =
+    options.plugin
+      ?.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean) ?? [];
   const registry = await resolveServiceEntries(pluginSpecifiers);
 
   console.log("\nAvailable services:\n");

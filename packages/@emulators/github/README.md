@@ -2,7 +2,7 @@
 
 Fully stateful GitHub API emulation. Creates, updates, and deletes persist in memory and affect related entities.
 
-Part of [emulate](https://github.com/vercel-labs/emulate) — local drop-in replacement services for CI and no-network sandboxes.
+Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
 
 ## Install
 
@@ -174,5 +174,5 @@ github:
 
 ## Links
 
-- [Full documentation](https://emulate.dev/github)
-- [GitHub](https://github.com/vercel-labs/emulate)
+- [Full documentation](https://api-emulator.jsj.sh/github)
+- [GitHub](https://github.com/jsj/api-emulator)

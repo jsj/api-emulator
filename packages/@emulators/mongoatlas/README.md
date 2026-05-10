@@ -2,7 +2,7 @@
 
 MongoDB Atlas emulation with Atlas Admin API v2 and Atlas Data API v1 for local development and testing. In-memory document storage with CRUD, filtering, and aggregation.
 
-Part of [emulate](https://github.com/vercel-labs/emulate) — local drop-in replacement services for CI and no-network sandboxes.
+Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
 
 ## Install
 
@@ -67,5 +67,5 @@ mongoatlas:
 
 ## Links
 
-- [Full documentation](https://emulate.dev)
-- [GitHub](https://github.com/vercel-labs/emulate)
+- [Full documentation](https://api-emulator.jsj.sh)
+- [GitHub](https://github.com/jsj/api-emulator)

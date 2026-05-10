@@ -9,7 +9,7 @@ interface InitOptions {
 }
 
 export async function initCommand(options: InitOptions): Promise<void> {
-  const filename = "emulate.config.yaml";
+  const filename = "api-emulator.config.yaml";
   const fullPath = resolve(filename);
 
   if (existsSync(fullPath)) {
@@ -44,5 +44,5 @@ export async function initCommand(options: InitOptions): Promise<void> {
   writeFileSync(fullPath, content, "utf-8");
 
   console.log(`Created ${filename}`);
-  console.log(`\nRun 'npx emulate' to start the emulator.`);
+  console.log(`\nRun 'npx api-emulator' to start the emulator.`);
 }

@@ -1,6 +1,6 @@
-# Stripe Checkout with emulate
+# Stripe Checkout with api-emulator
 
-A Next.js storefront demonstrating the full [Stripe Checkout](https://stripe.com/docs/payments/checkout) flow against the emulated Stripe API from `emulate`.
+A Next.js storefront demonstrating the full [Stripe Checkout](https://stripe.com/docs/payments/checkout) flow against the emulated Stripe API from `api-emulator`.
 
 No real payments are processed. The emulator runs in-process, seeds products and prices, hosts a checkout page, and fires webhooks on completion.
 

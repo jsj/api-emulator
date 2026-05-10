@@ -1,7 +1,7 @@
 ---
 name: next
 description: Next.js adapter for embedding emulators directly in a Next.js app via @emulators/adapter-next. Use when the user needs to embed emulators in Next.js, set up same-origin OAuth for Vercel preview deployments, create an emulate catch-all route handler, configure Auth.js/NextAuth with embedded emulators, add persistence to embedded emulators, or wrap next.config with withEmulate. Triggers include "Next.js emulator", "adapter-next", "embedded emulator", "same-origin OAuth", "Vercel preview", "createEmulateHandler", "withEmulate", or any task requiring emulators inside a Next.js app.
-allowed-tools: Bash(npx emulate:*), Bash(emulate:*)
+allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*)
 ---
 
 # Next.js Integration
@@ -102,8 +102,8 @@ import { createEmulateHandler } from '@emulators/adapter-next'
 import * as github from '@emulators/github'
 
 const kvAdapter = {
-  async load() { return await kv.get('emulate-state') },
-  async save(data: string) { await kv.set('emulate-state', data) },
+  async load() { return await kv.get('api-emulator-state') },
+  async save(data: string) { await kv.set('api-emulator-state', data) },
 }
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
@@ -120,7 +120,7 @@ For local development, `@emulators/core` ships a file-based adapter:
 import { filePersistence } from '@emulators/core'
 
 // persists to a JSON file
-persistence: filePersistence('.emulate/state.json'),
+persistence: filePersistence('.api-emulator/state.json'),
 ```
 
 ### How Persistence Works

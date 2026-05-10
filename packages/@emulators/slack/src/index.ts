@@ -66,14 +66,14 @@ function seedDefaults(store: Store, _baseUrl: string): void {
     team_id: teamId,
     name: "admin",
     real_name: "Admin User",
-    email: "admin@emulate.dev",
+    email: "admin@api-emulator.jsj.sh",
     is_admin: true,
     is_bot: false,
     deleted: false,
     profile: {
       display_name: "admin",
       real_name: "Admin User",
-      email: "admin@emulate.dev",
+      email: "admin@api-emulator.jsj.sh",
       image_48: "",
       image_192: "",
     },
@@ -144,7 +144,7 @@ export function seedFromConfig(store: Store, _baseUrl: string, config: SlackSeed
       if (existing) continue;
 
       const userId = generateSlackId("U");
-      const email = u.email ?? `${u.name}@emulate.dev`;
+      const email = u.email ?? `${u.name}@api-emulator.jsj.sh`;
       ss.users.insert({
         user_id: userId,
         team_id: teamId,

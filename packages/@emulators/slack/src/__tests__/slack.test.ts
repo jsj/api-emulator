@@ -411,11 +411,11 @@ describe("Slack plugin - users", () => {
     const res = await app.request(`${base}/api/users.lookupByEmail`, {
       method: "POST",
       headers: authHeaders(),
-      body: JSON.stringify({ email: "admin@emulate.dev" }),
+      body: JSON.stringify({ email: "admin@api-emulator.jsj.sh" }),
     });
     const body = (await res.json()) as any;
     expect(body.ok).toBe(true);
-    expect(body.user.profile.email).toBe("admin@emulate.dev");
+    expect(body.user.profile.email).toBe("admin@api-emulator.jsj.sh");
   });
 
   it("returns error for unknown user", async () => {

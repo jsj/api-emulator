@@ -58,7 +58,7 @@ export async function renderOgImage(title: string) {
             color: "white",
           }}
         >
-          emulate
+          api-emulator
         </span>
       </div>
 

@@ -96,8 +96,8 @@ import { createEmulateHandler } from '@emulators/adapter-next'
 import * as github from '@emulators/github'
 
 const kvAdapter = {
-  async load() { return await kv.get('emulate-state') },
-  async save(data: string) { await kv.set('emulate-state', data) },
+  async load() { return await kv.get('api-emulator-state') },
+  async save(data: string) { await kv.set('api-emulator-state', data) },
 }
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
@@ -114,7 +114,7 @@ For local development, `@emulators/core` ships a file-based adapter:
 import { filePersistence } from '@emulators/core'
 
 // persists to a JSON file
-persistence: filePersistence('.emulate/state.json'),
+persistence: filePersistence('.api-emulator/state.json'),
 ```
 
 ### How It Works

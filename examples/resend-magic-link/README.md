@@ -1,6 +1,6 @@
 # Magic Link Sign-In with Resend
 
-A Next.js app demonstrating magic link authentication using the [Resend](https://resend.com) email API, powered by the emulated Resend service from `emulate`.
+A Next.js app demonstrating magic link authentication using the [Resend](https://resend.com) email API, powered by the emulated Resend service from `api-emulator`.
 
 No real emails are sent. The emulator captures every email in-memory so you can inspect them through the inbox UI or retrieve them via the API.
 

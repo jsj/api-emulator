@@ -2,7 +2,7 @@
 
 Google OAuth 2.0, OpenID Connect, and mutable Google Workspace-style surfaces for local Gmail, Calendar, and Drive flows.
 
-Part of [emulate](https://github.com/vercel-labs/emulate) — local drop-in replacement services for CI and no-network sandboxes.
+Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
 
 ## Install
 
@@ -126,5 +126,5 @@ google:
 
 ## Links
 
-- [Full documentation](https://emulate.dev/google)
-- [GitHub](https://github.com/vercel-labs/emulate)
+- [Full documentation](https://api-emulator.jsj.sh/google)
+- [GitHub](https://github.com/jsj/api-emulator)

@@ -8,28 +8,25 @@ import { getStarCount } from "@/lib/github";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://emulate.dev"),
+  metadataBase: new URL("https://api-emulator.jsj.sh"),
   title: {
-    default: "emulate | Local API Emulation for CI & Sandboxes",
-    template: "%s | emulate",
+    default: "api-emulator | Local API Emulation for CI & Sandboxes",
+    template: "%s | api-emulator",
   },
-  description:
-    "Local drop-in replacement services for CI and no-network sandboxes. Fully stateful, production-fidelity API emulation. Not mocks.",
+  description: "A thin spine for provider-shaped API emulators in CI and no-network sandboxes.",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://emulate.dev",
-    siteName: "emulate",
-    title: "emulate | Local API Emulation for CI & Sandboxes",
-    description:
-      "Local drop-in replacement services for CI and no-network sandboxes. Fully stateful, production-fidelity API emulation. Not mocks.",
-    images: [{ url: "/og", width: 1200, height: 630, alt: "emulate" }],
+    url: "https://api-emulator.jsj.sh",
+    siteName: "api-emulator",
+    title: "api-emulator | Local API Emulation for CI & Sandboxes",
+    description: "A thin spine for provider-shaped API emulators in CI and no-network sandboxes.",
+    images: [{ url: "/og", width: 1200, height: 630, alt: "api-emulator" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "emulate | Local API Emulation for CI & Sandboxes",
-    description:
-      "Local drop-in replacement services for CI and no-network sandboxes. Fully stateful, production-fidelity API emulation. Not mocks.",
+    title: "api-emulator | Local API Emulation for CI & Sandboxes",
+    description: "A thin spine for provider-shaped API emulators in CI and no-network sandboxes.",
     images: ["/og"],
   },
 };
@@ -69,7 +66,7 @@ function Header({ stars }: { stars?: string }) {
             </svg>
           </span>
           <Link href="/">
-            <span className={`${GeistPixelSquare.className} text-lg`}>emulate</span>
+            <span className={`${GeistPixelSquare.className} text-lg`}>api-emulator</span>
           </Link>
         </div>
         <nav className="flex items-center gap-4">
@@ -81,7 +78,7 @@ function Header({ stars }: { stars?: string }) {
             Docs
           </Link>
           <a
-            href="https://github.com/vercel-labs/emulate"
+            href="https://github.com/jsj/api-emulator"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900 transition-colors dark:text-neutral-400 dark:hover:text-neutral-100"
@@ -92,7 +89,7 @@ function Header({ stars }: { stars?: string }) {
             {stars && <span>{stars}</span>}
           </a>
           <a
-            href="https://www.npmjs.com/package/emulate"
+            href="https://www.npmjs.com/package/api-emulator"
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors dark:text-neutral-400 dark:hover:text-neutral-100"

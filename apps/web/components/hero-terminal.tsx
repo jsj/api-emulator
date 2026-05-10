@@ -55,16 +55,16 @@ export function HeroTerminal({ pixelFont }: { pixelFont: string }) {
       <pre className="overflow-x-auto p-5 text-[13px] leading-relaxed text-neutral-400 font-mono">
         <code>
           <span className="text-neutral-500">$</span>{" "}
-          <span className="text-neutral-200">npx emulate{portless ? " --portless" : ""}</span>
+          <span className="text-neutral-200">npx api-emulator{portless ? " --portless" : ""}</span>
           {"\n\n"}
-          <span className={`${pixelFont} text-neutral-200`}>emulate</span>
+          <span className={`${pixelFont} text-neutral-200`}>api-emulator</span>
           {" v0.4.1\n\n"}
           {services.map((s) => (
             <span key={s.name}>
               {"  "}
               <span className="text-neutral-500">{s.name.padEnd(14)}</span>
               <span className="text-emerald-400">
-                {portless ? `https://${s.slug}.emulate.localhost` : `http://localhost:${s.port}`}
+                {portless ? `https://${s.slug}.api-emulator.localhost` : `http://localhost:${s.port}`}
               </span>
               {"\n"}
             </span>

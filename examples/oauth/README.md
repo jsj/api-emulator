@@ -12,7 +12,7 @@ pnpm install
 
 # Start the emulator with the example config
 cd examples/oauth
-npx emulate --seed emulate.config.yaml
+npx api-emulator --seed api-emulator.config.yaml
 
 # In a separate terminal, start the Next.js app
 cd examples/oauth
@@ -31,6 +31,6 @@ Open [http://localhost:3000](http://localhost:3000) and click any provider to si
 
 ## Configuration
 
-The `emulate.config.yaml` seeds users and OAuth apps for all three providers. The `.env.local` connects the Next.js app to the emulator's ports and provides matching client credentials.
+The `api-emulator.config.yaml` seeds users and OAuth apps for all three providers. The `.env.local` connects the Next.js app to the emulator's ports and provides matching client credentials.
 
 See the root [README](../../README.md) for full emulator configuration options.

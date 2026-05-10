@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     STRIPE_PORT: port,
     STRIPE_PROTOCOL: "http",
   },
-  allowedDevOrigins: ["stripe-checkout.emulate.localhost"],
+  allowedDevOrigins: ["stripe-checkout.api-emulator.localhost"],
 };
 
 export default withEmulate(nextConfig);

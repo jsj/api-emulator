@@ -89,5 +89,5 @@ export function removeAliases(aliases: PortlessAlias[]): void {
 }
 
 export function portlessBaseUrl(serviceName: string): string {
-  return `https://${serviceName}.emulate.localhost`;
+  return `https://${serviceName}.api-emulator.localhost`;
 }
