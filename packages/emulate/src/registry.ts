@@ -1,13 +1,13 @@
-import { loadExternalPlugin } from "./external-plugin-adapter.js";
+import { loadExternalPluginModule } from "./external-plugin-adapter.js";
 import {
   DEFAULT_PLUGIN_REGISTRY,
   DEFAULT_PLUGIN_NAMES,
   SERVICE_NAMES,
   type ServiceName,
 } from "./default-plugin-catalog.js";
-import type { ServiceEntry } from "./plugin-types.js";
+import type { PluginModule } from "./plugin-types.js";
 export { DEFAULT_PLUGIN_REGISTRY, DEFAULT_PLUGIN_NAMES, SERVICE_NAMES, type ServiceName };
-export type { LoadedService, ServiceEntry } from "./plugin-types.js";
+export type { LoadedPlugin, LoadedService, PluginModule, ServiceEntry } from "./plugin-types.js";
 
 export const DEFAULT_TOKENS = {
   tokens: {
@@ -22,22 +22,24 @@ export const DEFAULT_TOKENS = {
   },
 };
 
-export async function resolveServiceEntries(pluginSpecifiers: string[] = []): Promise<Record<string, ServiceEntry>> {
-  const results = await Promise.all(pluginSpecifiers.map(loadExternalPlugin));
+export async function resolvePluginModules(pluginSpecifiers: string[] = []): Promise<Record<string, PluginModule>> {
+  const results = await Promise.all(pluginSpecifiers.map(loadExternalPluginModule));
 
-  const externalEntries: Record<string, ServiceEntry> = {};
-  for (const { name, entry } of results) {
-    if (name in DEFAULT_PLUGIN_REGISTRY) {
-      throw new Error(`Plugin "${name}" conflicts with default plugin "${name}"`);
+  const externalEntries: Record<string, PluginModule> = {};
+  for (const pluginModule of results) {
+    if (pluginModule.name in DEFAULT_PLUGIN_REGISTRY) {
+      throw new Error(`Plugin "${pluginModule.name}" conflicts with default plugin "${pluginModule.name}"`);
     }
-    if (name in externalEntries) {
-      throw new Error(`Duplicate plugin name "${name}"`);
+    if (pluginModule.name in externalEntries) {
+      throw new Error(`Duplicate plugin name "${pluginModule.name}"`);
     }
-    externalEntries[name] = entry;
+    externalEntries[pluginModule.name] = pluginModule;
   }
 
   return { ...DEFAULT_PLUGIN_REGISTRY, ...externalEntries };
 }
+
+export const resolveServiceEntries = resolvePluginModules;
 
 export function getDefaultPluginNames(): string[] {
   return [...DEFAULT_PLUGIN_NAMES];

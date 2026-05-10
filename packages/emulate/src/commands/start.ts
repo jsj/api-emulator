@@ -1,4 +1,4 @@
-import { resolveServiceEntries, getDefaultPluginNames, type LoadedService, type ServiceEntry } from "../registry.js";
+import { resolvePluginModules, getDefaultPluginNames, type LoadedPlugin, type PluginModule } from "../registry.js";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 import { parse as parseYaml } from "yaml";
@@ -92,28 +92,31 @@ export async function startCommand(options: StartOptions): Promise<void> {
       ?.split(",")
       .map((s) => s.trim())
       .filter(Boolean) ?? [];
-  let allEntries: Record<string, ServiceEntry>;
+  let allPluginModules: Record<string, PluginModule>;
   try {
-    allEntries = await resolveServiceEntries(pluginSpecifiers);
+    allPluginModules = await resolvePluginModules(pluginSpecifiers);
   } catch (err) {
     console.error(`Failed to load plugins: ${err instanceof Error ? err.message : err}`);
     process.exit(1);
   }
 
   const defaultPlugins = getDefaultPluginNames();
-  const externalServices = Object.keys(allEntries).filter((name) => !defaultPlugins.includes(name));
+  const externalServices = Object.keys(allPluginModules).filter((name) => !defaultPlugins.includes(name));
 
   let services: string[];
   if (options.service) {
     services = options.service.split(",").map((s) => s.trim());
   } else if (seedConfig) {
-    services = inferServicesFromConfig(seedConfig, Object.keys(allEntries)) ?? [...defaultPlugins, ...externalServices];
+    services = inferServicesFromConfig(seedConfig, Object.keys(allPluginModules)) ?? [
+      ...defaultPlugins,
+      ...externalServices,
+    ];
   } else {
     services = [...defaultPlugins, ...externalServices];
   }
 
   for (const svc of services) {
-    if (!allEntries[svc]) {
+    if (!allPluginModules[svc]) {
       console.error(`Unknown service: ${svc}`);
       process.exit(1);
     }
@@ -127,8 +130,8 @@ export async function startCommand(options: StartOptions): Promise<void> {
 
   interface PreparedService {
     svc: string;
-    entry: ServiceEntry;
-    loadedSvc: LoadedService;
+    pluginModule: PluginModule;
+    loadedPlugin: LoadedPlugin;
     svcSeedConfig: Record<string, unknown> | undefined;
     port: number;
     baseUrl: string;
@@ -139,8 +142,8 @@ export async function startCommand(options: StartOptions): Promise<void> {
 
   for (let i = 0; i < services.length; i++) {
     const svc = services[i];
-    const entry = allEntries[svc];
-    const loadedSvc = await entry.load();
+    const pluginModule = allPluginModules[svc];
+    const loadedPlugin = await pluginModule.load();
 
     const svcSeedConfig = seedConfig?.[svc] as Record<string, unknown> | undefined;
     const port = (svcSeedConfig?.port as number | undefined) ?? basePort + i;
@@ -156,7 +159,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
     const effectiveBaseUrl = options.portless ? portlessBaseUrl(svc) : options.baseUrl;
     const baseUrl = resolveBaseUrl({ service: svc, port, baseUrl: effectiveBaseUrl, seedBaseUrl });
 
-    prepared.push({ svc, entry, loadedSvc, svcSeedConfig, port, baseUrl });
+    prepared.push({ svc, pluginModule, loadedPlugin, svcSeedConfig, port, baseUrl });
   }
 
   if (portlessAliases.length > 0) {
@@ -166,13 +169,13 @@ export async function startCommand(options: StartOptions): Promise<void> {
   const serviceUrls: Array<{ name: string; url: string }> = [];
   const runningServices: RunningService[] = [];
 
-  for (const { svc, entry, loadedSvc, svcSeedConfig, port, baseUrl } of prepared) {
+  for (const { svc, pluginModule, loadedPlugin, svcSeedConfig, port, baseUrl } of prepared) {
     serviceUrls.push({ name: svc, url: baseUrl });
 
     const running = createServiceRuntime({
       service: svc,
-      entry,
-      loadedService: loadedSvc,
+      pluginModule,
+      loadedPlugin,
       port,
       baseUrl,
       tokens,
