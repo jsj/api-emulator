@@ -12,7 +12,7 @@ const program = new Command();
 
 program
   .name("api-emulator")
-  .description("A thin spine for provider-shaped API emulators in CI and no-network sandboxes")
+  .description("Local API emulators you can run, share, and extend with plugins")
   .version(pkg.version);
 
 program

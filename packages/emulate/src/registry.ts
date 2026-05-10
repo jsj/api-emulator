@@ -51,7 +51,7 @@ export async function loadExternalPlugin(specifier: string): Promise<{ name: str
   return { name, entry };
 }
 
-const SERVICE_NAME_LIST = [
+const DEFAULT_PLUGIN_NAME_LIST = [
   "vercel",
   "github",
   "google",
@@ -65,10 +65,11 @@ const SERVICE_NAME_LIST = [
   "mongoatlas",
   "clerk",
 ] as const;
-export type ServiceName = (typeof SERVICE_NAME_LIST)[number];
-export const SERVICE_NAMES: readonly ServiceName[] = SERVICE_NAME_LIST;
+export type ServiceName = (typeof DEFAULT_PLUGIN_NAME_LIST)[number];
+export const DEFAULT_PLUGIN_NAMES: readonly ServiceName[] = DEFAULT_PLUGIN_NAME_LIST;
+export const SERVICE_NAMES: readonly ServiceName[] = DEFAULT_PLUGIN_NAMES;
 
-export const SERVICE_REGISTRY: Record<ServiceName, ServiceEntry> = {
+export const DEFAULT_PLUGIN_REGISTRY: Record<ServiceName, ServiceEntry> = {
   vercel: {
     label: "Vercel REST API emulator",
     endpoints: "projects, deployments, domains, env vars, users, teams, file uploads, protection bypass",
@@ -480,7 +481,7 @@ export const SERVICE_REGISTRY: Record<ServiceName, ServiceEntry> = {
           {
             client_id: "clerk_emulate_client",
             client_secret: "clerk_emulate_secret",
-            name: "Emulate App",
+            name: "api-emulator App",
             redirect_uris: ["http://localhost:3000/api/auth/callback/clerk"],
           },
         ],
@@ -507,8 +508,8 @@ export async function resolveServiceEntries(pluginSpecifiers: string[] = []): Pr
 
   const externalEntries: Record<string, ServiceEntry> = {};
   for (const { name, entry } of results) {
-    if (name in SERVICE_REGISTRY) {
-      throw new Error(`Plugin "${name}" conflicts with built-in service "${name}"`);
+    if (name in DEFAULT_PLUGIN_REGISTRY) {
+      throw new Error(`Plugin "${name}" conflicts with default plugin "${name}"`);
     }
     if (name in externalEntries) {
       throw new Error(`Duplicate plugin name "${name}"`);
@@ -516,9 +517,9 @@ export async function resolveServiceEntries(pluginSpecifiers: string[] = []): Pr
     externalEntries[name] = entry;
   }
 
-  return { ...SERVICE_REGISTRY, ...externalEntries };
+  return { ...DEFAULT_PLUGIN_REGISTRY, ...externalEntries };
 }
 
-export function getBuiltInServiceNames(): string[] {
-  return [...SERVICE_NAMES];
+export function getDefaultPluginNames(): string[] {
+  return [...DEFAULT_PLUGIN_NAMES];
 }
