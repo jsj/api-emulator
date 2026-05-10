@@ -41,7 +41,7 @@ export function createServer(plugin: ServicePlugin, options: ServerOptions = {})
     }
   }
 
-  const docsUrl = options.docsUrl ?? `https://emulate.dev/${plugin.name}`;
+  const docsUrl = options.docsUrl ?? `https://api-emulator.jsj.sh/${plugin.name}`;
 
   registerFontRoutes(app);
 

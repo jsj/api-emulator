@@ -12,14 +12,14 @@
       "default": "./dist/index.js"
     }
   },
-  "homepage": "https://emulate.dev",
+  "homepage": "https://api-emulator.jsj.sh",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vercel-labs/emulate.git",
+    "url": "https://github.com/jsj/api-emulator.git",
     "directory": "packages/@emulators/adapter-next"
   },
   "bugs": {
-    "url": "https://github.com/vercel-labs/emulate/issues"
+    "url": "https://github.com/jsj/api-emulator/issues"
   },
   "publishConfig": {
     "access": "public"

@@ -1,7 +1,7 @@
 import type { Context, ErrorHandler, MiddlewareHandler } from "hono";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 
-const DEFAULT_DOCS_URL = "https://emulate.dev";
+const DEFAULT_DOCS_URL = "https://api-emulator.jsj.sh";
 
 function getDocsUrl(c: Context): string {
   return (c.get("docsUrl") as string | undefined) ?? DEFAULT_DOCS_URL;

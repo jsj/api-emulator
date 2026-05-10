@@ -1,5 +1,5 @@
 {
-  "name": "emulate-monorepo",
+  "name": "api-emulator-monorepo",
   "private": true,
   "license": "Apache-2.0",
   "scripts": {

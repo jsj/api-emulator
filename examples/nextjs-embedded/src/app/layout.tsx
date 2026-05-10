@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next.js Embedded Example – emulate",
+  title: "Next.js Embedded Example – api-emulator",
   description: "OAuth with emulators embedded in the Next.js app via @emulators/adapter-next",
 };
 

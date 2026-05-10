@@ -2,7 +2,7 @@
 
 Fully stateful Vercel API emulation with Vercel-style JSON responses and cursor-based pagination.
 
-Part of [emulate](https://github.com/vercel-labs/emulate) — local drop-in replacement services for CI and no-network sandboxes.
+Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
 
 ## Install
 
@@ -86,5 +86,5 @@ vercel:
 
 ## Links
 
-- [Full documentation](https://emulate.dev/vercel)
-- [GitHub](https://github.com/vercel-labs/emulate)
+- [Full documentation](https://api-emulator.jsj.sh/vercel)
+- [GitHub](https://github.com/jsj/api-emulator)

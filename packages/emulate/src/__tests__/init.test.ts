@@ -28,7 +28,7 @@ describe("initCommand", () => {
       plugin: resolve(__dirname, "fixtures/echo-plugin.ts"),
     });
 
-    const content = readFileSync(join(tempDir, "emulate.config.yaml"), "utf-8");
+    const content = readFileSync(join(tempDir, "api-emulator.config.yaml"), "utf-8");
     expect(content).toContain("tokens:");
     expect(content).toContain("echo:");
     expect(content).toContain("message: hello");

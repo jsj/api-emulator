@@ -1,17 +1,17 @@
 # Programmatic API
 
-Use emulators as libraries in your tests and scripts. There are two approaches: the `emulate` CLI package (which wraps all services) and the individual `@emulators/*` scoped packages.
+Use emulators as libraries in your tests and scripts. There are two approaches: the `api-emulator` CLI package (which wraps all services) and the individual `@emulators/*` scoped packages.
 
 ## CLI package
 
-The `emulate` package provides a `createEmulator` helper that starts any service by name.
+The `api-emulator` package provides a `createEmulator` helper that starts any service by name.
 
 ```bash
-npm install emulate
+npm install api-emulator
 ```
 
 ```typescript
-import { createEmulator } from 'emulate'
+import { createEmulator } from 'api-emulator'
 
 const github = await createEmulator({ service: 'github', port: 4001 })
 const vercel = await createEmulator({ service: 'vercel', port: 4002 })
@@ -27,7 +27,7 @@ await vercel.close()
 
 ```typescript
 // vitest.setup.ts
-import { createEmulator, type Emulator } from 'emulate'
+import { createEmulator, type Emulator } from 'api-emulator'
 
 let github: Emulator
 let vercel: Emulator
@@ -74,7 +74,7 @@ afterAll(() => Promise.all([github.close(), vercel.close()]))
     <tr>
       <td><code>baseUrl</code></td>
       <td>none</td>
-      <td>Override the advertised base URL (used in OAuth redirects, webhook URLs, etc.). Per-service <code>baseUrl</code> in seed config takes highest priority, then this option, then the <code>EMULATE_BASE_URL</code> env var (supports <code>{'{service}'}</code> template), then <code>PORTLESS_URL</code> (supports <code>{'{service}'}</code>, automatically set by the <code>portless</code> CLI wrapper), then <code>{`http://localhost:<port>`}</code>.</td>
+      <td>Override the advertised base URL (used in OAuth redirects, webhook URLs, etc.). Per-service <code>baseUrl</code> in seed config takes highest priority, then this option, then the <code>API_EMULATOR_BASE_URL</code> env var (supports <code>{'{service}'}</code> template), then <code>PORTLESS_URL</code> (supports <code>{'{service}'}</code>, automatically set by the <code>portless</code> CLI wrapper), then <code>{`http://localhost:<port>`}</code>.</td>
     </tr>
   </tbody>
 </table>

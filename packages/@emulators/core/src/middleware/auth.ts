@@ -114,7 +114,7 @@ export function authMiddleware(tokens: TokenMap, appKeyResolver?: AppKeyResolver
 export function requireAuth() {
   return async (c: Context, next: Next) => {
     if (!c.get("authUser")) {
-      const docsUrl = (c.get("docsUrl") as string | undefined) ?? "https://emulate.dev";
+      const docsUrl = (c.get("docsUrl") as string | undefined) ?? "https://api-emulator.jsj.sh";
       return c.json(
         {
           message: "Requires authentication",
@@ -130,7 +130,7 @@ export function requireAuth() {
 export function requireAppAuth() {
   return async (c: Context, next: Next) => {
     if (!c.get("authApp")) {
-      const docsUrl = (c.get("docsUrl") as string | undefined) ?? "https://emulate.dev";
+      const docsUrl = (c.get("docsUrl") as string | undefined) ?? "https://api-emulator.jsj.sh";
       return c.json(
         {
           message: "A JSON web token could not be decoded",

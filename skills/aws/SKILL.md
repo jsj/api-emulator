@@ -1,7 +1,7 @@
 ---
 name: aws
 description: Emulated AWS cloud services (S3, SQS, IAM, STS) for local development and testing. Use when the user needs to interact with AWS API endpoints locally, test S3 bucket and object operations, emulate SQS queues and messages, manage IAM users/roles/access keys, test STS assume role, or work without hitting real AWS APIs. Triggers include "AWS emulator", "emulate AWS", "mock S3", "local SQS", "test IAM", "emulate S3", "AWS locally", "STS assume role", or any task requiring local AWS service emulation.
-allowed-tools: Bash(npx emulate:*), Bash(emulate:*), Bash(curl:*)
+allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*), Bash(curl:*)
 ---
 
 # AWS Emulator
@@ -12,7 +12,7 @@ S3, SQS, IAM, and STS emulation with AWS SDK-compatible S3 paths and query-style
 
 ```bash
 # AWS only
-npx emulate --service aws
+npx api-emulator --service aws
 
 # Default port (when run alone)
 # http://localhost:4000
@@ -21,7 +21,7 @@ npx emulate --service aws
 Or programmatically:
 
 ```typescript
-import { createEmulator } from 'emulate'
+import { createEmulator } from 'api-emulator'
 
 const aws = await createEmulator({ service: 'aws', port: 4006 })
 // aws.url === 'http://localhost:4006'

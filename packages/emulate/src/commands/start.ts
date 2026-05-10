@@ -48,6 +48,9 @@ function loadSeedConfig(seedPath?: string): LoadResult | null {
   }
 
   const autoFiles = [
+    "api-emulator.config.yaml",
+    "api-emulator.config.yml",
+    "api-emulator.config.json",
     "emulate.config.yaml",
     "emulate.config.yml",
     "emulate.config.json",
@@ -160,7 +163,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
     const port = (svcSeedConfig?.port as number | undefined) ?? basePort + i;
 
     if (options.portless) {
-      portlessAliases.push({ name: `${svc}.emulate`, port });
+      portlessAliases.push({ name: `${svc}.api-emulator`, port });
     }
 
     const seedBaseUrl =
@@ -238,7 +241,7 @@ function printBanner(
 ): void {
   const lines: string[] = [];
   lines.push("");
-  lines.push(`  ${pc.bold("emulate")} ${pc.dim(`v${pkg.version}`)}`);
+  lines.push(`  ${pc.bold("api-emulator")} ${pc.dim(`v${pkg.version}`)}`);
   lines.push("");
 
   const maxNameLen = Math.max(...services.map((s) => s.name.length));
@@ -259,7 +262,7 @@ function printBanner(
   if (configSource) {
     lines.push(`  ${pc.dim("Config:")} ${configSource}`);
   } else {
-    lines.push(`  ${pc.dim("Config:")} defaults ${pc.dim("(run")} npx emulate init ${pc.dim("to customize)")}`);
+    lines.push(`  ${pc.dim("Config:")} defaults ${pc.dim("(run")} npx api-emulator init ${pc.dim("to customize)")}`);
   }
   lines.push("");
 

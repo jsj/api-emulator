@@ -123,7 +123,7 @@ function ToolCallDisplay({
 }
 
 const SUGGESTIONS = [
-  "What is emulate?",
+  "What is api-emulator?",
   "How do I start the server?",
   "What GitHub APIs are supported?",
   "How do I configure OAuth?",
@@ -316,7 +316,7 @@ export function DocsChat({
   const chatPanel = (
     <>
       <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
-        <span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">emulate docs</span>
+        <span className="text-sm font-medium text-neutral-900 dark:text-neutral-100">api-emulator docs</span>
         <div className="flex items-center gap-3">
           {showMessages && (
             <button

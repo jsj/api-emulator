@@ -1,17 +1,17 @@
 ---
-name: emulate
-description: Local drop-in API emulator for Vercel, GitHub, Google, Slack, Apple, Microsoft, and AWS. Use when the user needs to start emulated services, configure seed data, write tests against local APIs, set up CI without network access, or work with the emulate CLI or programmatic API. Triggers include "start the emulator", "emulate services", "mock API locally", "create emulator config", "test against local API", "npx emulate", or any task requiring local service emulation.
-allowed-tools: Bash(npx emulate:*), Bash(emulate:*)
+name: api-emulator
+description: Local drop-in API emulator for Vercel, GitHub, Google, Slack, Apple, Microsoft, and AWS. Use when the user needs to start emulated services, configure seed data, write tests against local APIs, set up CI without network access, or work with the api-emulator CLI or programmatic API. Triggers include "start the emulator", "emulate services", "mock API locally", "create emulator config", "test against local API", "npx api-emulator", or any task requiring local service emulation.
+allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*)
 ---
 
-# Service Emulation with emulate
+# Service Emulation with api-emulator
 
 Local drop-in replacement services for CI and no-network sandboxes. Fully stateful, production-fidelity API emulation, not mocks.
 
 ## Quick Start
 
 ```bash
-npx emulate
+npx api-emulator
 ```
 
 All services start with sensible defaults:
@@ -30,25 +30,25 @@ All services start with sensible defaults:
 
 ```bash
 # Start all services (zero-config)
-npx emulate
+npx api-emulator
 
 # Start specific services
-npx emulate --service vercel,github
+npx api-emulator --service vercel,github
 
 # Custom base port (auto-increments per service)
-npx emulate --port 3000
+npx api-emulator --port 3000
 
 # Use a seed config file
-npx emulate --seed config.yaml
+npx api-emulator --seed config.yaml
 
 # Generate a starter config
-npx emulate init
+npx api-emulator init
 
 # Generate config for a specific service
-npx emulate init --service vercel
+npx api-emulator init --service vercel
 
 # List available services
-npx emulate list
+npx api-emulator list
 ```
 
 ### Options
@@ -61,20 +61,20 @@ npx emulate list
 | `--base-url` | none | Override advertised base URL (supports `{service}` template) |
 | `--portless` | off | Serve over HTTPS via portless (auto-registers aliases) |
 
-The port can also be set via `EMULATE_PORT` or `PORT` environment variables.
+The port can also be set via `API_EMULATOR_PORT` or `PORT` environment variables.
 
-The advertised base URL (used in OAuth redirects, webhook URLs, etc.) can be overridden via `--base-url`, the `EMULATE_BASE_URL` env var (supports `{service}` template), or per-service `baseUrl` in the seed config. When running under portless, the `PORTLESS_URL` env var is also detected automatically.
+The advertised base URL (used in OAuth redirects, webhook URLs, etc.) can be overridden via `--base-url`, the `API_EMULATOR_BASE_URL` env var (supports `{service}` template), or per-service `baseUrl` in the seed config. When running under portless, the `PORTLESS_URL` env var is also detected automatically.
 
 ## Programmatic API
 
 ```bash
-npm install emulate
+npm install api-emulator
 ```
 
 Each call to `createEmulator` starts a single service:
 
 ```typescript
-import { createEmulator } from 'emulate'
+import { createEmulator } from 'api-emulator'
 
 const github = await createEmulator({ service: 'github', port: 4001 })
 const vercel = await createEmulator({ service: 'vercel', port: 4002 })
@@ -93,7 +93,7 @@ await vercel.close()
 | `service` | *(required)* | `'vercel'`, `'github'`, `'google'`, `'slack'`, `'apple'`, `'microsoft'`, or `'aws'` |
 | `port` | `4000` | Port for the HTTP server |
 | `seed` | none | Inline seed data (same shape as YAML config) |
-| `baseUrl` | none | Override advertised base URL. Per-service `baseUrl` in seed config takes highest priority, then this option, then `EMULATE_BASE_URL` env var (supports `{service}`), then `PORTLESS_URL` (supports `{service}`, automatically set by the `portless` CLI wrapper), then `http://localhost:<port>`. |
+| `baseUrl` | none | Override advertised base URL. Per-service `baseUrl` in seed config takes highest priority, then this option, then `API_EMULATOR_BASE_URL` env var (supports `{service}`), then `PORTLESS_URL` (supports `{service}`, automatically set by the `portless` CLI wrapper), then `http://localhost:<port>`. |
 
 ### Instance Methods
 
@@ -106,7 +106,7 @@ await vercel.close()
 ## Vitest / Jest Setup
 
 ```typescript
-import { createEmulator, type Emulator } from 'emulate'
+import { createEmulator, type Emulator } from 'api-emulator'
 
 let github: Emulator
 let vercel: Emulator
@@ -128,12 +128,12 @@ afterAll(() => Promise.all([github.close(), vercel.close()]))
 
 Configuration is optional. The CLI auto-detects config files in this order:
 
-1. `emulate.config.yaml` / `.yml`
-2. `emulate.config.json`
+1. `api-emulator.config.yaml` / `.yml`
+2. `api-emulator.config.json`
 3. `service-emulator.config.yaml` / `.yml`
 4. `service-emulator.config.json`
 
-Or pass `--seed <file>` explicitly. Run `npx emulate init` to generate a starter file.
+Or pass `--seed <file>` explicitly. Run `npx api-emulator init` to generate a starter file.
 
 ### Config Structure
 
@@ -261,39 +261,39 @@ Each service also has a fallback user. If no token is provided, requests authent
 [portless](https://github.com/vercel-labs/portless) gives emulators trusted HTTPS URLs with auto-generated certs. Use the `--portless` flag to auto-register each service as a portless alias:
 
 ```bash
-npx emulate start --portless
-# github  https://github.emulate.localhost
-# google  https://google.emulate.localhost
+npx api-emulator start --portless
+# github  https://github.api-emulator.localhost
+# google  https://google.api-emulator.localhost
 # ...
 ```
 
-This requires the portless proxy to be running (`portless proxy start`). If portless is not installed, emulate will prompt to install it.
+This requires the portless proxy to be running (`portless proxy start`). If portless is not installed, api-emulator will prompt to install it.
 
-The `--portless` flag overwrites any existing portless aliases matching `*.emulate`. Aliases are removed automatically when emulate shuts down.
+The `--portless` flag overwrites any existing portless aliases matching `*.api-emulator`. Aliases are removed automatically when api-emulator shuts down.
 
 For a single service behind portless:
 
 ```bash
-portless github.emulate emulate start --service github
+portless github.api-emulator api-emulator start --service github
 ```
 
 For a custom base URL without portless (any reverse proxy):
 
 ```bash
-npx emulate start --base-url "https://{service}.myproxy.test"
+npx api-emulator start --base-url "https://{service}.myproxy.test"
 # or
-EMULATE_BASE_URL="https://{service}.myproxy.test" npx emulate start
+API_EMULATOR_BASE_URL="https://{service}.myproxy.test" npx api-emulator start
 ```
 
-The `PORTLESS_URL` env var is automatically set by the `portless` CLI wrapper when running a command through it (e.g. `portless github.emulate emulate start`), typically to a value like `https://{service}.emulate.localhost`. It supports `{service}` interpolation, just like `--base-url` and `EMULATE_BASE_URL`. When no explicit `baseUrl` is provided, it is used as a fallback.
+The `PORTLESS_URL` env var is automatically set by the `portless` CLI wrapper when running a command through it (e.g. `portless github.api-emulator api-emulator start`), typically to a value like `https://{service}.api-emulator.localhost`. It supports `{service}` interpolation, just like `--base-url` and `API_EMULATOR_BASE_URL`. When no explicit `baseUrl` is provided, it is used as a fallback.
 
 Per-service overrides in the seed config (these take highest priority over all other base URL sources):
 
 ```yaml
 github:
-  baseUrl: https://github.emulate.localhost
+  baseUrl: https://github.api-emulator.localhost
 google:
-  baseUrl: https://google.emulate.localhost
+  baseUrl: https://google.api-emulator.localhost
 ```
 
 ## Pointing Your App at the Emulator
@@ -326,7 +326,7 @@ By default, all emulator state is in-memory. For persistence across process rest
 import { filePersistence } from '@emulators/core'
 
 // CLI or local dev: persists to a JSON file
-const adapter = filePersistence('.emulate/state.json')
+const adapter = filePersistence('.api-emulator/state.json')
 ```
 
 ### Custom adapters
@@ -335,8 +335,8 @@ const adapter = filePersistence('.emulate/state.json')
 import type { PersistenceAdapter } from '@emulators/core'
 
 const kvAdapter: PersistenceAdapter = {
-  async load() { return await kv.get('emulate-state') },
-  async save(data) { await kv.set('emulate-state', data) },
+  async load() { return await kv.get('api-emulator-state') },
+  async save(data) { await kv.set('api-emulator-state', data) },
 }
 ```
 

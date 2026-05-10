@@ -1,7 +1,7 @@
 {
-  "name": "emulate",
+  "name": "api-emulator",
   "version": "0.5.0",
-  "description": "Local drop-in replacement services for CI and no-network sandboxes",
+  "description": "A thin spine for provider-shaped API emulators in CI and no-network sandboxes",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
@@ -15,14 +15,14 @@
   },
   "main": "./dist/api.js",
   "types": "./dist/api.d.ts",
-  "homepage": "https://emulate.dev",
+  "homepage": "https://api-emulator.jsj.sh",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vercel-labs/emulate.git",
+    "url": "https://github.com/jsj/api-emulator.git",
     "directory": "packages/emulate"
   },
   "bugs": {
-    "url": "https://github.com/vercel-labs/emulate/issues"
+    "url": "https://github.com/jsj/api-emulator/issues"
   },
   "keywords": [
     "emulator",
@@ -40,7 +40,7 @@
     "dist"
   ],
   "bin": {
-    "emulate": "./dist/index.js"
+    "api-emulator": "./dist/index.js"
   },
   "scripts": {
     "prepack": "cp ../../README.md .",

@@ -11,14 +11,14 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "homepage": "https://emulate.dev",
+  "homepage": "https://api-emulator.jsj.sh",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vercel-labs/emulate.git",
+    "url": "https://github.com/jsj/api-emulator.git",
     "directory": "packages/@emulators/google"
   },
   "bugs": {
-    "url": "https://github.com/vercel-labs/emulate/issues"
+    "url": "https://github.com/jsj/api-emulator/issues"
   },
   "publishConfig": {
     "access": "public"
