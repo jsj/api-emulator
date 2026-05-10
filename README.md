@@ -1,7 +1,7 @@
 <h1 align="center">api-emulator</h1>
 
 <p align="center">
-  A thin spine for provider-shaped API emulators, shared plugins, and private internal mocks
+  Local API emulators you can run, share, and extend with plugins
 </p>
 
 api-emulator runs local, stateful API emulators for development, CI, and no-network sandboxes. It starts with first-party providers like GitHub, Stripe, Google, Slack, AWS, Resend, and Vercel, then lets teams add their own provider-shaped plugins without forking the runtime.
@@ -246,4 +246,4 @@ See:
 
 ## License
 
-Apache-2.0
+MIT

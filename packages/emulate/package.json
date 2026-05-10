@@ -1,8 +1,8 @@
 {
   "name": "api-emulator",
   "version": "0.5.0",
-  "description": "A thin spine for provider-shaped API emulators in CI and no-network sandboxes",
-  "license": "Apache-2.0",
+  "description": "Local API emulators you can run, share, and extend with plugins",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {

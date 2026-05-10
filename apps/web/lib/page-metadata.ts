@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PAGE_TITLES } from "./page-titles";
 
-const DESCRIPTION = "A thin spine for provider-shaped API emulators in CI and no-network sandboxes.";
+const DESCRIPTION = "Local API emulators you can run, share, and extend with plugins.";
 
 export function pageMetadata(slug: string): Metadata {
   const title = PAGE_TITLES[slug];

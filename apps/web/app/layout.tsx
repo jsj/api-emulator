@@ -13,20 +13,20 @@ export const metadata: Metadata = {
     default: "api-emulator | Local API Emulation for CI & Sandboxes",
     template: "%s | api-emulator",
   },
-  description: "A thin spine for provider-shaped API emulators in CI and no-network sandboxes.",
+  description: "Local API emulators you can run, share, and extend with plugins.",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://api-emulator.jsj.sh",
     siteName: "api-emulator",
     title: "api-emulator | Local API Emulation for CI & Sandboxes",
-    description: "A thin spine for provider-shaped API emulators in CI and no-network sandboxes.",
+    description: "Local API emulators you can run, share, and extend with plugins.",
     images: [{ url: "/og", width: 1200, height: 630, alt: "api-emulator" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "api-emulator | Local API Emulation for CI & Sandboxes",
-    description: "A thin spine for provider-shaped API emulators in CI and no-network sandboxes.",
+    description: "Local API emulators you can run, share, and extend with plugins.",
     images: ["/og"],
   },
 };
