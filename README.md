@@ -4,7 +4,7 @@
   Local API emulators you can run, share, and extend with plugins
 </p>
 
-api-emulator runs local, stateful API emulators for development, CI, and no-network sandboxes. It starts with first-party providers like GitHub, Stripe, Google, Slack, AWS, Resend, and Vercel, then lets teams add their own provider-shaped plugins without forking the runtime.
+api-emulator runs local, stateful API emulators for development, CI, and no-network sandboxes. The core package is a runtime plus a default plugin catalog; teams can load public, shared, or private provider-shaped plugins without forking the runtime.
 
 ## Install
 
@@ -18,12 +18,12 @@ For one-off CLI usage:
 npx api-emulator
 ```
 
-No API keys, Docker daemon, or external sandbox accounts are required for the default plugin set.
+No API keys, Docker daemon, or external sandbox accounts are required for the default plugin catalog.
 
 ## CLI
 
 ```bash
-# Start all default plugins
+# Start the default plugin catalog
 npx api-emulator
 
 # Start a subset
@@ -51,7 +51,7 @@ Resend        https://resend.api-emulator.localhost
 AWS           https://aws.api-emulator.localhost
 ```
 
-The CLI reads `API_EMULATOR_PORT`, `API_EMULATOR_BASE_URL`, and `PORTLESS_URL`. It also accepts the older `EMULATE_PORT`, `EMULATE_BASE_URL`, and `emulate.config.*` names for migration compatibility.
+The CLI reads `API_EMULATOR_PORT`, `API_EMULATOR_BASE_URL`, and `PORTLESS_URL`. It also accepts `EMULATE_PORT`, `EMULATE_BASE_URL`, and `emulate.config.*` names as migration compatibility aliases.
 
 ## Canonical API
 
@@ -76,11 +76,13 @@ Each emulator instance exposes:
 
 ## Plugins
 
-api-emulator is designed around a small runtime spine and provider-shaped plugins.
+api-emulator is designed around a small runtime spine and provider-shaped plugins. The default providers are loaded from `packages/emulate/src/default-plugin-catalog.ts`; external plugin modules are normalized by `packages/emulate/src/external-plugin-adapter.ts`.
+
+Public external plugins live at [`jsj/api-emulator-plugins`](https://github.com/jsj/api-emulator-plugins). Private teams can keep the same shape in internal repos.
 
 ```bash
-npx api-emulator --plugin ./plugins/@posthog/api-emulator.mjs --service posthog
-npx api-emulator --plugin ./plugins/@github/api-emulator.mjs,./plugins/@apple/api-emulator.mjs
+npx api-emulator --plugin ./api-emulator-plugins/@posthog/api-emulator.mjs --service posthog
+npx api-emulator --plugin ./api-emulator-plugins/@github/api-emulator.mjs,./api-emulator-plugins/@apple/api-emulator.mjs
 ```
 
 A plugin exports a `ServicePlugin`:
@@ -90,13 +92,13 @@ import type { ServicePlugin } from '@emulators/core'
 
 export const plugin: ServicePlugin = {
   name: 'internal-billing',
-  register(app, ctx) {
+  register(app, store, webhooks, baseUrl) {
     app.get('/v1/customers', (c) => c.json({ data: [] }))
   },
 }
 ```
 
-Plugins can be public, shared inside a team, or private to one product. The runtime only needs the provider interface: routes, state, seed data, inspect pages, and control endpoints.
+Plugins can also export `label`, `endpoints`, `initConfig`, `seedFromConfig`, and `defaultFallback`. The runtime keeps plugin lifecycle in one service-runtime module, so CLI and programmatic usage share the same seed, reset, token, and close behavior.
 
 ## Configuration
 
@@ -138,13 +140,16 @@ The CLI auto-detects:
 - `api-emulator.config.yaml`
 - `api-emulator.config.yml`
 - `api-emulator.config.json`
+- `emulate.config.yaml`
+- `emulate.config.yml`
+- `emulate.config.json`
 - `service-emulator.config.yaml`
 - `service-emulator.config.yml`
 - `service-emulator.config.json`
 
-## Default plugins
+## Default plugin catalog
 
-api-emulator ships with a default plugin set so first run is useful, but these providers live as plugins rather than as the core runtime:
+api-emulator ships with a default plugin catalog so first run is useful, but these providers are catalog entries rather than hard-coded runtime behavior:
 
 - Vercel API
 - GitHub REST, OAuth, Apps, Actions, checks, statuses, and webhooks
@@ -191,6 +196,21 @@ This gives local routes like:
 - Keep private team plugins outside the public runtime until the interface proves stable.
 - Use inspect and control endpoints for deterministic tests instead of sleeping or polling real systems.
 
+## Development
+
+This monorepo uses Bun.
+
+```bash
+bun install
+bun run build
+bun run format:check
+bun run type-check
+bun run lint
+bun run test
+```
+
+Release publishing also uses `bun pm pack` before `npm publish` so workspace dependencies resolve in package tarballs.
+
 ## Examples
 
 See:
@@ -205,12 +225,12 @@ See:
 - Stateful local provider APIs for development and CI
 - One CLI that can start many providers at predictable ports
 - Trusted local HTTPS names through portless
-- External plugin loading from files or package names
+- External plugin loading from files or package names through a dedicated adapter seam
 - YAML and JSON seed data
 - Programmatic test API with reset and close hooks
 - Shared core store, auth, persistence, UI, webhooks, and inspect pages
 - Next.js embedded mode for same-origin OAuth and SDK flows
-- Public, shared, default, and private plugin workflows
+- Public, shared, default-catalog, and private plugin workflows
 
 ## FAQ
 
