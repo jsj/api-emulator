@@ -12,7 +12,7 @@ export const maxDuration = 60;
 
 const DEFAULT_MODEL = "anthropic/claude-haiku-4.5";
 
-const SYSTEM_PROMPT = `You are a helpful documentation assistant for api-emulator, a thin spine for provider-shaped API emulators used in CI and no-network sandboxes.
+const SYSTEM_PROMPT = `You are a helpful documentation assistant for api-emulator, a local API emulator runtime for development, CI, and no-network sandboxes that can be extended with plugins.
 
 api-emulator provides fully stateful, production-fidelity API emulation, not mocks. The CLI is installed as the "api-emulator" npm package and run via "npx api-emulator". It also supports a programmatic API via createEmulator and a Next.js adapter (@emulators/adapter-next) for embedding emulators in your app.
 
