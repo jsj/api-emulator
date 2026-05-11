@@ -22,7 +22,7 @@ export async function initCommand(options: InitOptions): Promise<void> {
       ?.split(",")
       .map((s) => s.trim())
       .filter(Boolean) ?? [];
-  const pluginModules = await resolvePluginModules(pluginSpecifiers);
+  const pluginModules = await resolvePluginModules(pluginSpecifiers, { includeInstalled: true });
   const availableServices = Object.keys(pluginModules);
 
   let config: Record<string, unknown>;

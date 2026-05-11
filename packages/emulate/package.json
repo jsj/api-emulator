@@ -1,6 +1,6 @@
 {
   "name": "api-emulator",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Local API emulators you can run, share, and extend with plugins",
   "license": "MIT",
   "type": "module",
@@ -40,6 +40,7 @@
     "dist"
   ],
   "bin": {
+    "api": "./dist/index.js",
     "api-emulator": "./dist/index.js"
   },
   "scripts": {
@@ -56,19 +57,19 @@
     "commander": "^14",
     "picocolors": "^1.1.1",
     "yaml": "^2",
-    "@emulators/core": "workspace:*",
-    "@emulators/github": "workspace:*",
-    "@emulators/apple": "workspace:*",
-    "@emulators/microsoft": "workspace:*",
-    "@emulators/okta": "workspace:*",
-    "@emulators/aws": "workspace:*",
-    "@emulators/google": "workspace:*",
-    "@emulators/mongoatlas": "workspace:*",
-    "@emulators/slack": "workspace:*",
-    "@emulators/vercel": "workspace:*",
-    "@emulators/resend": "workspace:*",
-    "@emulators/stripe": "workspace:*",
-    "@emulators/clerk": "workspace:*"
+    "@emulators/core": "0.5.0",
+    "@emulators/github": "0.5.0",
+    "@emulators/apple": "0.5.0",
+    "@emulators/microsoft": "0.5.0",
+    "@emulators/okta": "0.5.0",
+    "@emulators/aws": "0.5.0",
+    "@emulators/google": "0.5.0",
+    "@emulators/mongoatlas": "0.5.0",
+    "@emulators/slack": "0.5.0",
+    "@emulators/vercel": "0.5.0",
+    "@emulators/resend": "0.5.0",
+    "@emulators/stripe": "0.5.0",
+    "@emulators/clerk": "0.5.0"
   },
   "devDependencies": {
     "tsup": "^8",

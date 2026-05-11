@@ -1,4 +1,5 @@
 import type { ServicePlugin, Store, AppKeyResolver, AuthFallback, WebhookDispatcher } from "@emulators/core";
+import type { PluginManifest } from "./plugin-manifest.js";
 
 export interface LoadedPlugin {
   plugin: ServicePlugin;
@@ -10,6 +11,7 @@ export interface PluginModule {
   name: string;
   label: string;
   endpoints: string;
+  manifest?: PluginManifest;
   load(): Promise<LoadedPlugin>;
   defaultFallback(svcSeedConfig?: Record<string, unknown>): AuthFallback;
   initConfig: Record<string, unknown>;

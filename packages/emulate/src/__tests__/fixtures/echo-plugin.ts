@@ -12,10 +12,13 @@ export function seedFromConfig(store: Store, _baseUrl: string, config: unknown):
   store.setData("echo:config", config);
 }
 
-export const label = "Echo test plugin";
-export const endpoints = "ping";
-export const initConfig = {
-  echo: {
-    message: "hello",
+export const manifest = {
+  name: "echo",
+  label: "Echo test plugin",
+  endpoints: "ping",
+  initConfig: {
+    echo: {
+      message: "hello",
+    },
   },
 };

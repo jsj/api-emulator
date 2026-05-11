@@ -10,7 +10,7 @@ export async function listCommand(options: ListOptions = {}): Promise<void> {
       ?.split(",")
       .map((s) => s.trim())
       .filter(Boolean) ?? [];
-  const pluginModules = await resolvePluginModules(pluginSpecifiers);
+  const pluginModules = await resolvePluginModules(pluginSpecifiers, { includeInstalled: true });
 
   console.log("\nAvailable services:\n");
   for (const pluginModule of Object.values(pluginModules)) {

@@ -2,6 +2,7 @@ import { Command } from "commander";
 import { startCommand } from "./commands/start.js";
 import { initCommand } from "./commands/init.js";
 import { listCommand } from "./commands/list.js";
+import { installCommand } from "./commands/install.js";
 
 declare const PKG_VERSION: string;
 const pkg = { version: PKG_VERSION };
@@ -56,6 +57,22 @@ program
   .option("--plugin <plugins>", "Comma-separated external plugin paths or package names")
   .action(async (opts) => {
     await listCommand({ plugin: opts.plugin });
+  });
+
+program
+  .command("install <plugin>")
+  .description("Install a provider plugin by name")
+  .option("--package-manager <name>", "Package manager to use")
+  .option("--no-package-manager", "Only record the plugin in api-emulator.lock")
+  .action(async (plugin, opts) => {
+    try {
+      await installCommand(plugin, {
+        packageManager: opts.packageManager === false ? false : opts.packageManager,
+      });
+    } catch (err) {
+      console.error(err instanceof Error ? err.message : err);
+      process.exit(1);
+    }
   });
 
 program.parse();
