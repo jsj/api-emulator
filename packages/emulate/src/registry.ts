@@ -1,4 +1,5 @@
 import { loadExternalPluginModule } from "./external-plugin-adapter.js";
+import { getLockedPluginSpecifiers } from "./plugin-lock.js";
 import {
   DEFAULT_PLUGIN_REGISTRY,
   DEFAULT_PLUGIN_NAMES,
@@ -8,6 +9,10 @@ import {
 import type { PluginModule } from "./plugin-types.js";
 export { DEFAULT_PLUGIN_REGISTRY, DEFAULT_PLUGIN_NAMES, SERVICE_NAMES, type ServiceName };
 export type { LoadedPlugin, LoadedService, PluginModule, ServiceEntry } from "./plugin-types.js";
+
+export interface ResolvePluginModulesOptions {
+  includeInstalled?: boolean;
+}
 
 export const DEFAULT_TOKENS = {
   tokens: {
@@ -22,8 +27,13 @@ export const DEFAULT_TOKENS = {
   },
 };
 
-export async function resolvePluginModules(pluginSpecifiers: string[] = []): Promise<Record<string, PluginModule>> {
-  const results = await Promise.all(pluginSpecifiers.map(loadExternalPluginModule));
+export async function resolvePluginModules(
+  pluginSpecifiers: string[] = [],
+  options: ResolvePluginModulesOptions = {},
+): Promise<Record<string, PluginModule>> {
+  const installedSpecifiers = options.includeInstalled ? getLockedPluginSpecifiers() : [];
+  const allSpecifiers = [...installedSpecifiers, ...pluginSpecifiers];
+  const results = await Promise.all(allSpecifiers.map(loadExternalPluginModule));
 
   const externalEntries: Record<string, PluginModule> = {};
   for (const pluginModule of results) {

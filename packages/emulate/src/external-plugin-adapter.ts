@@ -1,5 +1,6 @@
 import type { ServicePlugin, Store, AuthFallback, WebhookDispatcher } from "@emulators/core";
 import { isAbsolute, resolve } from "path";
+import { readPluginManifest, validatePluginManifest, type PluginManifest } from "./plugin-manifest.js";
 import type { PluginModule } from "./plugin-types.js";
 
 export interface ExternalPluginModule {
@@ -8,6 +9,8 @@ export interface ExternalPluginModule {
   seedFromConfig?(store: Store, baseUrl: string, config: unknown, webhooks?: WebhookDispatcher): void;
   label?: string;
   endpoints?: string;
+  manifest?: PluginManifest;
+  contract?: unknown;
   defaultFallback?(svcSeedConfig?: Record<string, unknown>): AuthFallback;
   initConfig?: Record<string, unknown>;
 }
@@ -22,10 +25,12 @@ export async function loadExternalPluginModule(specifier: string): Promise<Plugi
   }
 
   const name = plugin.name;
+  const manifest = validatePluginManifest(readPluginManifest(mod), name);
   return {
     name,
-    label: mod.label ?? `${name} (external plugin)`,
-    endpoints: mod.endpoints ?? "",
+    label: manifest.label,
+    endpoints: manifest.endpoints,
+    manifest,
     async load() {
       return {
         plugin,
@@ -33,7 +38,7 @@ export async function loadExternalPluginModule(specifier: string): Promise<Plugi
       };
     },
     defaultFallback: mod.defaultFallback ?? (() => ({ login: "admin", id: 1, scopes: [] })),
-    initConfig: mod.initConfig ?? {},
+    initConfig: manifest.initConfig,
   };
 }
 

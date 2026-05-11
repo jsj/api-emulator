@@ -94,7 +94,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
       .filter(Boolean) ?? [];
   let allPluginModules: Record<string, PluginModule>;
   try {
-    allPluginModules = await resolvePluginModules(pluginSpecifiers);
+    allPluginModules = await resolvePluginModules(pluginSpecifiers, { includeInstalled: true });
   } catch (err) {
     console.error(`Failed to load plugins: ${err instanceof Error ? err.message : err}`);
     process.exit(1);
