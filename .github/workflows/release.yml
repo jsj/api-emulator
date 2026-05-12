@@ -28,7 +28,7 @@ permissions:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  RUNTIME_PACKAGES: adapter-next core
+  RUNTIME_PACKAGES: core adapter-next
 
 jobs:
   check-release:
@@ -50,7 +50,7 @@ jobs:
           SHOULD_RELEASE=false
           DRY_RUN="${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}"
           FORCE_RELEASE="${{ github.event_name == 'workflow_dispatch' && inputs.force }}"
-          PUBLISH_RUNTIME="${{ github.event_name == 'workflow_dispatch' && inputs.publish_runtime }}"
+          PUBLISH_RUNTIME="${{ github.event_name != 'workflow_dispatch' || inputs.publish_runtime }}"
 
           REGISTRY_VERSION=$(npm view api-emulator version 2>/dev/null || echo "0.0.0")
           echo "api-emulator — local: $LOCAL_VERSION, registry: $REGISTRY_VERSION"
@@ -61,6 +61,9 @@ jobs:
           for pkg in $RUNTIME_PACKAGES; do
             REGISTRY_VERSION=$(npm view "@api-emulator/$pkg" version 2>/dev/null || echo "0.0.0")
             echo "@api-emulator/$pkg — local: $LOCAL_VERSION, registry: $REGISTRY_VERSION"
+            if [ "$PUBLISH_RUNTIME" = "true" ] && [ "$LOCAL_VERSION" != "$REGISTRY_VERSION" ]; then
+              SHOULD_RELEASE=true
+            fi
           done
 
           if [ "$DRY_RUN" = "true" ] || [ "$FORCE_RELEASE" = "true" ]; then
@@ -161,8 +164,6 @@ jobs:
             rm -rf "$TMP_DIR"
           }
 
-          publish_pkg packages/api-emulator api-emulator
-
           if [ "$PUBLISH_RUNTIME" = "true" ]; then
             for pkg in $RUNTIME_PACKAGES; do
               publish_pkg "packages/@api-emulator/$pkg" "@api-emulator/$pkg"
@@ -170,6 +171,8 @@ jobs:
           else
             echo "Skipping @api-emulator/* runtime packages. Enable publish_runtime after the npm scope exists."
           fi
+
+          publish_pkg packages/api-emulator api-emulator
 
           if [ -n "$FAILED" ]; then
             echo "Failed to publish:$FAILED"

@@ -1,6 +1,17 @@
 # Changelog
 
 <!-- release:start -->
+## 0.5.2
+
+### Fixes
+
+- Publish the corrected package shape with `@api-emulator/core` instead of the legacy `@emulators/*` runtime dependencies.
+- Publish runtime packages before the CLI package so npm dependency resolution works on fresh installs.
+- Fix the npm README cover image by using an absolute GitHub asset URL.
+- Add fixture capture and replay APIs for stabilizing stateful and stochastic emulator runs.
+
+<!-- release:end -->
+
 ## 0.5.1
 
 ### Stability
@@ -9,8 +20,6 @@
 - Synced release package versions and runtime emulator dependency versions.
 - Tightened agent skill command examples around `npx -p api-emulator api`.
 - Added plugin shelf discovery for public and internal provider packages.
-
-<!-- release:end -->
 
 ## 0.5.0
 
