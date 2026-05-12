@@ -54,9 +54,6 @@ jobs:
           for pkg in $RUNTIME_PACKAGES; do
             REGISTRY_VERSION=$(npm view "@api-emulator/$pkg" version 2>/dev/null || echo "0.0.0")
             echo "@api-emulator/$pkg — local: $LOCAL_VERSION, registry: $REGISTRY_VERSION"
-            if [ "$LOCAL_VERSION" != "$REGISTRY_VERSION" ]; then
-              SHOULD_RELEASE=true
-            fi
           done
 
           if [ "$DRY_RUN" = "true" ] || [ "$FORCE_RELEASE" = "true" ]; then
