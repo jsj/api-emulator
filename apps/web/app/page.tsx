@@ -141,7 +141,7 @@ stripe.config.host = `}</span>
             <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
               <div className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">Programmatic API</div>
               <p className="mb-3 text-sm text-neutral-600 dark:text-neutral-400">
-                Import into Vitest or Jest. Start per-suite, reset between tests.
+                Import into Vitest or Jest. Start per-suite, reset or replay fixtures between tests.
               </p>
               <div className="overflow-hidden rounded-md bg-neutral-100 dark:bg-neutral-900">
                 <pre className="overflow-x-auto px-3 py-2 font-mono text-xs text-neutral-700 dark:text-neutral-300">

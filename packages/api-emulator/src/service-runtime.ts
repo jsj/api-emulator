@@ -1,4 +1,15 @@
-import { createServer, type AppKeyResolver, type Store } from "@api-emulator/core";
+import {
+  createServer,
+  createStoreFixture,
+  fixtureStoreSnapshot,
+  type AppKeyResolver,
+  type FixtureInteraction,
+  type FixtureSource,
+  type Store,
+  type StoreFixture,
+  type StoreFixtureOptions,
+  type StoreSnapshot,
+} from "@api-emulator/core";
 import { serve } from "@hono/node-server";
 import type { LoadedPlugin, PluginModule } from "./registry.js";
 
@@ -23,6 +34,10 @@ export interface RunningService {
   service: string;
   url: string;
   store: Store;
+  snapshot(): StoreSnapshot;
+  restore(fixture: FixtureSource): void;
+  exportFixture(options?: StoreFixtureOptions): StoreFixture;
+  resetToFixture(fixture: FixtureSource): void;
   reset(): void;
   close(): Promise<void>;
 }
@@ -72,6 +87,23 @@ export function createServiceRuntime(options: ServiceRuntimeOptions): RunningSer
     service,
     url: baseUrl,
     store,
+    snapshot() {
+      return store.snapshot();
+    },
+    restore(fixture) {
+      store.restore(fixtureStoreSnapshot(fixture));
+    },
+    exportFixture(options = {}) {
+      const interactions = store.getData<FixtureInteraction[]>("api-emulator:interactions");
+      return createStoreFixture(service, store.snapshot(), {
+        ...options,
+        interactions: options.interactions ?? interactions,
+      });
+    },
+    resetToFixture(fixture) {
+      store.reset();
+      store.restore(fixtureStoreSnapshot(fixture));
+    },
     reset() {
       store.reset();
       seed();

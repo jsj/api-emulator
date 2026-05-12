@@ -94,6 +94,22 @@ afterAll(() => Promise.all([github.close(), vercel.close()]))
       <td>Base URL of the running server</td>
     </tr>
     <tr>
+      <td><code>snapshot()</code></td>
+      <td>Capture the current store snapshot</td>
+    </tr>
+    <tr>
+      <td><code>restore(fixture)</code></td>
+      <td>Restore a store snapshot or exported fixture</td>
+    </tr>
+    <tr>
+      <td><code>exportFixture(options?)</code></td>
+      <td>Export a fixture envelope with store state and recorded interactions</td>
+    </tr>
+    <tr>
+      <td><code>resetToFixture(fixture)</code></td>
+      <td>Reset state to a captured fixture</td>
+    </tr>
+    <tr>
       <td><code>reset()</code></td>
       <td>Wipe the store and replay seed data</td>
     </tr>
@@ -103,6 +119,16 @@ afterAll(() => Promise.all([github.close(), vercel.close()]))
     </tr>
   </tbody>
 </table>
+
+### Fixtures
+
+Use fixtures to stabilize a stochastic or stateful run:
+
+```typescript
+const fixture = github.exportFixture({ metadata: { name: 'pull-request-flow' } })
+
+github.resetToFixture(fixture)
+```
 
 ## Scoped packages
 

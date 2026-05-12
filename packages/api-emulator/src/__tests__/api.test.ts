@@ -55,6 +55,40 @@ describe("createEmulator", () => {
     expect(await resetConfigRes.json()).toEqual({ message: "hello" });
   });
 
+  it("exports and restores fixtures", async () => {
+    const echo = await createEmulator({
+      service: "echo",
+      port: 14025,
+      plugins: [resolve("src/__tests__/fixtures/echo-plugin.ts")],
+      seed: { echo: { message: "seed" } },
+    });
+    emulators.push(echo);
+
+    await fetch(`${echo.url}/config`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: "captured" }),
+    });
+
+    const fixture = echo.exportFixture({ metadata: { name: "captured-run" } });
+    expect(fixture.service).toBe("echo");
+    expect(fixture.metadata).toEqual({ name: "captured-run" });
+
+    await fetch(`${echo.url}/config`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: "changed" }),
+    });
+
+    echo.resetToFixture(fixture);
+    const fixtureConfigRes = await fetch(`${echo.url}/config`);
+    expect(await fixtureConfigRes.json()).toEqual({ message: "captured" });
+
+    echo.reset();
+    const resetConfigRes = await fetch(`${echo.url}/config`);
+    expect(await resetConfigRes.json()).toEqual({ message: "seed" });
+  });
+
   it("throws on unknown service", async () => {
     await expect(createEmulator({ service: "unknown-svc" })).rejects.toThrow("Unknown service");
   });

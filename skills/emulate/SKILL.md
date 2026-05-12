@@ -100,6 +100,10 @@ await vercel.close()
 | Method | Description |
 |--------|-------------|
 | `url` | Base URL of the running server |
+| `snapshot()` | Capture the current store snapshot |
+| `restore(fixture)` | Restore a store snapshot or exported fixture |
+| `exportFixture(options?)` | Export a named fixture envelope with store state and recorded interactions |
+| `resetToFixture(fixture)` | Reset state to a captured fixture |
 | `reset()` | Wipe the store and replay seed data |
 | `close()` | Shut down the HTTP server, returns a Promise |
 

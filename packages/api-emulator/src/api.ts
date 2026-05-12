@@ -1,10 +1,18 @@
 import { resolvePluginModules } from "./registry.js";
 export type { ServiceName } from "./registry.js";
 import type { ServiceName } from "./registry.js";
+import type { FixtureSource, StoreFixture, StoreFixtureOptions, StoreSnapshot } from "@api-emulator/core";
 import { resolveBaseUrl } from "./base-url.js";
 import { createAuthTokens, createServiceRuntime, type SeedConfig } from "./service-runtime.js";
 
 export type { SeedConfig };
+export type {
+  FixtureInteraction,
+  FixtureSource,
+  StoreFixture,
+  StoreFixtureOptions,
+  StoreSnapshot,
+} from "@api-emulator/core";
 
 export interface EmulatorOptions {
   service: ServiceName | (string & {});
@@ -16,6 +24,10 @@ export interface EmulatorOptions {
 
 export interface Emulator {
   url: string;
+  snapshot(): StoreSnapshot;
+  restore(fixture: FixtureSource): void;
+  exportFixture(options?: StoreFixtureOptions): StoreFixture;
+  resetToFixture(fixture: FixtureSource): void;
   reset(): void;
   close(): Promise<void>;
 }
@@ -47,6 +59,10 @@ export async function createEmulator(options: EmulatorOptions): Promise<Emulator
 
   return {
     url: running.url,
+    snapshot: running.snapshot,
+    restore: running.restore,
+    exportFixture: running.exportFixture,
+    resetToFixture: running.resetToFixture,
     reset: running.reset,
     close: running.close,
   };
