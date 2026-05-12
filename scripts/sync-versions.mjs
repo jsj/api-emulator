@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Reads the version from packages/emulate/package.json (the canonical
+ * Reads the version from packages/api-emulator/package.json (the canonical
  * source), writes it to runtime package package.json files, and keeps
  * api-emulator's runtime package dependencies aligned.
  *
@@ -15,10 +15,10 @@ import { join } from "path";
 import { fileURLToPath } from "url";
 
 const root = join(fileURLToPath(import.meta.url), "../..");
-const emulatePkgPath = join(root, "packages/emulate/package.json");
-const runtimePackageDirs = ["packages/@emulators/adapter-next", "packages/@emulators/core"];
+const apiEmulatorPkgPath = join(root, "packages/api-emulator/package.json");
+const runtimePackageDirs = ["packages/@api-emulator/adapter-next", "packages/@api-emulator/core"];
 
-const canonicalPkg = JSON.parse(readFileSync(emulatePkgPath, "utf8"));
+const canonicalPkg = JSON.parse(readFileSync(apiEmulatorPkgPath, "utf8"));
 const version = canonicalPkg.version;
 
 const check = process.argv.includes("--check");
@@ -45,7 +45,7 @@ for (const dir of runtimePackageDirs) {
 }
 
 for (const [name, currentVersion] of Object.entries(canonicalPkg.dependencies ?? {})) {
-  if (!name.startsWith("@emulators/")) continue;
+  if (!name.startsWith("@api-emulator/")) continue;
   if (currentVersion === version) continue;
 
   if (check) {
@@ -57,7 +57,7 @@ for (const [name, currentVersion] of Object.entries(canonicalPkg.dependencies ??
 }
 
 if (!check) {
-  writeFileSync(emulatePkgPath, JSON.stringify(canonicalPkg, null, 2) + "\n");
+  writeFileSync(apiEmulatorPkgPath, JSON.stringify(canonicalPkg, null, 2) + "\n");
 }
 
 if (check && mismatches.length > 0) {

@@ -9,8 +9,8 @@ emulate.config.yml
 !.env.example
 .DS_Store
 
-# emulate CLI README is copied from root by prepack
-packages/emulate/README.md
+# api-emulator CLI README is copied from root by prepack
+packages/api-emulator/README.md
 
 # opensrc - source code for packages
 opensrc/

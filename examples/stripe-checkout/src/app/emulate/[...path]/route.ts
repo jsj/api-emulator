@@ -1,5 +1,5 @@
-import { createEmulateHandler } from "@emulators/adapter-next";
-import type { ServicePlugin } from "@emulators/core";
+import { createEmulateHandler } from "@api-emulator/adapter-next";
+import type { ServicePlugin } from "@api-emulator/core";
 
 const stripePlugin: ServicePlugin = {
   name: "stripe",

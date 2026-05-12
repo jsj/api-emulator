@@ -5,6 +5,15 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build and pack without publishing or creating a GitHub release"
+        type: boolean
+        default: true
+      force:
+        description: "Run the release workflow even when versions match the registry"
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,6 +32,7 @@ jobs:
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}
       version: ${{ steps.check.outputs.version }}
+      dry_run: ${{ steps.check.outputs.dry_run }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,8 +40,10 @@ jobs:
       - name: Compare versions to registry
         id: check
         run: |
-          LOCAL_VERSION=$(node -p "require('./packages/emulate/package.json').version")
+          LOCAL_VERSION=$(node -p "require('./packages/api-emulator/package.json').version")
           SHOULD_RELEASE=false
+          DRY_RUN="${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}"
+          FORCE_RELEASE="${{ github.event_name == 'workflow_dispatch' && inputs.force }}"
 
           REGISTRY_VERSION=$(npm view api-emulator version 2>/dev/null || echo "0.0.0")
           echo "api-emulator — local: $LOCAL_VERSION, registry: $REGISTRY_VERSION"
@@ -40,15 +52,20 @@ jobs:
           fi
 
           for pkg in $RUNTIME_PACKAGES; do
-            REGISTRY_VERSION=$(npm view "@emulators/$pkg" version 2>/dev/null || echo "0.0.0")
-            echo "@emulators/$pkg — local: $LOCAL_VERSION, registry: $REGISTRY_VERSION"
+            REGISTRY_VERSION=$(npm view "@api-emulator/$pkg" version 2>/dev/null || echo "0.0.0")
+            echo "@api-emulator/$pkg — local: $LOCAL_VERSION, registry: $REGISTRY_VERSION"
             if [ "$LOCAL_VERSION" != "$REGISTRY_VERSION" ]; then
               SHOULD_RELEASE=true
             fi
           done
 
+          if [ "$DRY_RUN" = "true" ] || [ "$FORCE_RELEASE" = "true" ]; then
+            SHOULD_RELEASE=true
+          fi
+
           echo "should_release=$SHOULD_RELEASE" >> "$GITHUB_OUTPUT"
           echo "version=$LOCAL_VERSION" >> "$GITHUB_OUTPUT"
+          echo "dry_run=$DRY_RUN" >> "$GITHUB_OUTPUT"
 
   publish:
     name: Publish
@@ -80,30 +97,68 @@ jobs:
         run: bun run build
 
       - name: Publish packages
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           LOCAL_VERSION="${{ needs.check-release.outputs.version }}"
+          DRY_RUN="${{ needs.check-release.outputs.dry_run }}"
           FAILED=""
+          PUBLISH_ARGS="--provenance --access public"
 
-          # bun pm pack resolves workspace:* protocols in the tarball;
-          # npm publish handles OIDC trusted-publisher auth.
+          if [ "$DRY_RUN" = "true" ]; then
+            PUBLISH_ARGS="--dry-run --access public"
+            echo "Dry run enabled; packages will be packed but not published"
+          elif [ -n "${NPM_TOKEN:-}" ]; then
+            npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+            echo "Using NPM_TOKEN for npm authentication"
+          else
+            echo "Using npm trusted publishing for authentication"
+          fi
+
           publish_pkg() {
             local dir="$1" name="$2"
             REGISTRY_VERSION=$(npm view "$name" version 2>/dev/null || echo "0.0.0")
-            if [ "$LOCAL_VERSION" = "$REGISTRY_VERSION" ]; then
+            if [ "$DRY_RUN" != "true" ] && [ "$LOCAL_VERSION" = "$REGISTRY_VERSION" ]; then
               echo "$name@$LOCAL_VERSION already published, skipping"
               return 0
             fi
             echo "Publishing $name@$LOCAL_VERSION..."
-            TARBALL=$(cd "$dir" && bun pm pack --destination /tmp --quiet | tail -1)
-            if ! npm publish "$TARBALL" --provenance --access public; then
+            TMP_DIR=$(mktemp -d)
+            cp "$dir/package.json" "$TMP_DIR/package.json"
+            cp -R "$dir/dist" "$TMP_DIR/dist"
+            if [ -f "$dir/README.md" ]; then
+              cp "$dir/README.md" "$TMP_DIR/README.md"
+            elif [ "$name" = "api-emulator" ] && [ -f README.md ]; then
+              cp README.md "$TMP_DIR/README.md"
+            fi
+            node - "$TMP_DIR/package.json" "$LOCAL_VERSION" <<'NODE'
+          const fs = require("node:fs");
+          const [file, version] = process.argv.slice(2);
+          const pkg = JSON.parse(fs.readFileSync(file, "utf8"));
+          pkg.publishConfig = { ...pkg.publishConfig, access: "public" };
+          for (const field of ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"]) {
+            for (const [dep, spec] of Object.entries(pkg[field] ?? {})) {
+              if (spec === "workspace:*") {
+                pkg[field][dep] = version;
+              }
+            }
+          }
+          if (pkg.scripts) {
+            delete pkg.scripts.prepack;
+          }
+          fs.writeFileSync(file, `${JSON.stringify(pkg, null, 2)}\n`);
+          NODE
+            TARBALL=$(cd "$TMP_DIR" && npm pack --pack-destination /tmp --json | node -e 'let input = ""; process.stdin.on("data", chunk => input += chunk); process.stdin.on("end", () => process.stdout.write(`/tmp/${JSON.parse(input)[0].filename}`));')
+            if ! npm publish "$TARBALL" $PUBLISH_ARGS; then
               FAILED="$FAILED $name"
             fi
+            rm -rf "$TMP_DIR"
           }
 
-          publish_pkg packages/emulate api-emulator
+          publish_pkg packages/api-emulator api-emulator
 
           for pkg in $RUNTIME_PACKAGES; do
-            publish_pkg "packages/@emulators/$pkg" "@emulators/$pkg"
+            publish_pkg "packages/@api-emulator/$pkg" "@api-emulator/$pkg"
           done
 
           if [ -n "$FAILED" ]; then
@@ -114,7 +169,7 @@ jobs:
   github-release:
     name: Create GitHub Release
     needs: [check-release, publish]
-    if: needs.check-release.outputs.should_release == 'true'
+    if: needs.check-release.outputs.should_release == 'true' && needs.check-release.outputs.dry_run != 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write

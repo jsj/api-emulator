@@ -1,4 +1,4 @@
-import { createServer, type AppKeyResolver, type Store } from "@emulators/core";
+import { createServer, type AppKeyResolver, type Store } from "@api-emulator/core";
 import { serve } from "@hono/node-server";
 import type { LoadedPlugin, PluginModule } from "./registry.js";
 

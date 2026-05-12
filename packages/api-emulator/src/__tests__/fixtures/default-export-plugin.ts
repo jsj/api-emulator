@@ -1,4 +1,4 @@
-import type { ServicePlugin } from "@emulators/core";
+import type { ServicePlugin } from "@api-emulator/core";
 
 const plugin: ServicePlugin = {
   name: "defaulted",

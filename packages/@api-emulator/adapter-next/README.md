@@ -1,4 +1,4 @@
-# @emulators/adapter-next
+# @api-emulator/adapter-next
 
 Next.js App Router integration for emulate. Embed emulators directly in your Next.js app so they run on the same origin, solving the Vercel preview deployment problem where OAuth callback URLs change with every deployment.
 
@@ -7,7 +7,7 @@ Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replace
 ## Install
 
 ```bash
-npm install @emulators/adapter-next
+npm install @api-emulator/adapter-next
 ```
 
 ## Route handler
@@ -16,8 +16,8 @@ Create a catch-all route that serves emulator traffic:
 
 ```typescript
 // app/emulate/[...path]/route.ts
-import { createEmulateHandler } from '@emulators/adapter-next'
-import type { ServicePlugin } from '@emulators/core'
+import { createEmulateHandler } from '@api-emulator/adapter-next'
+import type { ServicePlugin } from '@api-emulator/core'
 
 const localPlugin: ServicePlugin = {
   name: 'local',
@@ -61,7 +61,7 @@ Emulator UI pages use bundled fonts. Wrap your Next.js config to include them in
 
 ```typescript
 // next.config.mjs
-import { withEmulate } from '@emulators/adapter-next'
+import { withEmulate } from '@api-emulator/adapter-next'
 
 export default withEmulate({
   // your normal Next.js config
@@ -79,8 +79,8 @@ export default withEmulate(nextConfig, { routePrefix: '/api/emulate' })
 By default, emulator state is in-memory and resets on every cold start. To persist state across restarts, pass a `persistence` adapter:
 
 ```typescript
-import { createEmulateHandler } from '@emulators/adapter-next'
-import type { ServicePlugin } from '@emulators/core'
+import { createEmulateHandler } from '@api-emulator/adapter-next'
+import type { ServicePlugin } from '@api-emulator/core'
 
 const localPlugin: ServicePlugin = {
   name: 'local',
@@ -98,10 +98,10 @@ export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
 })
 ```
 
-For local development, `@emulators/core` ships `filePersistence`:
+For local development, `@api-emulator/core` ships `filePersistence`:
 
 ```typescript
-import { filePersistence } from '@emulators/core'
+import { filePersistence } from '@api-emulator/core'
 
 // ...
 persistence: filePersistence('.api-emulator/state.json'),

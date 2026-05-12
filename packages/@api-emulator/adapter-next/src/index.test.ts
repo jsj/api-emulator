@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ServicePlugin } from "@emulators/core";
+import type { ServicePlugin } from "@api-emulator/core";
 import { createEmulateHandler, withEmulate } from "./index.js";
 
 const plugin: ServicePlugin = {
@@ -57,7 +57,7 @@ describe("withEmulate", () => {
 
     expect(config.outputFileTracingIncludes).toMatchObject({
       "/api/**": ["./existing/**"],
-      "/emulate/**": ["./node_modules/@emulators/core/dist/fonts/**"],
+      "/emulate/**": ["./node_modules/@api-emulator/core/dist/fonts/**"],
     });
   });
 });

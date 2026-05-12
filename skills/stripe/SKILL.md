@@ -48,11 +48,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 ### Embedded in Next.js (adapter-next)
 
-When using `@emulators/adapter-next`, the emulator runs inside your Next.js app at `/emulate/stripe`. The SDK needs to point at `localhost` with a proxy route to forward `/v1/*` calls to `/emulate/stripe/v1/*`:
+When using `@api-emulator/adapter-next`, the emulator runs inside your Next.js app at `/emulate/stripe`. The SDK needs to point at `localhost` with a proxy route to forward `/v1/*` calls to `/emulate/stripe/v1/*`:
 
 ```typescript
 // next.config.ts
-import { withEmulate } from '@emulators/adapter-next'
+import { withEmulate } from '@api-emulator/adapter-next'
 
 export default withEmulate({
   env: {
@@ -77,8 +77,8 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 ```typescript
 // app/emulate/[...path]/route.ts
-import { createEmulateHandler } from '@emulators/adapter-next'
-import type { ServicePlugin } from '@emulators/core'
+import { createEmulateHandler } from '@api-emulator/adapter-next'
+import type { ServicePlugin } from '@api-emulator/core'
 
 const stripePlugin: ServicePlugin = {
   name: 'stripe',

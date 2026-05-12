@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 const pkg = JSON.parse(readFileSync(resolve(__dirname, "package.json"), "utf-8"));
 
 const copyFonts = async () => {
-  const src = resolve(__dirname, "../@emulators/core/src/fonts");
+  const src = resolve(__dirname, "../@api-emulator/core/src/fonts");
   const dest = resolve(__dirname, "dist/fonts");
   mkdirSync(dest, { recursive: true });
   cpSync(src, dest, { recursive: true });

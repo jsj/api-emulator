@@ -24,7 +24,7 @@ Never use `--` as a dash in prose, comments, or user-facing output. Use an em da
 
 ## Emulator UI Design System
 
-All emulator UIs (inspector pages, OAuth flows, checkout pages, inboxes, etc.) must use the shared design system in `packages/@emulators/core/src/ui.ts`. Never write inline HTML with custom `<style>` tags or standalone `<!DOCTYPE html>` templates in individual emulator packages.
+All emulator UIs (inspector pages, OAuth flows, checkout pages, inboxes, etc.) must use the shared design system in `packages/@api-emulator/core/src/ui.ts`. Never write inline HTML with custom `<style>` tags or standalone `<!DOCTYPE html>` templates in individual emulator packages.
 
 Use the appropriate shared render function for each page type:
 
@@ -46,7 +46,7 @@ When a change affects how humans or agents use api-emulator (new/changed/removed
 1. `README.md`
 2. `skills/*/SKILL.md` (agent skills for each service)
 3. `apps/web/` (docs site pages)
-4. CLI `--help` output in `packages/emulate/src/index.ts`
+4. CLI `--help` output in `packages/api-emulator/src/index.ts`
 
 ## Releasing
 
@@ -55,13 +55,13 @@ Releases are manual, single-PR affairs. The maintainer controls the changelog vo
 To prepare a release:
 
 1. Create a branch (e.g. `prepare-v0.5.0`)
-2. Bump the version in `packages/emulate/package.json`
+2. Bump the version in `packages/api-emulator/package.json`
 3. Run `bun run sync-versions` to update runtime package versions
 4. Write the changelog entry in `CHANGELOG.md`, wrapped in `<!-- release:start -->` and `<!-- release:end -->` markers
 5. Remove the `<!-- release:start -->` and `<!-- release:end -->` markers from the previous release entry (only the latest release should have markers)
 6. Open a PR and merge to `main`
 
-CI compares the version in `packages/emulate/package.json` to what's on npm. If it differs, it builds, publishes all packages with provenance, and creates the GitHub release automatically. The release body is extracted from the content between the markers.
+CI compares the version in `packages/api-emulator/package.json` to what's on npm. If it differs, it builds, publishes all packages with provenance, and creates the GitHub release automatically. The release body is extracted from the content between the markers.
 
 <!-- opensrc:start -->
 
