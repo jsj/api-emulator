@@ -1,7 +1,7 @@
 ---
 name: github
 description: Emulated GitHub REST API for local development and testing. Use when the user needs to interact with GitHub API endpoints locally, test GitHub integrations, emulate repos/issues/PRs, set up GitHub OAuth flows, configure GitHub Apps, test webhooks, or work with actions/checks without hitting the real GitHub API. Triggers include "GitHub API", "emulate GitHub", "mock GitHub", "test GitHub OAuth", "GitHub App JWT", "local GitHub", or any task requiring a local GitHub API.
-allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*), Bash(curl:*)
+allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
 # GitHub API Emulator
@@ -12,7 +12,7 @@ Fully stateful GitHub REST API emulation. Creates, updates, and deletes persist 
 
 ```bash
 # GitHub only
-npx api-emulator --service github
+npx -p api-emulator api --service github
 
 # Default port
 # http://localhost:4001

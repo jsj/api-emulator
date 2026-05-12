@@ -41,20 +41,23 @@ export async function installCommand(name: string, options: InstallOptions = {})
   }
 
   const packageManager = options.packageManager === undefined ? detectPackageManager() : options.packageManager;
-  if (packageManager) {
+  if (packageManager && source.packageName) {
     installPackage(packageManager, source.packageName);
+  } else if (packageManager && source.kind === "package" && !source.packageName) {
+    throw new Error(`Plugin source "${name}" is a local package without a package name`);
   }
 
   const lock = readPluginLock();
   lock.plugins[source.name] = {
     name: source.name,
-    source: "registry",
+    source: source.kind === "file" ? "specifier" : "registry",
+    sourceId: source.sourceId,
     packageName: source.packageName,
-    specifier: source.specifier,
+    specifier: packageManager && source.packageName ? source.packageName : source.specifier,
     version: "latest",
   };
   writePluginLock(lock);
 
-  console.log(`Installed ${source.name} from ${source.packageName}`);
+  console.log(`Installed ${source.name} from ${source.sourceId}`);
   console.log(`Recorded plugin in ${PLUGIN_LOCK_FILE}`);
 }

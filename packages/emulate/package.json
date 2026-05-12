@@ -40,8 +40,7 @@
     "dist"
   ],
   "bin": {
-    "api": "./dist/index.js",
-    "api-emulator": "./dist/index.js"
+    "api": "./dist/index.js"
   },
   "scripts": {
     "prepack": "cp ../../README.md .",
@@ -54,22 +53,10 @@
   },
   "dependencies": {
     "@hono/node-server": "^1",
+    "@emulators/core": "0.5.1",
     "commander": "^14",
     "picocolors": "^1.1.1",
-    "yaml": "^2",
-    "@emulators/core": "0.5.0",
-    "@emulators/github": "0.5.0",
-    "@emulators/apple": "0.5.0",
-    "@emulators/microsoft": "0.5.0",
-    "@emulators/okta": "0.5.0",
-    "@emulators/aws": "0.5.0",
-    "@emulators/google": "0.5.0",
-    "@emulators/mongoatlas": "0.5.0",
-    "@emulators/slack": "0.5.0",
-    "@emulators/vercel": "0.5.0",
-    "@emulators/resend": "0.5.0",
-    "@emulators/stripe": "0.5.0",
-    "@emulators/clerk": "0.5.0"
+    "yaml": "^2"
   },
   "devDependencies": {
     "tsup": "^8",

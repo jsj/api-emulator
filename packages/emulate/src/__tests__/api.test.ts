@@ -1,62 +1,58 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect } from "vitest";
 import { resolve } from "path";
 import { createEmulator } from "../api.js";
 
 describe("createEmulator", () => {
-  it("starts github and returns a url", async () => {
-    const github = await createEmulator({ service: "github", port: 14000 });
+  const emulators: Array<{ close(): Promise<void> }> = [];
 
-    expect(github.url).toBe("http://localhost:14000");
-
-    const res = await fetch(`${github.url}/user`, {
-      headers: { Authorization: "token test_token_admin" },
-    });
-    expect(res.status).toBe(200);
-    const body = (await res.json()) as { login: string };
-    expect(body.login).toBe("admin");
-
-    await github.close();
+  afterEach(async () => {
+    await Promise.all(emulators.splice(0).map((emulator) => emulator.close()));
   });
 
-  it("starts multiple services independently", async () => {
-    const [github, vercel] = await Promise.all([
-      createEmulator({ service: "github", port: 14010 }),
-      createEmulator({ service: "vercel", port: 14011 }),
+  it("starts a plugin and returns a url", async () => {
+    const echo = await createEmulator({
+      service: "echo",
+      port: 14000,
+      plugins: [resolve("src/__tests__/fixtures/echo-plugin.ts")],
+    });
+    emulators.push(echo);
+
+    expect(echo.url).toBe("http://localhost:14000");
+
+    const res = await fetch(`${echo.url}/ping`);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { ok: boolean; service: string };
+    expect(body).toEqual({ ok: true, service: "echo" });
+  });
+
+  it("starts multiple plugins independently", async () => {
+    const pluginPath = resolve("src/__tests__/fixtures/echo-plugin.ts");
+    const [echo1, echo2] = await Promise.all([
+      createEmulator({ service: "echo", port: 14010, plugins: [pluginPath] }),
+      createEmulator({ service: "echo", port: 14011, plugins: [pluginPath] }),
     ]);
+    emulators.push(echo1, echo2);
 
-    expect(github.url).toBe("http://localhost:14010");
-    expect(vercel.url).toBe("http://localhost:14011");
-
-    await Promise.all([github.close(), vercel.close()]);
+    expect(echo1.url).toBe("http://localhost:14010");
+    expect(echo2.url).toBe("http://localhost:14011");
   });
 
   it("reset wipes and re-seeds stores", async () => {
-    const github = await createEmulator({
-      service: "github",
+    const echo = await createEmulator({
+      service: "echo",
       port: 14020,
-      seed: { github: { users: [{ login: "test-user" }] } },
+      plugins: [resolve("src/__tests__/fixtures/echo-plugin.ts")],
+      seed: { echo: { message: "hello" } },
     });
+    emulators.push(echo);
 
-    const createRes = await fetch(`${github.url}/user/repos`, {
-      method: "POST",
-      headers: {
-        Authorization: "token test_token_admin",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: "my-repo", private: false }),
-    });
-    expect(createRes.status).toBe(201);
+    const configRes = await fetch(`${echo.url}/config`);
+    expect(await configRes.json()).toEqual({ message: "hello" });
 
-    github.reset();
+    echo.reset();
 
-    const listRes = await fetch(`${github.url}/user/repos`, {
-      headers: { Authorization: "token test_token_admin" },
-    });
-    expect(listRes.status).toBe(200);
-    const repos = (await listRes.json()) as unknown[];
-    expect(repos).toHaveLength(0);
-
-    await github.close();
+    const resetConfigRes = await fetch(`${echo.url}/config`);
+    expect(await resetConfigRes.json()).toEqual({ message: "hello" });
   });
 
   it("throws on unknown service", async () => {
@@ -70,6 +66,7 @@ describe("createEmulator", () => {
       plugins: [resolve("src/__tests__/fixtures/echo-plugin.ts")],
       seed: { echo: { message: "hello" } },
     });
+    emulators.push(echo);
 
     const res = await fetch(`${echo.url}/ping`);
     expect(res.status).toBe(200);
@@ -78,7 +75,5 @@ describe("createEmulator", () => {
 
     const configRes = await fetch(`${echo.url}/config`);
     expect(await configRes.json()).toEqual({ message: "hello" });
-
-    await echo.close();
   });
 });

@@ -1,7 +1,7 @@
 ---
 name: stripe
 description: Emulated Stripe API for local development and testing. Use when the user needs to process payments locally, test checkout flows, create customers, manage products and prices, handle payment intents, work with webhooks, or use the Stripe SDK without hitting real Stripe servers. Triggers include "Stripe API", "emulate Stripe", "test payments locally", "checkout flow", "payment intent", "Stripe webhook", "Stripe SDK", "STRIPE_API_KEY", or any task requiring a local Stripe API.
-allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*), Bash(curl:*)
+allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
 # Stripe API Emulator
@@ -14,7 +14,7 @@ No real payments are processed. Every Stripe SDK call hits the emulator and prod
 
 ```bash
 # Stripe only
-npx api-emulator --service stripe
+npx -p api-emulator api --service stripe
 
 # Default port (when run alone)
 # http://localhost:4000
@@ -78,12 +78,17 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 ```typescript
 // app/emulate/[...path]/route.ts
 import { createEmulateHandler } from '@emulators/adapter-next'
-import * as stripe from '@emulators/stripe'
+import type { ServicePlugin } from '@emulators/core'
+
+const stripePlugin: ServicePlugin = {
+  name: 'stripe',
+  register(app) { app.all('/*', (c) => c.json({ ok: true, provider: 'stripe' })) },
+}
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
   services: {
     stripe: {
-      emulator: stripe,
+      emulator: { plugin: stripePlugin },
       seed: {
         products: [
           { id: 'prod_widget', name: 'Widget', description: 'A useful widget' },

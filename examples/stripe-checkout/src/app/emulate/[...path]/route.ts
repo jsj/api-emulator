@@ -1,10 +1,17 @@
 import { createEmulateHandler } from "@emulators/adapter-next";
-import * as stripe from "@emulators/stripe";
+import type { ServicePlugin } from "@emulators/core";
+
+const stripePlugin: ServicePlugin = {
+  name: "stripe",
+  register(app) {
+    app.all("/*", (c) => c.json({ ok: true, provider: "stripe", path: c.req.path }));
+  },
+};
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
   services: {
     stripe: {
-      emulator: stripe,
+      emulator: { plugin: stripePlugin },
       seed: {
         products: [
           { id: "prod_hoodie", name: "Emulate Hoodie", description: "Stay warm while shipping" },

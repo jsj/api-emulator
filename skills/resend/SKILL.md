@@ -1,7 +1,7 @@
 ---
 name: resend
 description: Emulated Resend email API for local development and testing. Use when the user needs to send emails locally, test transactional email flows, implement magic link or verification code auth, inspect sent emails, manage domains/contacts/API keys, or work with the Resend API without sending real emails. Triggers include "Resend API", "emulate Resend", "send email locally", "test email", "magic link", "verification email", "email inbox", "RESEND_BASE_URL", or any task requiring a local email API.
-allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*), Bash(curl:*)
+allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
 # Resend Email API Emulator
@@ -14,7 +14,7 @@ No real emails are sent. Every call to `POST /emails` stores the message locally
 
 ```bash
 # Resend only
-npx api-emulator --service resend
+npx -p api-emulator api --service resend
 
 # Default port (when run alone)
 # http://localhost:4000
@@ -82,12 +82,17 @@ export default withEmulate({
 ```typescript
 // app/emulate/[...path]/route.ts
 import { createEmulateHandler } from '@emulators/adapter-next'
-import * as resend from '@emulators/resend'
+import type { ServicePlugin } from '@emulators/core'
+
+const resendPlugin: ServicePlugin = {
+  name: 'resend',
+  register(app) { app.all('/*', (c) => c.json({ ok: true, provider: 'resend' })) },
+}
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
   services: {
     resend: {
-      emulator: resend,
+      emulator: { plugin: resendPlugin },
       seed: {
         domains: [{ name: 'example.com' }],
       },

@@ -1,8 +1,19 @@
 # Changelog
 
+<!-- release:start -->
+## 0.5.1
+
+### Stability
+
+- Kept the CLI binary surface focused on `api`.
+- Synced release package versions and runtime emulator dependency versions.
+- Tightened agent skill command examples around `npx -p api-emulator api`.
+- Added plugin shelf discovery for public and internal provider packages.
+
+<!-- release:end -->
+
 ## 0.5.0
 
-<!-- release:start -->
 ### New Features
 
 - **Clerk emulator** — local emulation of Clerk authentication and session management (#38)
@@ -29,13 +40,12 @@
 - @jlucaso1
 - @Railly
 - @tmm
-<!-- release:end -->
 
 ## 0.4.1
 
 ### Bug Fixes
 
-- Include README in all `@emulators/*` npm packages
+- Include README in all runtime packages
 
 ## 0.4.0
 

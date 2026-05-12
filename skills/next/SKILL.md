@@ -1,7 +1,7 @@
 ---
 name: next
 description: Next.js adapter for embedding emulators directly in a Next.js app via @emulators/adapter-next. Use when the user needs to embed emulators in Next.js, set up same-origin OAuth for Vercel preview deployments, create an emulate catch-all route handler, configure Auth.js/NextAuth with embedded emulators, add persistence to embedded emulators, or wrap next.config with withEmulate. Triggers include "Next.js emulator", "adapter-next", "embedded emulator", "same-origin OAuth", "Vercel preview", "createEmulateHandler", "withEmulate", or any task requiring emulators inside a Next.js app.
-allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*)
+allowed-tools: Bash(npx -p api-emulator api:*)
 ---
 
 # Next.js Integration
@@ -11,10 +11,10 @@ The `@emulators/adapter-next` package embeds emulators directly into a Next.js A
 ## Install
 
 ```bash
-npm install @emulators/adapter-next @emulators/github @emulators/google
+npm install @emulators/adapter-next @emulators/core
 ```
 
-Only install the emulators you need. Each `@emulators/*` package is published independently, keeping serverless bundles small.
+Load provider plugins from your app, an internal package, or a plugin shelf; the adapter only needs runtime plugin modules.
 
 ## Route Handler
 
@@ -23,20 +23,29 @@ Create a catch-all route that serves emulator traffic:
 ```typescript
 // app/emulate/[...path]/route.ts
 import { createEmulateHandler } from '@emulators/adapter-next'
-import * as github from '@emulators/github'
-import * as google from '@emulators/google'
+import type { ServicePlugin } from '@emulators/core'
+
+const githubPlugin: ServicePlugin = {
+  name: 'github',
+  register(app) { app.all('/*', (c) => c.json({ ok: true, provider: 'github' })) },
+}
+
+const googlePlugin: ServicePlugin = {
+  name: 'google',
+  register(app) { app.all('/*', (c) => c.json({ ok: true, provider: 'google' })) },
+}
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
   services: {
     github: {
-      emulator: github,
+      emulator: { plugin: githubPlugin },
       seed: {
         users: [{ login: 'octocat', name: 'The Octocat' }],
         repos: [{ owner: 'octocat', name: 'hello-world', auto_init: true }],
       },
     },
     google: {
-      emulator: google,
+      emulator: { plugin: googlePlugin },
       seed: {
         users: [{ email: 'test@example.com', name: 'Test User' }],
       },
@@ -99,7 +108,12 @@ By default, emulator state is in-memory and resets on every cold start. To persi
 
 ```typescript
 import { createEmulateHandler } from '@emulators/adapter-next'
-import * as github from '@emulators/github'
+import type { ServicePlugin } from '@emulators/core'
+
+const githubPlugin: ServicePlugin = {
+  name: 'github',
+  register(app) { app.all('/*', (c) => c.json({ ok: true, provider: 'github' })) },
+}
 
 const kvAdapter = {
   async load() { return await kv.get('api-emulator-state') },
@@ -107,7 +121,7 @@ const kvAdapter = {
 }
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
-  services: { github: { emulator: github } },
+  services: { github: { emulator: { plugin: githubPlugin } } },
   persistence: kvAdapter,
 })
 ```
@@ -155,7 +169,12 @@ Each `EmulatorEntry`:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `emulator` | `EmulatorModule` | The emulator package (e.g. `import * as github from '@emulators/github'`) |
+| `emulator` | `EmulatorModule` | The emulator package (e.g. `import type { ServicePlugin } from '@emulators/core'
+
+const githubPlugin: ServicePlugin = {
+  name: 'github',
+  register(app) { app.all('/*', (c) => c.json({ ok: true, provider: 'github' })) },
+}`) |
 | `seed?` | `Record<string, unknown>` | Seed data matching the service's config schema |
 
 ### `withEmulate(nextConfig, options?)`

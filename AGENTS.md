@@ -4,11 +4,11 @@
 
 Use `bun` for all package management commands (not pnpm, npm, or yarn).
 
-Exception: End-user install instructions should use `npm` (e.g. `npx api-emulator`, `npm install api-emulator`) since npm is universal.
+Exception: End-user install instructions should use `npm` (e.g. `npx -p api-emulator api`, `npm install api-emulator`) since npm is universal.
 
 ## CLI Invocation
 
-Use `npx api-emulator` in user-facing CLI examples, docs, skills, help output, and post-command messages.
+Use `npx -p api-emulator api` in user-facing CLI examples, docs, skills, help output, and post-command messages.
 
 ## Dependencies
 
@@ -50,13 +50,13 @@ When a change affects how humans or agents use api-emulator (new/changed/removed
 
 ## Releasing
 
-Releases are manual, single-PR affairs. The maintainer controls the changelog voice and format. All packages share a single version number (`api-emulator` + every `@emulators/*`).
+Releases are manual, single-PR affairs. The maintainer controls the changelog voice and format. Runtime packages share a single version number.
 
 To prepare a release:
 
 1. Create a branch (e.g. `prepare-v0.5.0`)
 2. Bump the version in `packages/emulate/package.json`
-3. Run `bun run sync-versions` to update all `@emulators/*` packages
+3. Run `bun run sync-versions` to update runtime package versions
 4. Write the changelog entry in `CHANGELOG.md`, wrapped in `<!-- release:start -->` and `<!-- release:end -->` markers
 5. Remove the `<!-- release:start -->` and `<!-- release:end -->` markers from the previous release entry (only the latest release should have markers)
 6. Open a PR and merge to `main`

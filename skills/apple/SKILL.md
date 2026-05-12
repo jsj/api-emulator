@@ -1,7 +1,7 @@
 ---
 name: apple
 description: Emulated Sign in with Apple / Apple OIDC for local development and testing. Use when the user needs to test Apple sign-in locally, emulate Apple OIDC discovery, handle Apple token exchange, configure Apple OAuth clients, or work with Apple userinfo without hitting real Apple APIs. Triggers include "Apple OAuth", "emulate Apple", "mock Apple login", "test Apple sign-in", "Sign in with Apple", "Apple OIDC", "local Apple auth", or any task requiring a local Apple OAuth/OIDC provider.
-allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*), Bash(curl:*)
+allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
 # Apple Sign In Emulator
@@ -12,7 +12,7 @@ Sign in with Apple emulation with authorization code flow, PKCE support, RS256 I
 
 ```bash
 # Apple only
-npx api-emulator --service apple
+npx -p api-emulator api --service apple
 
 # Default port (when run alone)
 # http://localhost:4000
