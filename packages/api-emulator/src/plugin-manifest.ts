@@ -1,4 +1,4 @@
-import type { AuthFallback } from "@emulators/core";
+import type { AuthFallback } from "@api-emulator/core";
 
 export interface PluginManifest {
   name?: string;

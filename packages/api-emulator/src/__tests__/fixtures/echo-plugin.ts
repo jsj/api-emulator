@@ -1,4 +1,4 @@
-import type { ServicePlugin, Store } from "@emulators/core";
+import type { ServicePlugin, Store } from "@api-emulator/core";
 
 export const plugin: ServicePlugin = {
   name: "echo",

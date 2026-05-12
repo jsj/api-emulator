@@ -1,5 +1,5 @@
 {
-  "name": "@emulators/adapter-next",
+  "name": "@api-emulator/core",
   "version": "0.5.1",
   "license": "MIT",
   "type": "module",
@@ -7,16 +7,15 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/index.d.ts"
     }
   },
   "homepage": "https://api-emulator.jsj.sh",
   "repository": {
     "type": "git",
     "url": "https://github.com/jsj/api-emulator.git",
-    "directory": "packages/@emulators/adapter-next"
+    "directory": "packages/@api-emulator/core"
   },
   "bugs": {
     "url": "https://github.com/jsj/api-emulator/issues"
@@ -36,7 +35,8 @@
     "lint": "eslint src"
   },
   "dependencies": {
-    "@emulators/core": "workspace:*"
+    "hono": "^4",
+    "jose": "^6.2.2"
   },
   "devDependencies": {
     "tsup": "^8",

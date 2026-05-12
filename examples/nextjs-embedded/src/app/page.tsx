@@ -56,8 +56,8 @@ export default async function Home() {
             </a>
           ))}
           <p className="text-xs text-center text-muted-foreground mt-2">
-            Emulators are embedded in this Next.js app via <code className="font-mono">@emulators/adapter-next</code>.
-            No separate emulator process needed.
+            Emulators are embedded in this Next.js app via <code className="font-mono">@api-emulator/adapter-next</code>
+            . No separate emulator process needed.
           </p>
         </CardContent>
       </Card>

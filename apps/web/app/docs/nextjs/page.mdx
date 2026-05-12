@@ -1,14 +1,14 @@
 # Next.js Integration
 
-The `@emulators/adapter-next` package embeds emulators directly into a Next.js app, running them on the same origin. This is particularly useful for Vercel preview deployments where OAuth callback URLs change with every deployment.
+The `@api-emulator/adapter-next` package embeds emulators directly into a Next.js app, running them on the same origin. This is particularly useful for Vercel preview deployments where OAuth callback URLs change with every deployment.
 
 ## Install
 
 ```bash
-npm install @emulators/adapter-next @emulators/github @emulators/google
+npm install @api-emulator/adapter-next @api-emulator/github @api-emulator/google
 ```
 
-Only install the emulators you need. Each `@emulators/*` package is published independently, keeping your serverless bundles small.
+Only install the emulators you need. Each `@api-emulator/*` package is published independently, keeping your serverless bundles small.
 
 ## Route Handler
 
@@ -16,9 +16,9 @@ Create a catch-all route that serves emulator traffic:
 
 ```typescript
 // app/emulate/[...path]/route.ts
-import { createEmulateHandler } from '@emulators/adapter-next'
-import * as github from '@emulators/github'
-import * as google from '@emulators/google'
+import { createEmulateHandler } from '@api-emulator/adapter-next'
+import * as github from '@api-emulator/github'
+import * as google from '@api-emulator/google'
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
   services: {
@@ -72,7 +72,7 @@ Emulator UI pages use bundled fonts. Wrap your Next.js config to include them in
 
 ```typescript
 // next.config.mjs
-import { withEmulate } from '@emulators/adapter-next'
+import { withEmulate } from '@api-emulator/adapter-next'
 
 export default withEmulate({
   // your normal Next.js config
@@ -92,8 +92,8 @@ By default, emulator state is in-memory and resets on every cold start. To persi
 ### Custom Adapter (Vercel KV, Redis, etc.)
 
 ```typescript
-import { createEmulateHandler } from '@emulators/adapter-next'
-import * as github from '@emulators/github'
+import { createEmulateHandler } from '@api-emulator/adapter-next'
+import * as github from '@api-emulator/github'
 
 const kvAdapter = {
   async load() { return await kv.get('api-emulator-state') },
@@ -108,10 +108,10 @@ export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
 
 ### File Persistence (Local Dev)
 
-For local development, `@emulators/core` ships a file-based adapter:
+For local development, `@api-emulator/core` ships a file-based adapter:
 
 ```typescript
-import { filePersistence } from '@emulators/core'
+import { filePersistence } from '@api-emulator/core'
 
 // persists to a JSON file
 persistence: filePersistence('.api-emulator/state.json'),

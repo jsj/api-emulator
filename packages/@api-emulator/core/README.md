@@ -1,4 +1,4 @@
-# @emulators/core
+# @api-emulator/core
 
 HTTP server, in-memory store, plugin interface, and middleware for emulate service plugins.
 
@@ -7,7 +7,7 @@ Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replace
 ## Install
 
 ```bash
-npm install @emulators/core
+npm install @api-emulator/core
 ```
 
 ## Overview
@@ -27,7 +27,7 @@ The core provides the shared infrastructure that every service plugin builds on:
 For local development, use the built-in file adapter:
 
 ```typescript
-import { filePersistence } from '@emulators/core'
+import { filePersistence } from '@api-emulator/core'
 
 persistence: filePersistence('.api-emulator/state.json')
 ```

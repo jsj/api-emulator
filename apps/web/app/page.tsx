@@ -159,7 +159,7 @@ afterAll(() => github.close())`}</code>
                 Embed in your app. Same origin, no CORS issues, works on Vercel preview deployments.
               </p>
               <div className="overflow-x-auto rounded-md bg-neutral-100 px-3 py-2 font-mono text-xs text-neutral-700 dark:bg-neutral-900 dark:text-neutral-300">
-                npm install @emulators/adapter-next @emulators/core
+                npm install @api-emulator/adapter-next @api-emulator/core
               </div>
             </div>
           </div>

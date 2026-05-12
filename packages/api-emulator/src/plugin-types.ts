@@ -1,4 +1,4 @@
-import type { ServicePlugin, Store, AppKeyResolver, AuthFallback, WebhookDispatcher } from "@emulators/core";
+import type { ServicePlugin, Store, AppKeyResolver, AuthFallback, WebhookDispatcher } from "@api-emulator/core";
 import type { PluginManifest } from "./plugin-manifest.js";
 
 export interface LoadedPlugin {

@@ -314,7 +314,7 @@ Then use these in your app to construct API and OAuth URLs. See each service's s
 
 ## Next.js Integration (Embedded Mode)
 
-The `@emulators/adapter-next` package embeds emulators directly into a Next.js app on the same origin. See the **next** skill (`skills/next/SKILL.md`) for full setup, Auth.js configuration, persistence, and font tracing details.
+The `@api-emulator/adapter-next` package embeds emulators directly into a Next.js app on the same origin. See the **next** skill (`skills/next/SKILL.md`) for full setup, Auth.js configuration, persistence, and font tracing details.
 
 ## Persistence
 
@@ -323,7 +323,7 @@ By default, all emulator state is in-memory. For persistence across process rest
 ### Built-in file persistence
 
 ```typescript
-import { filePersistence } from '@emulators/core'
+import { filePersistence } from '@api-emulator/core'
 
 // CLI or local dev: persists to a JSON file
 const adapter = filePersistence('.api-emulator/state.json')
@@ -332,7 +332,7 @@ const adapter = filePersistence('.api-emulator/state.json')
 ### Custom adapters
 
 ```typescript
-import type { PersistenceAdapter } from '@emulators/core'
+import type { PersistenceAdapter } from '@api-emulator/core'
 
 const kvAdapter: PersistenceAdapter = {
   async load() { return await kv.get('api-emulator-state') },
@@ -347,7 +347,7 @@ State is loaded on cold start and saved after every mutating request (POST, PUT,
 ```
 packages/
   emulate/           # CLI entry point + programmatic API
-  @emulators/
+  @api-emulator/
     core/            # HTTP server (Hono), Store, plugin interface, middleware
     adapter-next/    # Next.js App Router integration
     vercel/          # Vercel API service plugin

@@ -19,10 +19,13 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/jsj/api-emulator.git",
-    "directory": "packages/emulate"
+    "directory": "packages/api-emulator"
   },
   "bugs": {
     "url": "https://github.com/jsj/api-emulator/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "emulator",
@@ -53,7 +56,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1",
-    "@emulators/core": "0.5.1",
+    "@api-emulator/core": "0.5.1",
     "commander": "^14",
     "picocolors": "^1.1.1",
     "yaml": "^2"

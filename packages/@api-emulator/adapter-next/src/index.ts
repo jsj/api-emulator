@@ -11,9 +11,9 @@ import {
   type PersistenceAdapter,
   type AppKeyResolver,
   type WebhookDispatcher,
-} from "@emulators/core";
+} from "@api-emulator/core";
 
-export type { PersistenceAdapter } from "@emulators/core";
+export type { PersistenceAdapter } from "@api-emulator/core";
 
 export interface EmulatorModule {
   plugin?: ServicePlugin;
@@ -307,7 +307,7 @@ export function withEmulate<T>(nextConfig: T, options?: { routePrefix?: string }
   const config = nextConfig as Record<string, unknown>;
   const prefix = options?.routePrefix ?? "/emulate";
   const routePattern = `${prefix}/**`;
-  const fontGlob = "./node_modules/@emulators/core/dist/fonts/**";
+  const fontGlob = "./node_modules/@api-emulator/core/dist/fonts/**";
 
   const topLevel = { ...((config.outputFileTracingIncludes as Record<string, string[]> | undefined) ?? {}) };
   const existing = topLevel[routePattern] ?? [];

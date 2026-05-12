@@ -83,7 +83,7 @@ npx -p api-emulator api --plugin ./api-emulator-plugins/@github/api-emulator.mjs
 A plugin exports a `ServicePlugin`:
 
 ```ts
-import type { ServicePlugin } from '@emulators/core'
+import type { ServicePlugin } from '@api-emulator/core'
 
 export const plugin: ServicePlugin = {
   name: 'internal-billing',
@@ -143,12 +143,12 @@ The CLI auto-detects `api-emulator.config.yaml`, `.yml`, and `.json`. It still a
 
 ## Next.js embedded mode
 
-Use `@emulators/adapter-next` to mount emulators inside a Next.js app on the same origin.
+Use `@api-emulator/adapter-next` to mount emulators inside a Next.js app on the same origin.
 
 ```ts
 // app/emulate/[...path]/route.ts
-import { createEmulateHandler } from '@emulators/adapter-next'
-import type { ServicePlugin } from '@emulators/core'
+import { createEmulateHandler } from '@api-emulator/adapter-next'
+import type { ServicePlugin } from '@api-emulator/core'
 
 const internalPlugin: ServicePlugin = {
   name: 'internal',
