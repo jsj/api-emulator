@@ -10,12 +10,6 @@ Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replace
 npm install @emulators/adapter-next
 ```
 
-Only install the emulators you need alongside the adapter:
-
-```bash
-npm install @emulators/adapter-next @emulators/github @emulators/google
-```
-
 ## Route handler
 
 Create a catch-all route that serves emulator traffic:
@@ -23,24 +17,18 @@ Create a catch-all route that serves emulator traffic:
 ```typescript
 // app/emulate/[...path]/route.ts
 import { createEmulateHandler } from '@emulators/adapter-next'
-import * as github from '@emulators/github'
-import * as google from '@emulators/google'
+import type { ServicePlugin } from '@emulators/core'
+
+const localPlugin: ServicePlugin = {
+  name: 'local',
+  register(app) {
+    app.get('/health', (c) => c.json({ ok: true }))
+  },
+}
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
   services: {
-    github: {
-      emulator: github,
-      seed: {
-        users: [{ login: 'octocat', name: 'The Octocat' }],
-        repos: [{ owner: 'octocat', name: 'hello-world', auto_init: true }],
-      },
-    },
-    google: {
-      emulator: google,
-      seed: {
-        users: [{ email: 'test@example.com', name: 'Test User' }],
-      },
-    },
+    local: { emulator: { plugin: localPlugin } },
   },
 })
 ```
@@ -92,7 +80,12 @@ By default, emulator state is in-memory and resets on every cold start. To persi
 
 ```typescript
 import { createEmulateHandler } from '@emulators/adapter-next'
-import * as github from '@emulators/github'
+import type { ServicePlugin } from '@emulators/core'
+
+const localPlugin: ServicePlugin = {
+  name: 'local',
+  register(app) { app.get('/health', (c) => c.json({ ok: true })) },
+}
 
 const kvAdapter = {
   async load() { return await kv.get('api-emulator-state') },
@@ -100,7 +93,7 @@ const kvAdapter = {
 }
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
-  services: { github: { emulator: github } },
+  services: { local: { emulator: { plugin: localPlugin } } },
   persistence: kvAdapter,
 })
 ```

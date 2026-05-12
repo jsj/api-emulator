@@ -1,7 +1,7 @@
 ---
 name: api-emulator
-description: Local drop-in API emulator for Vercel, GitHub, Google, Slack, Apple, Microsoft, and AWS. Use when the user needs to start emulated services, configure seed data, write tests against local APIs, set up CI without network access, or work with the api-emulator CLI or programmatic API. Triggers include "start the emulator", "emulate services", "mock API locally", "create emulator config", "test against local API", "npx api-emulator", or any task requiring local service emulation.
-allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*)
+description: Local drop-in API emulator for Vercel, GitHub, Google, Slack, Apple, Microsoft, and AWS. Use when the user needs to start emulated services, configure seed data, write tests against local APIs, set up CI without network access, or work with the api-emulator CLI or programmatic API. Triggers include "start the emulator", "emulate services", "mock API locally", "create emulator config", "test against local API", "npx -p api-emulator api", or any task requiring local service emulation.
+allowed-tools: Bash(npx -p api-emulator api:*)
 ---
 
 # Service Emulation with api-emulator
@@ -11,7 +11,7 @@ Local drop-in replacement services for CI and no-network sandboxes. Fully statef
 ## Quick Start
 
 ```bash
-npx api-emulator
+npx -p api-emulator api
 ```
 
 All services start with sensible defaults:
@@ -30,25 +30,25 @@ All services start with sensible defaults:
 
 ```bash
 # Start all services (zero-config)
-npx api-emulator
+npx -p api-emulator api
 
 # Start specific services
-npx api-emulator --service vercel,github
+npx -p api-emulator api --service vercel,github
 
 # Custom base port (auto-increments per service)
-npx api-emulator --port 3000
+npx -p api-emulator api --port 3000
 
 # Use a seed config file
-npx api-emulator --seed config.yaml
+npx -p api-emulator api --seed config.yaml
 
 # Generate a starter config
-npx api-emulator init
+npx -p api-emulator api init
 
 # Generate config for a specific service
-npx api-emulator init --service vercel
+npx -p api-emulator api init --service vercel
 
 # List available services
-npx api-emulator list
+npx -p api-emulator api list
 ```
 
 ### Options
@@ -133,7 +133,7 @@ Configuration is optional. The CLI auto-detects config files in this order:
 3. `service-emulator.config.yaml` / `.yml`
 4. `service-emulator.config.json`
 
-Or pass `--seed <file>` explicitly. Run `npx api-emulator init` to generate a starter file.
+Or pass `--seed <file>` explicitly. Run `npx -p api-emulator api init` to generate a starter file.
 
 ### Config Structure
 
@@ -261,7 +261,7 @@ Each service also has a fallback user. If no token is provided, requests authent
 [portless](https://github.com/vercel-labs/portless) gives emulators trusted HTTPS URLs with auto-generated certs. Use the `--portless` flag to auto-register each service as a portless alias:
 
 ```bash
-npx api-emulator start --portless
+npx -p api-emulator api start --portless
 # github  https://github.api-emulator.localhost
 # google  https://google.api-emulator.localhost
 # ...
@@ -274,18 +274,18 @@ The `--portless` flag overwrites any existing portless aliases matching `*.api-e
 For a single service behind portless:
 
 ```bash
-portless github.api-emulator api-emulator start --service github
+portless github.api-emulator npx -p api-emulator api start --service github
 ```
 
 For a custom base URL without portless (any reverse proxy):
 
 ```bash
-npx api-emulator start --base-url "https://{service}.myproxy.test"
+npx -p api-emulator api start --base-url "https://{service}.myproxy.test"
 # or
-API_EMULATOR_BASE_URL="https://{service}.myproxy.test" npx api-emulator start
+API_EMULATOR_BASE_URL="https://{service}.myproxy.test" npx -p api-emulator api start
 ```
 
-The `PORTLESS_URL` env var is automatically set by the `portless` CLI wrapper when running a command through it (e.g. `portless github.api-emulator api-emulator start`), typically to a value like `https://{service}.api-emulator.localhost`. It supports `{service}` interpolation, just like `--base-url` and `API_EMULATOR_BASE_URL`. When no explicit `baseUrl` is provided, it is used as a fallback.
+The `PORTLESS_URL` env var is automatically set by the `portless` CLI wrapper when running a command through it (e.g. `portless github.api-emulator npx -p api-emulator api start`), typically to a value like `https://{service}.api-emulator.localhost`. It supports `{service}` interpolation, just like `--base-url` and `API_EMULATOR_BASE_URL`. When no explicit `baseUrl` is provided, it is used as a fallback.
 
 Per-service overrides in the seed config (these take highest priority over all other base URL sources):
 

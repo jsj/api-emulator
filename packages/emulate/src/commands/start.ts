@@ -228,7 +228,9 @@ function printBanner(
   if (configSource) {
     lines.push(`  ${pc.dim("Config:")} ${configSource}`);
   } else {
-    lines.push(`  ${pc.dim("Config:")} defaults ${pc.dim("(run")} npx api-emulator init ${pc.dim("to customize)")}`);
+    lines.push(
+      `  ${pc.dim("Config:")} defaults ${pc.dim("(run")} npx -p api-emulator api init ${pc.dim("to customize)")}`,
+    );
   }
   lines.push("");
 

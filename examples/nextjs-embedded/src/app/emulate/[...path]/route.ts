@@ -1,11 +1,21 @@
 import { createEmulateHandler } from "@emulators/adapter-next";
-import * as github from "@emulators/github";
-import * as google from "@emulators/google";
+import type { ServicePlugin } from "@emulators/core";
+
+function jsonPlugin(name: string): { plugin: ServicePlugin } {
+  return {
+    plugin: {
+      name,
+      register(app) {
+        app.all("/*", (c) => c.json({ ok: true, provider: name, path: c.req.path }));
+      },
+    },
+  };
+}
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
   services: {
     github: {
-      emulator: github,
+      emulator: jsonPlugin("github"),
       seed: {
         users: [
           { login: "admin", name: "Admin User", email: "admin@example.com" },
@@ -15,7 +25,7 @@ export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
       },
     },
     google: {
-      emulator: google,
+      emulator: jsonPlugin("google"),
       seed: {
         users: [
           { email: "admin@example.com", name: "Admin User" },

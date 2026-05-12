@@ -7,11 +7,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 describe("resolvePluginModules", () => {
-  it("keeps the default plugin order stable", async () => {
+  it("starts with no built-in provider plugins", async () => {
     const registry = await resolvePluginModules();
 
-    expect(Object.keys(registry)).toEqual([...DEFAULT_PLUGIN_NAMES]);
-    expect(Object.values(registry).map((pluginModule) => pluginModule.name)).toEqual([...DEFAULT_PLUGIN_NAMES]);
+    expect(DEFAULT_PLUGIN_NAMES).toEqual([]);
+    expect(Object.keys(registry)).toEqual([]);
   });
 
   it("normalizes external default exports into plugin modules", async () => {
@@ -28,10 +28,10 @@ describe("resolvePluginModules", () => {
     expect(loadedPlugin.plugin.name).toBe("defaulted");
   });
 
-  it("rejects external plugins that conflict with default plugin names", async () => {
-    await expect(resolvePluginModules([resolve(__dirname, "fixtures/github-conflict-plugin.ts")])).rejects.toThrow(
-      'Plugin "github" conflicts with default plugin "github"',
-    );
+  it("allows external plugins to use former built-in names", async () => {
+    const registry = await resolvePluginModules([resolve(__dirname, "fixtures/github-conflict-plugin.ts")]);
+
+    expect(registry.github.name).toBe("github");
   });
 
   it("rejects duplicate external plugin names", async () => {

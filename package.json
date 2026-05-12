@@ -29,7 +29,8 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/@emulators/*",
+    "packages/@emulators/adapter-next",
+    "packages/@emulators/core",
     "apps/*",
     "examples/*"
   ]

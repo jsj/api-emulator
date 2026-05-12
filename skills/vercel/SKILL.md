@@ -1,7 +1,7 @@
 ---
 name: vercel
 description: Emulated Vercel REST API for local development and testing. Use when the user needs to interact with Vercel API endpoints locally, test Vercel integrations, emulate projects/deployments/domains, set up Vercel OAuth flows, manage environment variables, create API keys, configure protection bypass, or test without hitting the real Vercel API. Triggers include "Vercel API", "emulate Vercel", "mock Vercel", "test Vercel OAuth", "Vercel integration", "local Vercel", or any task requiring a local Vercel API.
-allowed-tools: Bash(npx api-emulator:*), Bash(api-emulator:*), Bash(curl:*)
+allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
 # Vercel API Emulator
@@ -12,7 +12,7 @@ Fully stateful Vercel REST API emulation with Vercel-style JSON responses and cu
 
 ```bash
 # Vercel only
-npx api-emulator --service vercel
+npx -p api-emulator api --service vercel
 
 # Default port
 # http://localhost:4000

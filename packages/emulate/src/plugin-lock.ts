@@ -7,6 +7,7 @@ export interface PluginLockEntry {
   name: string;
   source: "registry" | "specifier";
   specifier: string;
+  sourceId?: string;
   packageName?: string;
   version?: string;
 }

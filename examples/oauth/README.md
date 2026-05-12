@@ -12,7 +12,7 @@ bun install
 
 # Start the emulator with the example config
 cd examples/oauth
-npx api-emulator --seed api-emulator.config.yaml
+npx -p api-emulator api --seed api-emulator.config.yaml
 
 # In a separate terminal, start the Next.js app
 cd examples/oauth
@@ -37,4 +37,4 @@ See the root [README](../../README.md) for full emulator configuration options.
 
 ## External plugins
 
-This example uses providers from the default plugin catalog. To test app flows against additional providers, load plugins from [jsj/api-emulator-plugins](https://github.com/jsj/api-emulator-plugins) with `npx api-emulator --plugin <path> --service <name>`.
+This example uses local provider plugins. To test app flows against additional providers, load plugins from [jsj/api-emulator-plugins](https://github.com/jsj/api-emulator-plugins) with `npx -p api-emulator api --plugin <path> --service <name>`.

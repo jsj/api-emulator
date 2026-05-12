@@ -44,5 +44,5 @@ export async function initCommand(options: InitOptions): Promise<void> {
   writeFileSync(fullPath, content, "utf-8");
 
   console.log(`Created ${filename}`);
-  console.log(`\nRun 'npx api-emulator' to start the emulator.`);
+  console.log(`\nRun 'npx -p api-emulator api' to start the emulator.`);
 }

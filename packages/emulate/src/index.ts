@@ -11,10 +11,7 @@ const defaultPort = process.env.API_EMULATOR_PORT ?? process.env.EMULATE_PORT ??
 
 const program = new Command();
 
-program
-  .name("api-emulator")
-  .description("Local API emulators you can run, share, and extend with plugins")
-  .version(pkg.version);
+program.name("api").description("Local API emulators you can run, share, and extend with plugins").version(pkg.version);
 
 program
   .command("start", { isDefault: true })

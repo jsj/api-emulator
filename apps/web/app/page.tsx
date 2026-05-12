@@ -62,7 +62,9 @@ export default function LandingPage() {
               <h3 className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">Zero config</h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 Run{" "}
-                <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs dark:bg-neutral-800">npx api-emulator</code>{" "}
+                <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs dark:bg-neutral-800">
+                  npx -p api-emulator api
+                </code>{" "}
                 and all 11 services start with sensible defaults. Seed data via YAML when you need it.
               </p>
             </div>
@@ -133,7 +135,7 @@ stripe.config.host = `}</span>
                 Run alongside your dev server. Pick which services you need.
               </p>
               <div className="overflow-x-auto rounded-md bg-neutral-100 px-3 py-2 font-mono text-xs text-neutral-700 dark:bg-neutral-900 dark:text-neutral-300">
-                npx api-emulator --service github,stripe
+                npx -p api-emulator api --service github,stripe
               </div>
             </div>
             <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
@@ -157,7 +159,7 @@ afterAll(() => github.close())`}</code>
                 Embed in your app. Same origin, no CORS issues, works on Vercel preview deployments.
               </p>
               <div className="overflow-x-auto rounded-md bg-neutral-100 px-3 py-2 font-mono text-xs text-neutral-700 dark:bg-neutral-900 dark:text-neutral-300">
-                npm install @emulators/adapter-next @emulators/github
+                npm install @emulators/adapter-next @emulators/core
               </div>
             </div>
           </div>

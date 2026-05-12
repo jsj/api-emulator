@@ -14,34 +14,34 @@ Provider depth belongs in plugins. The public plugin shelf lives in [`jsj/api-em
 
 ## Quick start
 
-Run the built-in catalog:
+Run installed plugins:
 
 ```bash
-npx api-emulator
+npx -p api-emulator api
 ```
 
-Start specific services:
+Start specific plugins:
 
 ```bash
-npx api-emulator --service github,stripe,resend
+npx -p api-emulator api --service github,stripe,resend
 ```
 
 Generate config:
 
 ```bash
-npx api-emulator init
+npx -p api-emulator api init
 ```
 
-List built-in and external plugins:
+List available plugins:
 
 ```bash
-npx api-emulator list
+npx -p api-emulator api list
 ```
 
 Use trusted local HTTPS names:
 
 ```bash
-npx api-emulator --portless
+npx -p api-emulator api --portless
 ```
 
 Example local URLs:
@@ -52,7 +52,7 @@ https://stripe.api-emulator.localhost
 https://resend.api-emulator.localhost
 ```
 
-No API keys, Docker daemon, or external sandbox accounts are required for the built-in catalog.
+No API keys, Docker daemon, or external sandbox accounts are required for local plugins.
 
 ## Programmatic API
 
@@ -73,11 +73,11 @@ Each emulator exposes `url`, `reset()`, and `close()`.
 
 ## Plugins
 
-Load public plugins from [`api-emulator-plugins`](https://github.com/jsj/api-emulator-plugins):
+Load plugins directly from [`api-emulator-plugins`](https://github.com/jsj/api-emulator-plugins):
 
 ```bash
-npx api-emulator --plugin ./api-emulator-plugins/@posthog/api-emulator.mjs --service posthog
-npx api-emulator --plugin ./api-emulator-plugins/@github/api-emulator.mjs,./api-emulator-plugins/@apple/api-emulator.mjs
+npx -p api-emulator api --plugin ./api-emulator-plugins/@posthog/api-emulator.mjs --service posthog
+npx -p api-emulator api --plugin ./api-emulator-plugins/@github/api-emulator.mjs,./api-emulator-plugins/@apple/api-emulator.mjs
 ```
 
 A plugin exports a `ServicePlugin`:
@@ -95,9 +95,18 @@ export const plugin: ServicePlugin = {
 
 Plugins can also export `label`, `endpoints`, `initConfig`, `seedFromConfig`, and `defaultFallback`. See [`jsj/api-emulator-plugins`](https://github.com/jsj/api-emulator-plugins) for the current public catalog and examples.
 
+Install plugins from a public or internal plugin shelf:
+
+```bash
+npx -p api-emulator api install posthog
+npx -p api-emulator api install pepper --no-package-manager
+```
+
+The installer auto-discovers sibling `api-emulator-plugins` and `api-emulator-internal` checkouts. Set `API_EMULATOR_PLUGIN_CATALOGS=/path/to/shelf,/path/to/internal` to add more shelves.
+
 ## Configuration
 
-`api-emulator init` creates `api-emulator.config.yaml`.
+`npx -p api-emulator api init` creates `api-emulator.config.yaml`.
 
 ```yaml
 tokens:
@@ -139,19 +148,26 @@ Use `@emulators/adapter-next` to mount emulators inside a Next.js app on the sam
 ```ts
 // app/emulate/[...path]/route.ts
 import { createEmulateHandler } from '@emulators/adapter-next'
-import { githubPlugin } from '@emulators/github'
-import { stripePlugin } from '@emulators/stripe'
+import type { ServicePlugin } from '@emulators/core'
+
+const internalPlugin: ServicePlugin = {
+  name: 'internal',
+  register(app) {
+    app.get('/health', (c) => c.json({ ok: true }))
+  },
+}
 
 export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
-  plugins: [githubPlugin, stripePlugin],
+  services: {
+    internal: { emulator: { plugin: internalPlugin } },
+  },
 })
 ```
 
 This gives local routes like:
 
 ```text
-/emulate/github/login/oauth/authorize
-/emulate/stripe/v1/checkout/sessions
+/emulate/internal/health
 ```
 
 ## Development
@@ -178,7 +194,7 @@ bun run test
 ## Features
 
 - Thin runtime spine for stateful local provider APIs
-- Built-in catalog for common local development flows
+- Plugin shelf discovery for local development flows
 - External plugin loading from files or package names
 - Trusted local HTTPS names through portless
 - YAML and JSON seed data

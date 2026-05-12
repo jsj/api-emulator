@@ -34,7 +34,7 @@ The session cookie in this example is a plain base64url-encoded JSON blob with n
 
 | | `examples/oauth` | `examples/nextjs-embedded` |
 |---|---|---|
-| Emulator process | Separate `npx api-emulator` process | Embedded in the Next.js app |
+| Emulator process | Separate `npx -p api-emulator api` process | Embedded in the Next.js app |
 | Config | `api-emulator.config.yaml` + `.env.local` | Seed data in `route.ts` |
 | OAuth URLs | `http://localhost:4001/login/oauth/...` | `/emulate/github/login/oauth/...` (same origin) |
 | Client credentials | Must match config | `"any"` (validation skipped) |
@@ -60,4 +60,4 @@ src/
 
 ## External plugins
 
-This example uses providers from the default plugin catalog. To test app flows against additional providers, load plugins from [jsj/api-emulator-plugins](https://github.com/jsj/api-emulator-plugins) with `npx api-emulator --plugin <path> --service <name>`.
+This example uses local provider plugins. To test app flows against additional providers, load plugins from [jsj/api-emulator-plugins](https://github.com/jsj/api-emulator-plugins) with `npx -p api-emulator api --plugin <path> --service <name>`.
