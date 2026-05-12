@@ -4,23 +4,35 @@
 
 <h1 align="center">api-emulator</h1>
 
-<p align="center">Local API emulators you can run, share, and extend with plugins.</p>
+<p align="center">Fake real APIs locally so your app can test integrations without touching production, sandboxes, or someone else's server.</p>
 
-api-emulator is a small runtime for stateful local API emulation. Provider behavior lives in plugins, while the runtime handles shared state, auth, webhooks, seed data, reset hooks, local URLs, and embedded adapters.
+`api-emulator` is a local app store for fake APIs. Run GitHub, Stripe, Resend, and plugin powered providers on localhost, seed state, inspect behavior, reset data, and test your app in one place.
+
+## Why use it?
+
+- Test API integrations locally without real provider credentials.
+- Run multiple fake services together, with shared state, auth, webhooks, seed data, and resets.
+- Keep provider behavior in plugins so public, private, and internal APIs can live outside your app.
 
 ## Quick start
 
 ```bash
 npx -p api-emulator api
 npx -p api-emulator api --service github,stripe,resend
-npx -p api-emulator api init
-npx -p api-emulator api list
 ```
 
-Use trusted local HTTPS names with portless:
+Then point your app at the local provider URLs:
+
+```text
+http://localhost:4000/github
+http://localhost:4000/stripe
+http://localhost:4000/resend
+```
+
+Use trusted local HTTPS names when your app needs browser compatible origins:
 
 ```bash
-npx -p api-emulator api --portless
+npx -p api-emulator api --service github,stripe,resend --portless
 ```
 
 ```text
@@ -29,13 +41,49 @@ https://stripe.api-emulator.localhost
 https://resend.api-emulator.localhost
 ```
 
+Create starter config and list available services:
+
+```bash
+npx -p api-emulator api init
+npx -p api-emulator api list
+```
+
+## Use in tests
+
+```ts
+import { createEmulator } from 'api-emulator'
+
+const github = await createEmulator({ service: 'github', port: 4001 })
+process.env.GITHUB_API_BASE = github.url
+
+afterEach(() => github.reset())
+afterAll(() => github.close())
+```
+
+Capture and replay a stable fixture after a stochastic or stateful run:
+
+```ts
+const fixture = github.exportFixture({ metadata: { name: 'pull-request-flow' } })
+
+github.resetToFixture(fixture)
+```
+
 ## Plugins
 
-Load plugins from a local plugin shelf:
+Install more providers from a public or internal plugin shelf:
+
+```bash
+npx -p api-emulator api install posthog
+npx -p api-emulator api install pepper --no-package-manager
+```
+
+Or load a plugin file directly:
 
 ```bash
 npx -p api-emulator api --plugin ./api-emulator-plugins/@posthog/api-emulator.mjs --service posthog
 ```
+
+The installer auto discovers sibling `api-emulator-plugins` and `api-emulator-internal` checkouts. Set `API_EMULATOR_PLUGIN_CATALOGS=/path/to/shelf,/path/to/internal` to add more shelves.
 
 A plugin exports a `ServicePlugin`:
 
@@ -48,27 +96,6 @@ export const plugin: ServicePlugin = {
     app.get('/v1/customers', (c) => c.json({ data: [] }))
   },
 }
-```
-
-Install plugins from a public or internal shelf:
-
-```bash
-npx -p api-emulator api install posthog
-npx -p api-emulator api install pepper --no-package-manager
-```
-
-The installer auto-discovers sibling `api-emulator-plugins` and `api-emulator-internal` checkouts. Set `API_EMULATOR_PLUGIN_CATALOGS=/path/to/shelf,/path/to/internal` to add more shelves.
-
-## Programmatic API
-
-```ts
-import { createEmulator } from 'api-emulator'
-
-const github = await createEmulator({ service: 'github', port: 4001 })
-process.env.GITHUB_API_BASE = github.url
-
-afterEach(() => github.reset())
-afterAll(() => github.close())
 ```
 
 ## Next.js embedded mode
@@ -113,6 +140,13 @@ github:
 
 The CLI auto-detects `api-emulator.config.yaml`, `.yml`, and `.json`. Older `emulate.config.*` and `service-emulator.config.*` names still work as migration aliases.
 
+## Examples
+
+- [`examples/oauth`](./examples/oauth)
+- [`examples/nextjs-embedded`](./examples/nextjs-embedded)
+- [`examples/resend-magic-link`](./examples/resend-magic-link)
+- [`examples/stripe-checkout`](./examples/stripe-checkout)
+
 ## Development
 
 ```bash
@@ -126,7 +160,6 @@ bun run test
 
 ## Links
 
-- [`examples/`](./examples)
 - [`jsj/api-emulator-plugins`](https://github.com/jsj/api-emulator-plugins)
 - [`api-emulator` on npm](https://www.npmjs.com/package/api-emulator)
 

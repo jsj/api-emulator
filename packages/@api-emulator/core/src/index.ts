@@ -14,6 +14,15 @@ export {
 } from "./store.js";
 export { createServer, type ServerOptions } from "./server.js";
 export { type ServicePlugin, type RouteContext } from "./plugin.js";
+export {
+  createStoreFixture,
+  fixtureStoreSnapshot,
+  isStoreFixture,
+  type FixtureInteraction,
+  type FixtureSource,
+  type StoreFixture,
+  type StoreFixtureOptions,
+} from "./fixture.js";
 export { WebhookDispatcher, type WebhookSubscription, type WebhookDelivery } from "./webhooks.js";
 export {
   errorHandler,

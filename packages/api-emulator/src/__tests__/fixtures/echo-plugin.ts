@@ -5,6 +5,11 @@ export const plugin: ServicePlugin = {
   register(app, store) {
     app.get("/ping", (c) => c.json({ ok: true, service: "echo" }));
     app.get("/config", (c) => c.json(store.getData("echo:config") ?? null));
+    app.post("/config", async (c) => {
+      const body = await c.req.json();
+      store.setData("echo:config", body);
+      return c.json(body);
+    });
   },
 };
 

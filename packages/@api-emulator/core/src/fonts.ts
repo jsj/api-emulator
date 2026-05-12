@@ -27,7 +27,7 @@ export function registerFontRoutes(app: Hono<AppEnv>): void {
     });
   });
 
-  app.get("/_emulate/favicon.ico", (c) => {
+  app.get("/_emulate/favicon.ico", () => {
     return new Response(FAVICON, {
       headers: {
         "Content-Type": "image/x-icon",
