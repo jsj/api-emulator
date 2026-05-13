@@ -1,8 +1,8 @@
 # @api-emulator/core
 
-HTTP server, in-memory store, plugin interface, and middleware for emulate service plugins.
+HTTP server, in-memory store, plugin interface, and middleware for api-emulator service plugins.
 
-Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
+Part of [api-emulator](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
 
 ## Install
 

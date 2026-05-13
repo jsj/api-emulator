@@ -41,17 +41,7 @@ function loadSeedConfig(seedPath?: string): LoadResult | null {
     }
   }
 
-  const autoFiles = [
-    "api-emulator.config.yaml",
-    "api-emulator.config.yml",
-    "api-emulator.config.json",
-    "emulate.config.yaml",
-    "emulate.config.yml",
-    "emulate.config.json",
-    "service-emulator.config.yaml",
-    "service-emulator.config.yml",
-    "service-emulator.config.json",
-  ];
+  const autoFiles = ["api-emulator.config.yaml", "api-emulator.config.yml", "api-emulator.config.json"];
 
   for (const file of autoFiles) {
     const fullPath = resolve(file);

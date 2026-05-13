@@ -9,7 +9,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Stripe Checkout with api-emulator",
-  description: "A storefront demonstrating Stripe Checkout against the emulated Stripe API",
+  description: "A storefront demonstrating Stripe Checkout against the local Stripe API",
 };
 
 export default async function RootLayout({
@@ -34,7 +34,7 @@ export default async function RootLayout({
           <main className="flex-1">{children}</main>
           <footer className="border-t border-border/50 py-10">
             <div className="mx-auto max-w-[1200px] px-6 text-center text-xs tracking-widest uppercase text-muted-foreground">
-              Powered by the emulated Stripe API
+              Powered by the local Stripe API
             </div>
           </footer>
         </CartProvider>

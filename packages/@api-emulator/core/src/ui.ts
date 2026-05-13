@@ -9,11 +9,11 @@ export function escapeAttr(s: string): string {
 const CSS = `
 @font-face{
   font-family:'Geist';font-style:normal;font-weight:100 900;font-display:swap;
-  src:url('/_emulate/fonts/geist-sans.woff2') format('woff2');
+  src:url('/_api-emulator/fonts/geist-sans.woff2') format('woff2');
 }
 @font-face{
   font-family:'Geist Pixel';font-style:normal;font-weight:400;font-display:swap;
-  src:url('/_emulate/fonts/GeistPixel-Square.woff2') format('woff2');
+  src:url('/_api-emulator/fonts/GeistPixel-Square.woff2') format('woff2');
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -299,7 +299,7 @@ function head(title: string): string {
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<link rel="icon" href="/_emulate/favicon.ico"/>
+<link rel="icon" href="/_api-emulator/favicon.ico"/>
 <title>${escapeHtml(title)} | api-emulator</title>
 <style>${CSS}</style>
 </head>`;

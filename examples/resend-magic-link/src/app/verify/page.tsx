@@ -25,7 +25,7 @@ export default async function VerifyPage() {
           <div className="rounded-lg border border-dashed border-border bg-muted/50 p-3 text-center">
             <p className="text-xs text-muted-foreground mb-2">Using the emulator? View the email in the inbox:</p>
             <a
-              href="/emulate/resend/inbox"
+              href="/api-emulator/resend/inbox"
               target="_blank"
               className="text-sm font-medium text-primary underline underline-offset-4 hover:text-primary/80"
             >

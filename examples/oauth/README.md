@@ -1,6 +1,6 @@
 # OAuth Example
 
-A Next.js app demonstrating OAuth sign-in with all three emulated providers: **GitHub**, **Google**, and **Vercel**.
+A Next.js app demonstrating OAuth sign-in with all three local providers: **GitHub**, **Google**, and **Vercel**.
 
 No real accounts or API keys needed — everything runs against the local emulator.
 

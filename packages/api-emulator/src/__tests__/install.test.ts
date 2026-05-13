@@ -10,7 +10,7 @@ describe("installCommand", () => {
   let tempDir: string;
 
   beforeEach(() => {
-    tempDir = mkdtempSync(join(tmpdir(), "emulate-install-"));
+    tempDir = mkdtempSync(join(tmpdir(), "api-emulator-install-"));
     process.chdir(tempDir);
   });
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ServicePlugin } from "@api-emulator/core";
-import { createEmulateHandler, withEmulate } from "./index.js";
+import { createApiEmulatorHandler, withApiEmulator } from "./index.js";
 
 const plugin: ServicePlugin = {
   name: "echo",
@@ -19,45 +19,48 @@ function ctx(path: string[]) {
   return { params: Promise.resolve({ path }) };
 }
 
-describe("createEmulateHandler", () => {
+describe("createApiEmulatorHandler", () => {
   it("routes requests by service and rewrites relative HTML URLs", async () => {
-    const handler = createEmulateHandler({ services: { echo: { emulator: { plugin } } } });
+    const handler = createApiEmulatorHandler({ services: { echo: { emulator: { plugin } } } });
 
-    const res = await handler.GET(new Request("https://app.test/emulate/echo/page"), ctx(["echo", "page"]));
+    const res = await handler.GET(new Request("https://app.test/api-emulator/echo/page"), ctx(["echo", "page"]));
     const html = await res.text();
 
     expect(res.status).toBe(200);
-    expect(html).toContain('href="/emulate/echo/login"');
-    expect(html).toContain('action="/emulate/echo/submit"');
-    expect(html).toContain("url('/emulate/echo/font.woff2')");
+    expect(html).toContain('href="/api-emulator/echo/login"');
+    expect(html).toContain('action="/api-emulator/echo/submit"');
+    expect(html).toContain("url('/api-emulator/echo/font.woff2')");
   });
 
   it("rewrites relative redirect locations", async () => {
-    const handler = createEmulateHandler({ services: { echo: { emulator: { plugin } } } });
+    const handler = createApiEmulatorHandler({ services: { echo: { emulator: { plugin } } } });
 
-    const res = await handler.GET(new Request("https://app.test/emulate/echo/redirect"), ctx(["echo", "redirect"]));
+    const res = await handler.GET(
+      new Request("https://app.test/api-emulator/echo/redirect"),
+      ctx(["echo", "redirect"]),
+    );
 
     expect(res.status).toBe(302);
-    expect(res.headers.get("Location")).toBe("/emulate/echo/login");
+    expect(res.headers.get("Location")).toBe("/api-emulator/echo/login");
   });
 
   it("returns 404 for unknown services", async () => {
-    const handler = createEmulateHandler({ services: { echo: { emulator: { plugin } } } });
+    const handler = createApiEmulatorHandler({ services: { echo: { emulator: { plugin } } } });
 
-    const res = await handler.GET(new Request("https://app.test/emulate/missing/ping"), ctx(["missing", "ping"]));
+    const res = await handler.GET(new Request("https://app.test/api-emulator/missing/ping"), ctx(["missing", "ping"]));
 
     expect(res.status).toBe(404);
     expect(await res.text()).toBe("Unknown service: missing");
   });
 });
 
-describe("withEmulate", () => {
-  it("adds core font tracing for the emulate route", () => {
-    const config = withEmulate({ outputFileTracingIncludes: { "/api/**": ["./existing/**"] } });
+describe("withApiEmulator", () => {
+  it("adds core font tracing for the api-emulator route", () => {
+    const config = withApiEmulator({ outputFileTracingIncludes: { "/api/**": ["./existing/**"] } });
 
     expect(config.outputFileTracingIncludes).toMatchObject({
       "/api/**": ["./existing/**"],
-      "/emulate/**": ["./node_modules/@api-emulator/core/dist/fonts/**"],
+      "/api-emulator/**": ["./node_modules/@api-emulator/core/dist/fonts/**"],
     });
   });
 });

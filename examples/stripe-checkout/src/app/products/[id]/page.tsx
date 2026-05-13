@@ -71,7 +71,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           <div className="mt-10 border-t border-border pt-6 max-w-xs">
             <p className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-3">Details</p>
             <ul className="space-y-2 text-xs text-muted-foreground leading-relaxed">
-              <li>Emulated product for demonstration</li>
+              <li>Local product for demonstration</li>
               <li>Checkout powered by Stripe API</li>
               <li>No real charges processed</li>
             </ul>

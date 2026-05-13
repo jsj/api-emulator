@@ -1,6 +1,6 @@
 ---
 name: aws
-description: Emulated AWS cloud services (S3, SQS, IAM, STS) for local development and testing. Use when the user needs to interact with AWS API endpoints locally, test S3 bucket and object operations, emulate SQS queues and messages, manage IAM users/roles/access keys, test STS assume role, or work without hitting real AWS APIs. Triggers include "AWS emulator", "emulate AWS", "mock S3", "local SQS", "test IAM", "emulate S3", "AWS locally", "STS assume role", or any task requiring local AWS service emulation.
+description: Local AWS cloud services (S3, SQS, IAM, STS) for local development and testing. Use when the user needs to interact with AWS API endpoints locally, test S3 bucket and object operations, run SQS queues and messages locally, manage IAM users/roles/access keys, test STS assume role, or work without hitting real AWS APIs. Triggers include "AWS emulator", "local AWS", "mock S3", "local SQS", "test IAM", "local S3", "AWS locally", "STS assume role", or any task requiring local AWS local service testing.
 allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
@@ -114,13 +114,13 @@ aws:
         assume_role_policy: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}'
 ```
 
-Default seed (always created): S3 bucket `emulate-default`, SQS queue `emulate-default-queue`, IAM user `admin` with access key pair (`AKIAIOSFODNN7EXAMPLE` / `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`).
+Default seed (always created): S3 bucket `api-emulator-default`, SQS queue `api-emulator-default-queue`, IAM user `admin` with access key pair (`AKIAIOSFODNN7EXAMPLE` / `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`).
 
 ## API Endpoints
 
 ### S3
 
-S3 routes use root paths matching the real AWS S3 wire format. Legacy `/s3/` prefixed paths are also supported.
+S3 routes use root paths matching the real AWS S3 wire format.
 
 ```bash
 # List all buckets
@@ -354,12 +354,12 @@ BASE="http://localhost:4006"
 # Get queue URL
 QUEUE_URL=$(curl -s -X POST $BASE/sqs/ \
   -H "Authorization: Bearer $TOKEN" \
-  -d "Action=GetQueueUrl&QueueName=emulate-default-queue" | grep -oP '<QueueUrl>\K[^<]+')
+  -d "Action=GetQueueUrl&QueueName=api-emulator-default-queue" | grep -oP '<QueueUrl>\K[^<]+')
 
 # Send message
 curl -X POST $BASE/sqs/ \
   -H "Authorization: Bearer $TOKEN" \
-  -d "Action=SendMessage&QueueUrl=$QUEUE_URL&MessageBody=Hello+from+emulate"
+  -d "Action=SendMessage&QueueUrl=$QUEUE_URL&MessageBody=Hello+from+api-emulator"
 
 # Receive messages
 curl -X POST $BASE/sqs/ \

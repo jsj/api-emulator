@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "predev": "command -v portless >/dev/null 2>&1 || { echo '\\nportless is required but not installed.\\nRun: npm install -g portless\\n' >&2; exit 1; }",
-    "dev": "portless emulate next dev",
+    "dev": "portless api-emulator next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

@@ -1,6 +1,6 @@
 ---
 name: slack
-description: Emulated Slack API for local development and testing. Use when the user needs to interact with Slack API endpoints locally, test Slack integrations, emulate channels/messages/users, set up Slack OAuth flows, test incoming webhooks, or work with the Slack Web API without hitting the real Slack API. Triggers include "Slack API", "emulate Slack", "mock Slack", "test Slack OAuth", "Slack bot", "incoming webhook", "local Slack", or any task requiring a local Slack API.
+description: Local Slack API for local development and testing. Use when the user needs to interact with Slack API endpoints locally, test Slack integrations, run channels/messages/users locally, set up Slack OAuth flows, test incoming webhooks, or work with the Slack Web API without hitting the real Slack API. Triggers include "Slack API", "local Slack", "mock Slack", "test Slack OAuth", "Slack bot", "incoming webhook", "local Slack", or any task requiring a local Slack API.
 allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
@@ -306,7 +306,7 @@ Returns a Slack-style response:
   "access_token": "xoxb-...",
   "token_type": "bot",
   "bot_user_id": "B000000001",
-  "team": { "id": "T000000001", "name": "Emulate" },
+  "team": { "id": "T000000001", "name": "API Emulator" },
   "authed_user": { "id": "U000000001" }
 }
 ```

@@ -1,32 +1,13 @@
-import type { AuthFallback } from "@api-emulator/core";
-
 export interface PluginManifest {
   name?: string;
   label?: string;
   endpoints?: string;
   initConfig?: Record<string, unknown>;
   contract?: unknown;
-  compatibility?: {
-    apiEmulator?: string;
-  };
 }
 
-interface LegacyManifestFields {
-  label?: string;
-  endpoints?: string;
-  initConfig?: Record<string, unknown>;
-  contract?: unknown;
-  defaultFallback?(svcSeedConfig?: Record<string, unknown>): AuthFallback;
-}
-
-export function readPluginManifest(mod: { manifest?: PluginManifest } & LegacyManifestFields): PluginManifest {
-  return {
-    label: mod.label,
-    endpoints: mod.endpoints,
-    initConfig: mod.initConfig,
-    contract: mod.contract,
-    ...mod.manifest,
-  };
+export function readPluginManifest(mod: { manifest?: PluginManifest }): PluginManifest {
+  return mod.manifest ?? {};
 }
 
 export function validatePluginManifest(

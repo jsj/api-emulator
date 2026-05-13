@@ -1,8 +1,8 @@
 # @api-emulator/adapter-next
 
-Next.js App Router integration for emulate. Embed emulators directly in your Next.js app so they run on the same origin, solving the Vercel preview deployment problem where OAuth callback URLs change with every deployment.
+Next.js App Router integration for api-emulator. Embed emulators directly in your Next.js app so they run on the same origin, solving the Vercel preview deployment problem where OAuth callback URLs change with every deployment.
 
-Part of [emulate](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
+Part of [api-emulator](https://github.com/jsj/api-emulator) — local drop-in replacement services for CI and no-network sandboxes.
 
 ## Install
 
@@ -15,8 +15,8 @@ npm install @api-emulator/adapter-next
 Create a catch-all route that serves emulator traffic:
 
 ```typescript
-// app/emulate/[...path]/route.ts
-import { createEmulateHandler } from '@api-emulator/adapter-next'
+// app/api-emulator/[...path]/route.ts
+import { createApiEmulatorHandler } from '@api-emulator/adapter-next'
 import type { ServicePlugin } from '@api-emulator/core'
 
 const localPlugin: ServicePlugin = {
@@ -26,7 +26,7 @@ const localPlugin: ServicePlugin = {
   },
 }
 
-export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
+export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: {
     local: { emulator: { plugin: localPlugin } },
   },
@@ -47,9 +47,9 @@ const baseUrl = process.env.VERCEL_URL
 GitHub({
   clientId: 'any-value',
   clientSecret: 'any-value',
-  authorization: { url: `${baseUrl}/emulate/github/login/oauth/authorize` },
-  token: { url: `${baseUrl}/emulate/github/login/oauth/access_token` },
-  userinfo: { url: `${baseUrl}/emulate/github/user` },
+  authorization: { url: `${baseUrl}/api-emulator/github/login/oauth/authorize` },
+  token: { url: `${baseUrl}/api-emulator/github/login/oauth/access_token` },
+  userinfo: { url: `${baseUrl}/api-emulator/github/user` },
 })
 ```
 
@@ -61,9 +61,9 @@ Emulator UI pages use bundled fonts. Wrap your Next.js config to include them in
 
 ```typescript
 // next.config.mjs
-import { withEmulate } from '@api-emulator/adapter-next'
+import { withApiEmulator } from '@api-emulator/adapter-next'
 
-export default withEmulate({
+export default withApiEmulator({
   // your normal Next.js config
 })
 ```
@@ -71,7 +71,7 @@ export default withEmulate({
 If you mount the catch-all at a custom path, pass the matching prefix:
 
 ```typescript
-export default withEmulate(nextConfig, { routePrefix: '/api/emulate' })
+export default withApiEmulator(nextConfig, { routePrefix: '/api/api-emulator' })
 ```
 
 ## Persistence
@@ -79,7 +79,7 @@ export default withEmulate(nextConfig, { routePrefix: '/api/emulate' })
 By default, emulator state is in-memory and resets on every cold start. To persist state across restarts, pass a `persistence` adapter:
 
 ```typescript
-import { createEmulateHandler } from '@api-emulator/adapter-next'
+import { createApiEmulatorHandler } from '@api-emulator/adapter-next'
 import type { ServicePlugin } from '@api-emulator/core'
 
 const localPlugin: ServicePlugin = {
@@ -92,7 +92,7 @@ const kvAdapter = {
   async save(data: string) { await kv.set('api-emulator-state', data) },
 }
 
-export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
+export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: { local: { emulator: { plugin: localPlugin } } },
   persistence: kvAdapter,
 })

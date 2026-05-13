@@ -10,9 +10,8 @@ export interface ResolveBaseUrlOptions {
  * 1. Per-service baseUrl from seed config
  * 2. Explicit baseUrl (CLI flag or programmatic option)
  * 3. API_EMULATOR_BASE_URL env var (with {service} interpolation)
- * 4. EMULATE_BASE_URL env var for backward compatibility (with {service} interpolation)
- * 5. PORTLESS_URL env var (with {service} interpolation)
- * 6. http://localhost:<port>
+ * 4. PORTLESS_URL env var (with {service} interpolation)
+ * 5. http://localhost:<port>
  */
 export function resolveBaseUrl(opts: ResolveBaseUrlOptions): string {
   if (opts.seedBaseUrl) {
@@ -21,7 +20,7 @@ export function resolveBaseUrl(opts: ResolveBaseUrlOptions): string {
   if (opts.baseUrl) {
     return opts.baseUrl.replace(/\{service\}/g, opts.service);
   }
-  const envBaseUrl = process.env.API_EMULATOR_BASE_URL ?? process.env.EMULATE_BASE_URL;
+  const envBaseUrl = process.env.API_EMULATOR_BASE_URL;
   if (envBaseUrl) {
     return envBaseUrl.replace(/\{service\}/g, opts.service);
   }

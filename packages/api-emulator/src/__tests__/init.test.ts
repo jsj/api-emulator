@@ -13,7 +13,7 @@ describe("initCommand", () => {
   let tempDir: string;
 
   beforeEach(() => {
-    tempDir = mkdtempSync(join(tmpdir(), "emulate-init-"));
+    tempDir = mkdtempSync(join(tmpdir(), "api-emulator-init-"));
     process.chdir(tempDir);
   });
 

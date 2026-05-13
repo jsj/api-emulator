@@ -28,7 +28,7 @@ describe("resolvePluginModules", () => {
     expect(loadedPlugin.plugin.name).toBe("defaulted");
   });
 
-  it("allows external plugins to use former built-in names", async () => {
+  it("allows external plugins to use provider names", async () => {
     const registry = await resolvePluginModules([resolve(__dirname, "fixtures/github-conflict-plugin.ts")]);
 
     expect(registry.github.name).toBe("github");

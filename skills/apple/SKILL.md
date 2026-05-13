@@ -1,6 +1,6 @@
 ---
 name: apple
-description: Emulated Sign in with Apple / Apple OIDC for local development and testing. Use when the user needs to test Apple sign-in locally, emulate Apple OIDC discovery, handle Apple token exchange, configure Apple OAuth clients, or work with Apple userinfo without hitting real Apple APIs. Triggers include "Apple OAuth", "emulate Apple", "mock Apple login", "test Apple sign-in", "Sign in with Apple", "Apple OIDC", "local Apple auth", or any task requiring a local Apple OAuth/OIDC provider.
+description: Local Sign in with Apple / Apple OIDC for local development and testing. Use when the user needs to test Apple sign-in locally, run Apple OIDC discovery locally, handle Apple token exchange, configure Apple OAuth clients, or work with Apple userinfo without hitting real Apple APIs. Triggers include "Apple OAuth", "local Apple", "mock Apple login", "test Apple sign-in", "Sign in with Apple", "Apple OIDC", "local Apple auth", or any task requiring a local Apple OAuth/OIDC provider.
 allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
@@ -137,7 +137,7 @@ Returns the standard OIDC discovery document with all endpoints pointing to the 
 curl http://localhost:4004/auth/keys
 ```
 
-Returns an RSA public key (`kid`: `emulate-apple-1`) for verifying `id_token` signatures.
+Returns an RSA public key (`kid`: `api-emulator-apple-1`) for verifying `id_token` signatures.
 
 ### Authorization
 
