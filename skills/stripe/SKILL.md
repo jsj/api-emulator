@@ -1,6 +1,6 @@
 ---
 name: stripe
-description: Emulated Stripe API for local development and testing. Use when the user needs to process payments locally, test checkout flows, create customers, manage products and prices, handle payment intents, work with webhooks, or use the Stripe SDK without hitting real Stripe servers. Triggers include "Stripe API", "emulate Stripe", "test payments locally", "checkout flow", "payment intent", "Stripe webhook", "Stripe SDK", "STRIPE_API_KEY", or any task requiring a local Stripe API.
+description: Local Stripe API for local development and testing. Use when the user needs to process payments locally, test checkout flows, create customers, manage products and prices, handle payment intents, work with webhooks, or use the Stripe SDK without hitting real Stripe servers. Triggers include "Stripe API", "local Stripe", "test payments locally", "checkout flow", "payment intent", "Stripe webhook", "Stripe SDK", "STRIPE_API_KEY", or any task requiring a local Stripe API.
 allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
@@ -48,15 +48,15 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 ### Embedded in Next.js (adapter-next)
 
-When using `@api-emulator/adapter-next`, the emulator runs inside your Next.js app at `/emulate/stripe`. The SDK needs to point at `localhost` with a proxy route to forward `/v1/*` calls to `/emulate/stripe/v1/*`:
+When using `@api-emulator/adapter-next`, the emulator runs inside your Next.js app at `/api-emulator/stripe`. The SDK needs to point at `localhost` with a proxy route to forward `/v1/*` calls to `/api-emulator/stripe/v1/*`:
 
 ```typescript
 // next.config.ts
-import { withEmulate } from '@api-emulator/adapter-next'
+import { withApiEmulator } from '@api-emulator/adapter-next'
 
-export default withEmulate({
+export default withApiEmulator({
   env: {
-    STRIPE_SECRET_KEY: 'sk_test_emulated',
+    STRIPE_SECRET_KEY: 'sk_test_api_emulator',
   },
 })
 ```
@@ -76,8 +76,8 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 ```
 
 ```typescript
-// app/emulate/[...path]/route.ts
-import { createEmulateHandler } from '@api-emulator/adapter-next'
+// app/api-emulator/[...path]/route.ts
+import { createApiEmulatorHandler } from '@api-emulator/adapter-next'
 import type { ServicePlugin } from '@api-emulator/core'
 
 const stripePlugin: ServicePlugin = {
@@ -85,7 +85,7 @@ const stripePlugin: ServicePlugin = {
   register(app) { app.all('/*', (c) => c.json({ ok: true, provider: 'stripe' })) },
 }
 
-export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
+export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: {
     stripe: {
       emulator: { plugin: stripePlugin },
@@ -110,7 +110,7 @@ export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
 
 ```typescript
 // app/v1/[...path]/route.ts  (proxy for Stripe SDK)
-const STRIPE_URL = `http://localhost:${process.env.PORT ?? '3000'}/emulate/stripe`
+const STRIPE_URL = `http://localhost:${process.env.PORT ?? '3000'}/api-emulator/stripe`
 
 async function handler(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
   const { path } = await ctx.params
@@ -138,7 +138,7 @@ export { handler as GET, handler as POST, handler as PUT, handler as PATCH, hand
 
 ```bash
 curl http://localhost:4000/v1/customers \
-  -H "Authorization: Bearer sk_test_emulated"
+  -H "Authorization: Bearer sk_test_api_emulator"
 ```
 
 ## Seed Config

@@ -212,7 +212,7 @@ describe("Store snapshot/restore", () => {
 });
 
 describe("filePersistence", () => {
-  const tmpPath = join(tmpdir(), `emulate-test-${Date.now()}.json`);
+  const tmpPath = join(tmpdir(), `api-emulator-test-${Date.now()}.json`);
 
   afterEach(() => {
     try {
@@ -240,7 +240,7 @@ describe("filePersistence", () => {
   });
 
   it("save creates parent directories", async () => {
-    const dir = join(tmpdir(), `emulate-nested-${Date.now()}`);
+    const dir = join(tmpdir(), `api-emulator-nested-${Date.now()}`);
     const nested = join(dir, "deep", "state.json");
     const adapter = filePersistence(nested);
     await adapter.save("{}");

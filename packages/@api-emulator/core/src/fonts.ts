@@ -14,7 +14,7 @@ const FONTS: Record<string, Buffer> = {
 const FAVICON = readFileSync(join(__dirname, "fonts", "favicon.ico"));
 
 export function registerFontRoutes(app: Hono<AppEnv>): void {
-  app.get("/_emulate/fonts/:name", (c) => {
+  app.get("/_api-emulator/fonts/:name", (c) => {
     const name = c.req.param("name");
     const buf = FONTS[name];
     if (!buf) return c.notFound();
@@ -27,7 +27,7 @@ export function registerFontRoutes(app: Hono<AppEnv>): void {
     });
   });
 
-  app.get("/_emulate/favicon.ico", () => {
+  app.get("/_api-emulator/favicon.ico", () => {
     return new Response(FAVICON, {
       headers: {
         "Content-Type": "image/x-icon",

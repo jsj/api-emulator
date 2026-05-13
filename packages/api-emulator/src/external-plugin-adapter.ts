@@ -7,12 +7,8 @@ export interface ExternalPluginModule {
   plugin?: ServicePlugin;
   default?: ServicePlugin;
   seedFromConfig?(store: Store, baseUrl: string, config: unknown, webhooks?: WebhookDispatcher): void;
-  label?: string;
-  endpoints?: string;
   manifest?: PluginManifest;
-  contract?: unknown;
   defaultFallback?(svcSeedConfig?: Record<string, unknown>): AuthFallback;
-  initConfig?: Record<string, unknown>;
 }
 
 export async function loadExternalPluginModule(specifier: string): Promise<PluginModule> {

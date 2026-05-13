@@ -7,7 +7,7 @@ import { installCommand } from "./commands/install.js";
 declare const PKG_VERSION: string;
 const pkg = { version: PKG_VERSION };
 
-const defaultPort = process.env.API_EMULATOR_PORT ?? process.env.EMULATE_PORT ?? process.env.PORT ?? "4000";
+const defaultPort = process.env.API_EMULATOR_PORT ?? process.env.PORT ?? "4000";
 
 const program = new Command();
 

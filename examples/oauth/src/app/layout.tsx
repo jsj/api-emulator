@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "OAuth Example – api-emulator",
-  description: "Sign in with GitHub, Google, and Vercel using emulated OAuth",
+  description: "Sign in with GitHub, Google, and Vercel using local OAuth",
 };
 
 export default function RootLayout({

@@ -1,6 +1,6 @@
 import { resolve } from "path";
 import type { NextConfig } from "next";
-import { withEmulate } from "@api-emulator/adapter-next";
+import { withApiEmulator } from "@api-emulator/adapter-next";
 
 const port = process.env.PORT ?? "3000";
 
@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
     root: resolve(import.meta.dirname, "../.."),
   },
   env: {
-    RESEND_BASE_URL: `http://localhost:${port}/emulate/resend`,
+    RESEND_BASE_URL: `http://localhost:${port}/api-emulator/resend`,
   },
 };
 
-export default withEmulate(nextConfig);
+export default withApiEmulator(nextConfig);

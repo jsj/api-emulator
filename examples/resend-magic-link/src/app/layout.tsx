@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Magic Link Sign-In with Resend",
-  description: "Magic link authentication using the emulated Resend API",
+  description: "Magic link authentication using the local Resend API",
 };
 
 export default function RootLayout({

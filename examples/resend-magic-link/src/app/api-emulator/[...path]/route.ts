@@ -1,4 +1,4 @@
-import { createEmulateHandler } from "@api-emulator/adapter-next";
+import { createApiEmulatorHandler } from "@api-emulator/adapter-next";
 import type { ServicePlugin } from "@api-emulator/core";
 
 const resendPlugin: ServicePlugin = {
@@ -8,7 +8,7 @@ const resendPlugin: ServicePlugin = {
   },
 };
 
-export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
+export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: {
     resend: {
       emulator: { plugin: resendPlugin },

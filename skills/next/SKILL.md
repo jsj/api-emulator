@@ -1,6 +1,6 @@
 ---
 name: next
-description: Next.js adapter for embedding emulators directly in a Next.js app via @api-emulator/adapter-next. Use when the user needs to embed emulators in Next.js, set up same-origin OAuth for Vercel preview deployments, create an emulate catch-all route handler, configure Auth.js/NextAuth with embedded emulators, add persistence to embedded emulators, or wrap next.config with withEmulate. Triggers include "Next.js emulator", "adapter-next", "embedded emulator", "same-origin OAuth", "Vercel preview", "createEmulateHandler", "withEmulate", or any task requiring emulators inside a Next.js app.
+description: Next.js adapter for embedding emulators directly in a Next.js app via @api-emulator/adapter-next. Use when the user needs to embed emulators in Next.js, set up same-origin OAuth for Vercel preview deployments, create an api-emulator catch-all route handler, configure Auth.js/NextAuth with embedded emulators, add persistence to embedded emulators, or wrap next.config with withApiEmulator. Triggers include "Next.js emulator", "adapter-next", "embedded emulator", "same-origin OAuth", "Vercel preview", "createApiEmulatorHandler", "withApiEmulator", or any task requiring emulators inside a Next.js app.
 allowed-tools: Bash(npx -p api-emulator api:*)
 ---
 
@@ -21,8 +21,8 @@ Load provider plugins from your app, an internal package, or a plugin shelf; the
 Create a catch-all route that serves emulator traffic:
 
 ```typescript
-// app/emulate/[...path]/route.ts
-import { createEmulateHandler } from '@api-emulator/adapter-next'
+// app/api-emulator/[...path]/route.ts
+import { createApiEmulatorHandler } from '@api-emulator/adapter-next'
 import type { ServicePlugin } from '@api-emulator/core'
 
 const githubPlugin: ServicePlugin = {
@@ -35,7 +35,7 @@ const googlePlugin: ServicePlugin = {
   register(app) { app.all('/*', (c) => c.json({ ok: true, provider: 'google' })) },
 }
 
-export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
+export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: {
     github: {
       emulator: { plugin: githubPlugin },
@@ -56,8 +56,8 @@ export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
 
 This creates the following routes:
 
-- `/emulate/github/**` serves the GitHub emulator
-- `/emulate/google/**` serves the Google emulator
+- `/api-emulator/github/**` serves the GitHub emulator
+- `/api-emulator/google/**` serves the Google emulator
 
 ## Auth.js / NextAuth Configuration
 
@@ -73,9 +73,9 @@ const baseUrl = process.env.VERCEL_URL
 GitHub({
   clientId: 'any-value',
   clientSecret: 'any-value',
-  authorization: { url: `${baseUrl}/emulate/github/login/oauth/authorize` },
-  token: { url: `${baseUrl}/emulate/github/login/oauth/access_token` },
-  userinfo: { url: `${baseUrl}/emulate/github/user` },
+  authorization: { url: `${baseUrl}/api-emulator/github/login/oauth/authorize` },
+  token: { url: `${baseUrl}/api-emulator/github/login/oauth/access_token` },
+  userinfo: { url: `${baseUrl}/api-emulator/github/user` },
 })
 ```
 
@@ -87,9 +87,9 @@ Emulator UI pages use bundled fonts. Wrap your Next.js config to include them in
 
 ```typescript
 // next.config.mjs
-import { withEmulate } from '@api-emulator/adapter-next'
+import { withApiEmulator } from '@api-emulator/adapter-next'
 
-export default withEmulate({
+export default withApiEmulator({
   // your normal Next.js config
 })
 ```
@@ -97,7 +97,7 @@ export default withEmulate({
 If you mount the catch-all at a custom path, pass the matching prefix:
 
 ```typescript
-export default withEmulate(nextConfig, { routePrefix: '/api/emulate' })
+export default withApiEmulator(nextConfig, { routePrefix: '/api/api-emulator' })
 ```
 
 ## Persistence
@@ -107,7 +107,7 @@ By default, emulator state is in-memory and resets on every cold start. To persi
 ### Custom Adapter (Vercel KV, Redis, etc.)
 
 ```typescript
-import { createEmulateHandler } from '@api-emulator/adapter-next'
+import { createApiEmulatorHandler } from '@api-emulator/adapter-next'
 import type { ServicePlugin } from '@api-emulator/core'
 
 const githubPlugin: ServicePlugin = {
@@ -120,7 +120,7 @@ const kvAdapter = {
   async save(data: string) { await kv.set('api-emulator-state', data) },
 }
 
-export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
+export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: { github: { emulator: { plugin: githubPlugin } } },
   persistence: kvAdapter,
 })
@@ -145,7 +145,7 @@ persistence: filePersistence('.api-emulator/state.json'),
 
 ## How It Works
 
-1. **Incoming request**: `/emulate/github/login/oauth/authorize?client_id=...`
+1. **Incoming request**: `/api-emulator/github/login/oauth/authorize?client_id=...`
 2. **Parse**: service = `github`, rest = `/login/oauth/authorize`
 3. **Strip prefix**: A new `Request` is created with the stripped path and forwarded to the GitHub Hono app
 4. **Rewrite response**: HTML `action` and `href` attributes, CSS `url()` font references, and `Location` headers get the service prefix prepended
@@ -158,7 +158,7 @@ persistence: filePersistence('.api-emulator/state.json'),
 
 ## Config Reference
 
-### `createEmulateHandler(config)`
+### `createApiEmulatorHandler(config)`
 
 | Field | Type | Description |
 |-------|------|-------------|
@@ -177,13 +177,13 @@ const githubPlugin: ServicePlugin = {
 }`) |
 | `seed?` | `Record<string, unknown>` | Seed data matching the service's config schema |
 
-### `withEmulate(nextConfig, options?)`
+### `withApiEmulator(nextConfig, options?)`
 
 Wraps a Next.js config to include emulator font files in the serverless output trace. Call it around your exported config in `next.config.mjs` or `next.config.ts`.
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `routePrefix` | `string` | `"/emulate"` | The path prefix where the catch-all route is mounted |
+| `routePrefix` | `string` | `"/api-emulator"` | The path prefix where the catch-all route is mounted |
 
 ### `PersistenceAdapter`
 

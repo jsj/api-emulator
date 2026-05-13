@@ -98,7 +98,7 @@ github:
         - "http://localhost:3000/api/auth/callback/github"
 ```
 
-If no `oauth_apps` are configured, the emulator accepts any `client_id` (backward-compatible). With apps configured, strict validation is enforced.
+If no `oauth_apps` are configured, the emulator accepts any `client_id`. With apps configured, strict validation is enforced.
 
 ## GitHub Apps
 
@@ -291,7 +291,7 @@ aws:
         description: Role for Lambda function execution
 ```
 
-Default seed (always created): S3 bucket `emulate-default`, SQS queue `emulate-default-queue`, IAM user `admin` with access key pair.
+Default seed (always created): S3 bucket `api-emulator-default`, SQS queue `api-emulator-default-queue`, IAM user `admin` with access key pair.
 
 ## Okta Seed Config
 

@@ -105,7 +105,7 @@ npm install @api-emulator/adapter-next @api-emulator/core
 ```
 
 ```ts
-import { createEmulateHandler } from '@api-emulator/adapter-next'
+import { createApiEmulatorHandler } from '@api-emulator/adapter-next'
 import type { ServicePlugin } from '@api-emulator/core'
 
 const internalPlugin: ServicePlugin = {
@@ -115,7 +115,7 @@ const internalPlugin: ServicePlugin = {
   },
 }
 
-export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
+export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: {
     internal: { emulator: { plugin: internalPlugin } },
   },
@@ -138,7 +138,7 @@ github:
       name: The Octocat
 ```
 
-The CLI auto-detects `api-emulator.config.yaml`, `.yml`, and `.json`. Older `emulate.config.*` and `service-emulator.config.*` names still work as migration aliases.
+The CLI auto-detects `api-emulator.config.yaml`, `.yml`, and `.json`.
 
 ## Examples
 

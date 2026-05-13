@@ -8,10 +8,12 @@ const plugin: ServicePlugin = {
 };
 
 export default plugin;
-export const label = "Default export test plugin";
-export const endpoints = "ping";
-export const initConfig = {
-  defaulted: {
-    enabled: true,
+export const manifest = {
+  label: "Default export test plugin",
+  endpoints: "ping",
+  initConfig: {
+    defaulted: {
+      enabled: true,
+    },
   },
 };
