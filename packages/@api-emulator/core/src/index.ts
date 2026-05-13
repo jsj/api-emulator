@@ -70,3 +70,13 @@ export { registerFontRoutes } from "./fonts.js";
 export { normalizeUri, matchesRedirectUri, constantTimeSecretEqual, bodyStr, parseCookies } from "./oauth-helpers.js";
 export { debug } from "./debug.js";
 export { type PersistenceAdapter, filePersistence } from "./persistence.js";
+export {
+  createOpenApiMockHandler,
+  openApiPathToHonoPath,
+  registerOpenApiMockAdapter,
+  type OpenApiMockContext,
+  type OpenApiMockEnvelope,
+  type OpenApiMockOperation,
+  type OpenApiMockResponseFactory,
+  type RegisterOpenApiMockOptions,
+} from "./openapi-mock.js";
