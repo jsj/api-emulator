@@ -47,7 +47,7 @@ export default async function Home() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Sign In</CardTitle>
-          <CardDescription>Choose a provider to sign in with the emulated OAuth flow</CardDescription>
+          <CardDescription>Choose a provider to sign in with the local OAuth flow</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           {Object.values(providers).map((provider) => (

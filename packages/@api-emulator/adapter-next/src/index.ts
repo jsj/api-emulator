@@ -27,7 +27,7 @@ interface EmulatorEntry {
   seed?: Record<string, unknown>;
 }
 
-export interface EmulateHandlerConfig {
+export interface ApiEmulatorHandlerConfig {
   services: Record<string, EmulatorEntry>;
   persistence?: PersistenceAdapter;
 }
@@ -166,7 +166,7 @@ async function rewriteResponse(response: Response, servicePrefix: string): Promi
   });
 }
 
-export function createEmulateHandler(config: EmulateHandlerConfig) {
+export function createApiEmulatorHandler(config: ApiEmulatorHandlerConfig) {
   const { services: serviceEntries, persistence } = config;
 
   let apps: Map<string, ServiceApp> | null = null;
@@ -303,9 +303,13 @@ export function createEmulateHandler(config: EmulateHandlerConfig) {
   };
 }
 
-export function withEmulate<T>(nextConfig: T, options?: { routePrefix?: string }): T {
+function addApiEmulatorTracing<T>(
+  nextConfig: T,
+  options: { routePrefix?: string } | undefined,
+  defaultRoutePrefix: string,
+): T {
   const config = nextConfig as Record<string, unknown>;
-  const prefix = options?.routePrefix ?? "/emulate";
+  const prefix = options?.routePrefix ?? defaultRoutePrefix;
   const routePattern = `${prefix}/**`;
   const fontGlob = "./node_modules/@api-emulator/core/dist/fonts/**";
 
@@ -316,4 +320,8 @@ export function withEmulate<T>(nextConfig: T, options?: { routePrefix?: string }
   }
 
   return { ...config, outputFileTracingIncludes: topLevel } as T;
+}
+
+export function withApiEmulator<T>(nextConfig: T, options?: { routePrefix?: string }): T {
+  return addApiEmulatorTracing(nextConfig, options, "/api-emulator");
 }

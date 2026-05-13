@@ -1,16 +1,28 @@
 # Changelog
 
 <!-- release:start -->
+## 0.6.0
+
+### Breaking Changes
+
+- Remove old naming and compatibility surfaces from config discovery, environment variables, adapter helpers, embedded routes, and package docs.
+- Rename Next.js adapter helpers to `createApiEmulatorHandler` and `withApiEmulator`.
+- Use `/api-emulator` and `/_api-emulator` routes for embedded apps and shared assets.
+
+### Fixes
+
+- Update runtime package READMEs so npm renders api-emulator branding consistently.
+
+<!-- release:end -->
+
 ## 0.5.2
 
 ### Fixes
 
-- Publish the corrected package shape with `@api-emulator/core` instead of the legacy `@emulators/*` runtime dependencies.
+- Publish the corrected package shape with `@api-emulator/core` instead of `@emulators/*` runtime dependencies.
 - Publish runtime packages before the CLI package so npm dependency resolution works on fresh installs.
 - Fix the npm README cover image by using an absolute GitHub asset URL.
 - Add fixture capture and replay APIs for stabilizing stateful and stochastic emulator runs.
-
-<!-- release:end -->
 
 ## 0.5.1
 

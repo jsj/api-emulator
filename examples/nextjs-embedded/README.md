@@ -19,7 +19,7 @@ Open [http://localhost:3000](http://localhost:3000) and click any provider to si
 
 ## How It Works
 
-1. Emulators are served from `/emulate/github/**` and `/emulate/google/**` via a catch-all route handler in `src/app/emulate/[...path]/route.ts`.
+1. Emulators are served from `/api-emulator/github/**` and `/api-emulator/google/**` via a catch-all route handler in `src/app/api-emulator/[...path]/route.ts`.
 2. Clicking a provider button redirects to `/api/auth/[provider]`, which builds the OAuth authorize URL pointing at the embedded emulator (same origin).
 3. The emulator shows a user-picker page. Select a seeded user.
 4. The emulator redirects back to `/api/auth/callback/[provider]` with an authorization code.
@@ -36,7 +36,7 @@ The session cookie in this example is a plain base64url-encoded JSON blob with n
 |---|---|---|
 | Emulator process | Separate `npx -p api-emulator api` process | Embedded in the Next.js app |
 | Config | `api-emulator.config.yaml` + `.env.local` | Seed data in `route.ts` |
-| OAuth URLs | `http://localhost:4001/login/oauth/...` | `/emulate/github/login/oauth/...` (same origin) |
+| OAuth URLs | `http://localhost:4001/login/oauth/...` | `/api-emulator/github/login/oauth/...` (same origin) |
 | Client credentials | Must match config | `"any"` (validation skipped) |
 | Preview deploys | Requires fixed callback URL | Works on any URL |
 | Extra dependency | None | `@api-emulator/adapter-next` |
@@ -46,7 +46,7 @@ The session cookie in this example is a plain base64url-encoded JSON blob with n
 ```
 src/
   app/
-    emulate/[...path]/route.ts   # Embedded emulators (GitHub + Google)
+    api-emulator/[...path]/route.ts   # Embedded emulators (GitHub + Google)
     api/auth/
       [provider]/route.ts        # Initiates OAuth flow
       callback/[provider]/route.ts  # Handles OAuth callback

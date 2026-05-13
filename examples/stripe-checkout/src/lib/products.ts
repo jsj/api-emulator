@@ -1,8 +1,8 @@
 export const productImages: Record<string, string> = {
-  "Emulate T-Shirt": "/products/tshirt.webp",
-  "Emulate Mug": "/products/mug.webp",
-  "Emulate Sticker Pack": "/products/stickers.webp",
-  "Emulate Hoodie": "/products/hoodie.webp",
+  "API Emulator T-Shirt": "/products/tshirt.webp",
+  "API Emulator Mug": "/products/mug.webp",
+  "API Emulator Sticker Pack": "/products/stickers.webp",
+  "API Emulator Hoodie": "/products/hoodie.webp",
 };
 
 export function formatCurrency(amount: number, currency: string) {

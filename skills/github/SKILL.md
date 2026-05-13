@@ -1,6 +1,6 @@
 ---
 name: github
-description: Emulated GitHub REST API for local development and testing. Use when the user needs to interact with GitHub API endpoints locally, test GitHub integrations, emulate repos/issues/PRs, set up GitHub OAuth flows, configure GitHub Apps, test webhooks, or work with actions/checks without hitting the real GitHub API. Triggers include "GitHub API", "emulate GitHub", "mock GitHub", "test GitHub OAuth", "GitHub App JWT", "local GitHub", or any task requiring a local GitHub API.
+description: Local GitHub REST API for local development and testing. Use when the user needs to interact with GitHub API endpoints locally, test GitHub integrations, run repos/issues/PRs locally, set up GitHub OAuth flows, configure GitHub Apps, test webhooks, or work with actions/checks without hitting the real GitHub API. Triggers include "GitHub API", "local GitHub", "mock GitHub", "test GitHub OAuth", "GitHub App JWT", "local GitHub", or any task requiring a local GitHub API.
 allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
@@ -370,7 +370,7 @@ curl http://localhost:4001/orgs/my-org/teams/engineering/repos
 curl -X PUT http://localhost:4001/orgs/my-org/teams/engineering/repos/my-org/org-repo \
   -H "Authorization: Bearer $TOKEN"
 
-# Legacy team endpoints by ID
+# Team endpoints by ID
 curl http://localhost:4001/teams/1
 curl http://localhost:4001/teams/1/members
 ```

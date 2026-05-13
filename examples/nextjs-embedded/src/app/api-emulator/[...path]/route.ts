@@ -1,4 +1,4 @@
-import { createEmulateHandler } from "@api-emulator/adapter-next";
+import { createApiEmulatorHandler } from "@api-emulator/adapter-next";
 import type { ServicePlugin } from "@api-emulator/core";
 
 function jsonPlugin(name: string): { plugin: ServicePlugin } {
@@ -12,7 +12,7 @@ function jsonPlugin(name: string): { plugin: ServicePlugin } {
   };
 }
 
-export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
+export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: {
     github: {
       emulator: jsonPlugin("github"),

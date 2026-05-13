@@ -1,6 +1,6 @@
 ---
 name: microsoft
-description: Emulated Microsoft Entra ID (Azure AD) OAuth 2.0 / OpenID Connect for local development and testing. Use when the user needs to test Microsoft sign-in locally, emulate Entra ID OIDC discovery, handle Microsoft token exchange, configure Azure AD OAuth clients, work with Microsoft Graph /me, or test PKCE/client credentials flows without hitting real Microsoft APIs. Triggers include "Microsoft OAuth", "Entra ID", "Azure AD", "emulate Microsoft", "mock Microsoft login", "test Microsoft sign-in", "Microsoft OIDC", "local Microsoft auth", or any task requiring a local Microsoft OAuth/OIDC provider.
+description: Local Microsoft Entra ID (Azure AD) OAuth 2.0 / OpenID Connect for local development and testing. Use when the user needs to test Microsoft sign-in locally, run Entra ID OIDC discovery locally, handle Microsoft token exchange, configure Azure AD OAuth clients, work with Microsoft Graph /me, or test PKCE/client credentials flows without hitting real Microsoft APIs. Triggers include "Microsoft OAuth", "Entra ID", "Azure AD", "local Microsoft", "mock Microsoft login", "test Microsoft sign-in", "Microsoft OIDC", "local Microsoft auth", or any task requiring a local Microsoft OAuth/OIDC provider.
 allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
@@ -161,7 +161,7 @@ Returns the standard OIDC discovery document:
 curl http://localhost:4005/discovery/v2.0/keys
 ```
 
-Returns an RSA public key (`kid`: `emulate-microsoft-1`) for verifying `id_token` signatures.
+Returns an RSA public key (`kid`: `api-emulator-microsoft-1`) for verifying `id_token` signatures.
 
 ### Authorization
 

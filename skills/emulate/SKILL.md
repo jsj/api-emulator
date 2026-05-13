@@ -1,6 +1,6 @@
 ---
 name: api-emulator
-description: Local drop-in API emulator for Vercel, GitHub, Google, Slack, Apple, Microsoft, and AWS. Use when the user needs to start emulated services, configure seed data, write tests against local APIs, set up CI without network access, or work with the api-emulator CLI or programmatic API. Triggers include "start the emulator", "emulate services", "mock API locally", "create emulator config", "test against local API", "npx -p api-emulator api", or any task requiring local service emulation.
+description: Local drop-in API emulator for Vercel, GitHub, Google, Slack, Apple, Microsoft, and AWS. Use when the user needs to start local services, configure seed data, write tests against local APIs, set up CI without network access, or work with the api-emulator CLI or programmatic API. Triggers include "start the emulator", "run local services", "mock API locally", "create emulator config", "test against local API", "npx -p api-emulator api", or any task requiring local local service testing.
 allowed-tools: Bash(npx -p api-emulator api:*)
 ---
 
@@ -134,8 +134,6 @@ Configuration is optional. The CLI auto-detects config files in this order:
 
 1. `api-emulator.config.yaml` / `.yml`
 2. `api-emulator.config.json`
-3. `service-emulator.config.yaml` / `.yml`
-4. `service-emulator.config.json`
 
 Or pass `--seed <file>` explicitly. Run `npx -p api-emulator api init` to generate a starter file.
 
@@ -350,7 +348,7 @@ State is loaded on cold start and saved after every mutating request (POST, PUT,
 
 ```
 packages/
-  emulate/           # CLI entry point + programmatic API
+  api-emulator/      # CLI entry point + programmatic API
   @api-emulator/
     core/            # HTTP server (Hono), Store, plugin interface, middleware
     adapter-next/    # Next.js App Router integration

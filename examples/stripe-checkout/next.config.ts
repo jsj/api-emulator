@@ -1,6 +1,6 @@
 import { resolve } from "path";
 import type { NextConfig } from "next";
-import { withEmulate } from "@api-emulator/adapter-next";
+import { withApiEmulator } from "@api-emulator/adapter-next";
 
 const port = process.env.PORT ?? "3000";
 
@@ -16,4 +16,4 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["stripe-checkout.api-emulator.localhost"],
 };
 
-export default withEmulate(nextConfig);
+export default withApiEmulator(nextConfig);

@@ -1,6 +1,6 @@
 ---
 name: resend
-description: Emulated Resend email API for local development and testing. Use when the user needs to send emails locally, test transactional email flows, implement magic link or verification code auth, inspect sent emails, manage domains/contacts/API keys, or work with the Resend API without sending real emails. Triggers include "Resend API", "emulate Resend", "send email locally", "test email", "magic link", "verification email", "email inbox", "RESEND_BASE_URL", or any task requiring a local email API.
+description: Local Resend email API for local development and testing. Use when the user needs to send emails locally, test transactional email flows, implement magic link or verification code auth, inspect sent emails, manage domains/contacts/API keys, or work with the Resend API without sending real emails. Triggers include "Resend API", "local Resend", "send email locally", "test email", "magic link", "verification email", "email inbox", "RESEND_BASE_URL", or any task requiring a local email API.
 allowed-tools: Bash(npx -p api-emulator api:*), Bash(curl:*)
 ---
 
@@ -66,22 +66,22 @@ await resend.emails.send({
 
 ### Embedded in Next.js (adapter-next)
 
-When using `@api-emulator/adapter-next`, the emulator runs inside your Next.js app at `/emulate/resend`. Set `RESEND_BASE_URL` via `next.config.ts`:
+When using `@api-emulator/adapter-next`, the emulator runs inside your Next.js app at `/api-emulator/resend`. Set `RESEND_BASE_URL` via `next.config.ts`:
 
 ```typescript
 // next.config.ts
-import { withEmulate } from '@api-emulator/adapter-next'
+import { withApiEmulator } from '@api-emulator/adapter-next'
 
-export default withEmulate({
+export default withApiEmulator({
   env: {
-    RESEND_BASE_URL: `http://localhost:${process.env.PORT ?? '3000'}/emulate/resend`,
+    RESEND_BASE_URL: `http://localhost:${process.env.PORT ?? '3000'}/api-emulator/resend`,
   },
 })
 ```
 
 ```typescript
-// app/emulate/[...path]/route.ts
-import { createEmulateHandler } from '@api-emulator/adapter-next'
+// app/api-emulator/[...path]/route.ts
+import { createApiEmulatorHandler } from '@api-emulator/adapter-next'
 import type { ServicePlugin } from '@api-emulator/core'
 
 const resendPlugin: ServicePlugin = {
@@ -89,7 +89,7 @@ const resendPlugin: ServicePlugin = {
   register(app) { app.all('/*', (c) => c.json({ ok: true, provider: 'resend' })) },
 }
 
-export const { GET, POST, PUT, PATCH, DELETE } = createEmulateHandler({
+export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: {
     resend: {
       emulator: { plugin: resendPlugin },
