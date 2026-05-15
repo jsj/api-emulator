@@ -3,6 +3,7 @@ import { startCommand } from "./commands/start.js";
 import { initCommand } from "./commands/init.js";
 import { listCommand } from "./commands/list.js";
 import { installCommand } from "./commands/install.js";
+import { validatePluginCommand } from "./commands/validate-plugin.js";
 
 declare const PKG_VERSION: string;
 const pkg = { version: PKG_VERSION };
@@ -65,6 +66,23 @@ program
     try {
       await installCommand(plugin, {
         packageManager: opts.packageManager === false ? false : opts.packageManager,
+      });
+    } catch (err) {
+      console.error(err instanceof Error ? err.message : err);
+      process.exit(1);
+    }
+  });
+
+program
+  .command("validate-plugin <plugin>")
+  .description("Validate a provider plugin by name, path, or package")
+  .option("--skip-build", "Skip entrypoint build validation")
+  .option("--skip-load", "Skip runtime module loading validation")
+  .action(async (plugin, opts) => {
+    try {
+      await validatePluginCommand(plugin, {
+        skipBuild: opts.skipBuild,
+        skipLoad: opts.skipLoad,
       });
     } catch (err) {
       console.error(err instanceof Error ? err.message : err);

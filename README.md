@@ -85,6 +85,13 @@ npx -p api-emulator api --plugin ./api-emulator-plugins/@posthog/api-emulator.mj
 
 The installer auto discovers sibling `api-emulator-plugins` and `api-emulator-internal` checkouts. Set `API_EMULATOR_PLUGIN_CATALOGS=/path/to/shelf,/path/to/internal` to add more shelves.
 
+Sanity check a plugin before installing or loading it:
+
+```bash
+npx -p api-emulator api validate-plugin posthog
+npx -p api-emulator api validate-plugin ./api-emulator-plugins/@posthog/api-emulator.mjs
+```
+
 A plugin exports a `ServicePlugin`:
 
 ```ts

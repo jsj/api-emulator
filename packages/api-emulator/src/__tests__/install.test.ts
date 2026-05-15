@@ -3,6 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "fs"
 import { tmpdir } from "os";
 import { join } from "path";
 import { installCommand } from "../commands/install.js";
+import { resolvePluginSource } from "../plugin-source-registry.js";
 
 describe("installCommand", () => {
   const originalCwd = process.cwd();
@@ -82,6 +83,30 @@ describe("installCommand", () => {
     expect(lock.plugins.alpaca).toMatchObject({
       packageName: "@alpaca/trading-emulator",
       sourceId: "public",
+      specifier: join(packageRoot, "src/index.ts"),
+    });
+  });
+
+  it("prefers package plugins over legacy single-file entries", () => {
+    const catalog = join(tempDir, "api-emulator-plugins");
+    const pluginRoot = join(catalog, "@github");
+    const packageRoot = join(pluginRoot, "api-emulator");
+    mkdirSync(join(packageRoot, "src"), { recursive: true });
+    writeFileSync(join(pluginRoot, "api-emulator.mjs"), "export const plugin = { name: 'github', register() {} };\n");
+    writeFileSync(
+      join(packageRoot, "package.json"),
+      JSON.stringify({
+        name: "@api-emulator/github",
+        type: "module",
+        exports: { ".": "./src/index.ts" },
+      }),
+    );
+    writeFileSync(join(packageRoot, "src/index.ts"), "export const plugin = { name: 'github', register() {} };\n");
+    process.env.API_EMULATOR_PLUGIN_CATALOGS = catalog;
+
+    expect(resolvePluginSource("github")).toMatchObject({
+      kind: "package",
+      packageName: "@api-emulator/github",
       specifier: join(packageRoot, "src/index.ts"),
     });
   });

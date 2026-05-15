@@ -122,20 +122,6 @@ function discoverCatalog(root: string): PluginSource[] {
     const name = entry.name.slice(1);
     const pluginRoot = join(root, entry.name);
 
-    for (const entryFile of PLUGIN_ENTRY_FILES) {
-      const specifier = join(pluginRoot, entryFile);
-      if (existsSync(specifier)) {
-        sources.push({
-          name,
-          sourceId,
-          kind: "file",
-          specifier,
-          description: `${name} plugin from ${sourceId} catalog`,
-        });
-        break;
-      }
-    }
-
     for (const entryDir of PACKAGE_ENTRY_DIRS) {
       const packageRoot = join(pluginRoot, entryDir);
       const packageJsonPath = join(packageRoot, "package.json");
@@ -155,6 +141,20 @@ function discoverCatalog(root: string): PluginSource[] {
         description: pkg.description ?? `${name} package from ${sourceId} catalog`,
       });
       break;
+    }
+
+    for (const entryFile of PLUGIN_ENTRY_FILES) {
+      const specifier = join(pluginRoot, entryFile);
+      if (existsSync(specifier)) {
+        sources.push({
+          name,
+          sourceId,
+          kind: "file",
+          specifier,
+          description: `${name} plugin from ${sourceId} catalog`,
+        });
+        break;
+      }
     }
   }
   return sources;
