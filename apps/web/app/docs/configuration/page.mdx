@@ -18,6 +18,17 @@ tokens:
       - user
 ```
 
+## Plugin Validation
+
+Check a plugin shelf entry or direct plugin file before installing or loading it:
+
+```bash
+npx -p api-emulator api validate-plugin github
+npx -p api-emulator api validate-plugin ./api-emulator-plugins/@github/api-emulator.mjs
+```
+
+Use `--skip-build` or `--skip-load` when validating source-only local plugins.
+
 ## Vercel Seed Config
 
 ```yaml

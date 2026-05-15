@@ -27,5 +27,6 @@ describe("cli surface", () => {
     expect(source).toContain('.command("init")');
     expect(source).toContain('.command("list")');
     expect(source).toContain('.command("install <plugin>")');
+    expect(source).toContain('.command("validate-plugin <plugin>")');
   });
 });

@@ -49,6 +49,10 @@ npx -p api-emulator api init --service vercel
 
 # List available services
 npx -p api-emulator api list
+
+# Validate a plugin shelf entry or plugin file
+npx -p api-emulator api validate-plugin github
+npx -p api-emulator api validate-plugin ./api-emulator-plugins/@github/api-emulator.mjs
 ```
 
 ### Options
