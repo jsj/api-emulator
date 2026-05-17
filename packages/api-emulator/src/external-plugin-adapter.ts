@@ -1,6 +1,11 @@
 import type { ServicePlugin, Store, AuthFallback, WebhookDispatcher } from "@api-emulator/core";
 import { isAbsolute, resolve } from "path";
-import { readPluginManifest, validatePluginManifest, type PluginManifest } from "./plugin-manifest.js";
+import {
+  formatPluginFidelity,
+  readPluginManifest,
+  validatePluginManifest,
+  type PluginManifest,
+} from "./plugin-manifest.js";
 import type { PluginModule } from "./plugin-types.js";
 
 export interface ExternalPluginModule {
@@ -26,6 +31,7 @@ export async function loadExternalPluginModule(specifier: string): Promise<Plugi
     name,
     label: manifest.label,
     endpoints: manifest.endpoints,
+    fidelity: formatPluginFidelity(manifest.fidelity),
     manifest,
     async load() {
       return {

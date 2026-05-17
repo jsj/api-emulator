@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { mkdtempSync, readFileSync, rmSync } from "fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
@@ -32,5 +32,46 @@ describe("initCommand", () => {
     expect(content).toContain("tokens:");
     expect(content).toContain("echo:");
     expect(content).toContain("message: hello");
+  });
+
+  it("installs agent skills with a generated manifest", async () => {
+    await initCommand({
+      service: "all",
+      agents: "agents",
+      skillsOnly: true,
+    });
+
+    const skillPath = join(tempDir, ".agents/skills/api-emulator-plugin-authoring/SKILL.md");
+    expect(readFileSync(skillPath, "utf-8")).toContain("api clone create <provider>");
+
+    const manifest = JSON.parse(readFileSync(join(tempDir, ".api-emulator/manifest.json"), "utf-8")) as {
+      files: Record<string, unknown>;
+    };
+    expect(manifest.files[".agents/skills/api-emulator-plugin-authoring/SKILL.md"]).toBeTruthy();
+  });
+
+  it("refuses to overwrite user-edited generated skills without yes", async () => {
+    await initCommand({
+      service: "all",
+      agents: "codex",
+      skillsOnly: true,
+    });
+    writeFileSync(join(tempDir, ".codex/skills/api-emulator-plugin-authoring/SKILL.md"), "local edits\n");
+
+    await expect(
+      initCommand({
+        service: "all",
+        agents: "codex",
+        skillsOnly: true,
+      }),
+    ).rejects.toThrow("Refusing to overwrite user-edited file");
+
+    await initCommand({
+      service: "all",
+      agents: "codex",
+      skillsOnly: true,
+      yes: true,
+    });
+    expect(existsSync(join(tempDir, ".codex/skills/api-emulator-plugin-authoring/SKILL.md"))).toBe(true);
   });
 });

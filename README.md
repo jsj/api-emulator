@@ -92,6 +92,22 @@ npx -p api-emulator api validate-plugin posthog
 npx -p api-emulator api validate-plugin ./api-emulator-plugins/@posthog/api-emulator.mjs
 ```
 
+Scaffold a local provider clone and catalog entry:
+
+```bash
+npx -p api-emulator api clone create internal-billing
+```
+
+The scaffold includes starter fidelity metadata so `api list` can show whether a provider is still a stub, partially covered, or contract-backed. `api plugin create` remains available as a compatibility alias. Generated scaffolds and agent skills are tracked in `.api-emulator/manifest.json` so reruns avoid overwriting local edits unless you pass `--yes`.
+
+Install local agent skills for plugin authoring and runtime workflows:
+
+```bash
+npx -p api-emulator api init --skills-only --agents agents
+```
+
+Use `--agents user-agents` to install into `~/.agents/skills`.
+
 A plugin exports a `ServicePlugin`:
 
 ```ts

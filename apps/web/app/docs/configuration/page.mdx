@@ -29,6 +29,24 @@ npx -p api-emulator api validate-plugin ./api-emulator-plugins/@github/api-emula
 
 Use `--skip-build` or `--skip-load` when validating source-only local plugins.
 
+## Plugin Authoring
+
+Scaffold a local provider clone and catalog entry:
+
+```bash
+npx -p api-emulator api clone create internal-billing
+```
+
+The scaffold includes starter fidelity metadata and is tracked in `.api-emulator/manifest.json` so reruns do not overwrite local edits unless you pass `--yes`. `api plugin create` remains available as a compatibility alias.
+
+Install local agent skills for plugin authoring and runtime workflows:
+
+```bash
+npx -p api-emulator api init --skills-only --agents agents
+```
+
+Use `--agents user-agents` to install into `~/.agents/skills`.
+
 ## Vercel Seed Config
 
 ```yaml

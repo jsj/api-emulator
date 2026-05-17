@@ -32,9 +32,12 @@ Each service is a plugin that:
 1. Defines its entity types and store collections
 2. Registers HTTP routes on the shared Hono app
 3. Provides a seed function to populate initial state from config
-4. Uses shared middleware for auth, error handling, and pagination
+4. Publishes manifest metadata for labels, endpoint summaries, seed defaults, and fidelity
+5. Uses shared middleware for auth, error handling, and pagination
 
 Multiple services can run simultaneously, each on its own port (auto-incremented from the base port).
+
+`api clone create <provider>` scaffolds a local provider clone and catalog entry. Generated files are tracked in `.api-emulator/manifest.json` so the CLI can distinguish safe reruns from user-edited files.
 
 ## In-Memory State
 
