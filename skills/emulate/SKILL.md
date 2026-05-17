@@ -53,6 +53,15 @@ npx -p api-emulator api list
 # Validate a plugin shelf entry or plugin file
 npx -p api-emulator api validate-plugin github
 npx -p api-emulator api validate-plugin ./api-emulator-plugins/@github/api-emulator.mjs
+
+# Scaffold a provider clone and catalog entry
+npx -p api-emulator api clone create github
+
+# Install local agent skills
+npx -p api-emulator api init --skills-only --agents agents
+
+# Install user agent skills
+npx -p api-emulator api init --skills-only --agents user-agents
 ```
 
 ### Options

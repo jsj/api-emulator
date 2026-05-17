@@ -2,8 +2,23 @@ export interface PluginManifest {
   name?: string;
   label?: string;
   endpoints?: string;
+  fidelity?: string | PluginFidelity;
   initConfig?: Record<string, unknown>;
   contract?: unknown;
+}
+
+export interface PluginFidelity {
+  level: string;
+  endpoints?: string[];
+  seedableResources?: string[];
+  smoke?: string;
+  notes?: string;
+}
+
+export function formatPluginFidelity(fidelity: PluginManifest["fidelity"]): string {
+  if (!fidelity) return "unrated";
+  if (typeof fidelity === "string") return fidelity;
+  return fidelity.level;
 }
 
 export function readPluginManifest(mod: { manifest?: PluginManifest }): PluginManifest {
