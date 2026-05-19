@@ -8,11 +8,11 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="mx-auto max-w-3xl px-6 pb-20 pt-16 sm:pt-24">
         <h1 className="mb-4 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl dark:text-neutral-50">
-          Local API emulation for dev and CI
+          Test agents and software against stateful API and database clones
         </h1>
         <p className="mb-8 max-w-xl text-base text-neutral-600 dark:text-neutral-400">
-          Stateful, production-fidelity replacements for Stripe, GitHub, Google, AWS, and 7 more services. No API keys.
-          No network. Not mocks.
+          Run production-shaped services locally: GitHub, Stripe, Slack, Postgres, MySQL, SQLite, DuckDB, warehouses,
+          data lakes, and 180+ more. Same APIs, familiar errors, deterministic state, no real credentials.
         </p>
 
         <div className="mb-6 flex flex-wrap items-center gap-3">
@@ -42,37 +42,43 @@ export default function LandingPage() {
       {/* What you get */}
       <section className="border-t border-neutral-200 dark:border-neutral-800">
         <div className="mx-auto max-w-3xl px-6 py-16 sm:py-20">
-          <h2 className="mb-6 text-lg font-semibold text-neutral-900 dark:text-neutral-100">What this gives you</h2>
+          <h2 className="mb-6 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+            Move integration failures earlier
+          </h2>
           <div className="grid gap-x-12 gap-y-6 sm:grid-cols-2">
             <div>
-              <h3 className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">Stateful</h3>
+              <h3 className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                Write against real surfaces
+              </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Create a GitHub repo, push commits, open a PR. Send an email through Resend. Charge a card on Stripe.
-                State persists across requests.
+                REST, OAuth, SDK-compatible routes, SQL workflows, queues, webhooks, object storage, and provider-shaped
+                errors.
               </p>
             </div>
             <div>
-              <h3 className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">Real protocols</h3>
+              <h3 className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                Run against stateful clones
+              </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                OAuth flows with RS256 ID tokens. AWS XML responses. Slack cursor pagination. Your SDK works without
-                changes.
+                Create a GitHub repo, push commits, send mail, charge a card, mutate rows, then reset cleanly between
+                scenarios.
               </p>
             </div>
             <div>
-              <h3 className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">Zero config</h3>
+              <h3 className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                Cover API and database paths
+              </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Run{" "}
-                <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs dark:bg-neutral-800">
-                  npx -p api-emulator api
-                </code>{" "}
-                and all 11 services start with sensible defaults. Seed data via YAML when you need it.
+                Test Postgres, MySQL, SQLite, DuckDB, warehouse, and lakehouse workflows without Docker or cloud
+                accounts.
               </p>
             </div>
             <div>
-              <h3 className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">Offline and CI-ready</h3>
+              <h3 className="mb-1 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                Fail in CI before production
+              </h3>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                No network, no Docker, no flaky sandbox accounts. Same deterministic behavior in GitHub Actions as on
-                your laptop.
+                Catch bad agent actions, SDK regressions, auth bugs, and schema assumptions before they reach users.
               </p>
             </div>
           </div>
@@ -170,13 +176,8 @@ afterAll(() => github.close())`}</code>
       <footer className="border-t border-neutral-200 dark:border-neutral-800">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-6">
           <div className="flex items-center gap-2 text-sm text-neutral-500">
-            <Link
-              href="https://vercel.com"
-              className="hover:text-neutral-900 dark:hover:text-neutral-300 transition-colors"
-            >
-              <svg height="14" strokeLinejoin="round" viewBox="0 0 16 16" width="14" style={{ color: "currentcolor" }}>
-                <path fillRule="evenodd" clipRule="evenodd" d="M8 1L16 15H0L8 1Z" fill="currentColor" />
-              </svg>
+            <Link href="/" className="hover:text-neutral-900 dark:hover:text-neutral-300 transition-colors">
+              <span aria-hidden="true">🧩</span>
             </Link>
             <span className="dark:text-neutral-500">api-emulator</span>
           </div>
