@@ -36,17 +36,10 @@ function Header({ stars }: { stars?: string }) {
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-sm dark:bg-neutral-950/90">
       <div className="flex h-14 items-center justify-between px-4 gap-6">
         <div className="flex items-center gap-2">
-          <Link href="https://vercel.com" title="Made with love by Vercel">
-            <svg
-              data-testid="geist-icon"
-              height="18"
-              strokeLinejoin="round"
-              viewBox="0 0 16 16"
-              width="18"
-              style={{ color: "currentcolor" }}
-            >
-              <path fillRule="evenodd" clipRule="evenodd" d="M8 1L16 15H0L8 1Z" fill="currentColor" />
-            </svg>
+          <Link href="/" title="api-emulator">
+            <span aria-hidden="true" className="text-lg leading-none">
+              🧩
+            </span>
           </Link>
           <span className="text-neutral-300 dark:text-neutral-700">
             <svg
