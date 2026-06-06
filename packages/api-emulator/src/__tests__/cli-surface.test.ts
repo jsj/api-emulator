@@ -31,5 +31,7 @@ describe("cli surface", () => {
     expect(source).toContain('.command("plugin")');
     expect(source).toContain('.command("clone")');
     expect(source).toContain('.command("create <name>")');
+    expect(source).toContain('.option("--notify"');
+    expect(source).toContain('.option("--no-notify"');
   });
 });

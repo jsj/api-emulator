@@ -6,6 +6,7 @@ import pc from "picocolors";
 import { ensurePortless, registerAliases, removeAliases, portlessBaseUrl, type PortlessAlias } from "../portless.js";
 import { resolveBaseUrl } from "../base-url.js";
 import { createAuthTokens, createServiceRuntime, type RunningService, type SeedConfig } from "../service-runtime.js";
+import { notifyIfRequested } from "../cli-notifier.js";
 
 declare const PKG_VERSION: string;
 const pkg = { version: PKG_VERSION };
@@ -17,6 +18,7 @@ export interface StartOptions {
   baseUrl?: string;
   portless?: boolean;
   plugin?: string;
+  notify?: boolean;
 }
 
 interface LoadResult {
@@ -124,7 +126,6 @@ export async function startCommand(options: StartOptions): Promise<void> {
     loadedPlugin: LoadedPlugin;
     svcSeedConfig: Record<string, unknown> | undefined;
     port: number;
-    baseUrl: string;
   }
 
   const portlessAliases: PortlessAlias[] = [];
@@ -142,14 +143,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
       portlessAliases.push({ name: `${svc}.api-emulator`, port });
     }
 
-    const seedBaseUrl =
-      typeof svcSeedConfig?.baseUrl === "string" && svcSeedConfig.baseUrl.length > 0
-        ? svcSeedConfig.baseUrl
-        : undefined;
-    const effectiveBaseUrl = options.portless ? portlessBaseUrl(svc) : options.baseUrl;
-    const baseUrl = resolveBaseUrl({ service: svc, port, baseUrl: effectiveBaseUrl, seedBaseUrl });
-
-    prepared.push({ svc, pluginModule, loadedPlugin, svcSeedConfig, port, baseUrl });
+    prepared.push({ svc, pluginModule, loadedPlugin, svcSeedConfig, port });
   }
 
   if (portlessAliases.length > 0) {
@@ -159,7 +153,14 @@ export async function startCommand(options: StartOptions): Promise<void> {
   const serviceUrls: Array<{ name: string; url: string }> = [];
   const runningServices: RunningService[] = [];
 
-  for (const { svc, pluginModule, loadedPlugin, svcSeedConfig, port, baseUrl } of prepared) {
+  for (const { svc, pluginModule, loadedPlugin, svcSeedConfig, port } of prepared) {
+    const seedBaseUrl =
+      typeof svcSeedConfig?.baseUrl === "string" && svcSeedConfig.baseUrl.length > 0
+        ? svcSeedConfig.baseUrl
+        : undefined;
+    const effectiveBaseUrl = options.portless ? portlessBaseUrl(svc) : options.baseUrl;
+    const baseUrl = resolveBaseUrl({ service: svc, port, baseUrl: effectiveBaseUrl, seedBaseUrl });
+
     serviceUrls.push({ name: svc, url: baseUrl });
 
     const running = createServiceRuntime({
@@ -175,6 +176,11 @@ export async function startCommand(options: StartOptions): Promise<void> {
   }
 
   printBanner(serviceUrls, tokens, configSource);
+  notifyIfRequested({
+    enabled: options.notify,
+    title: "api-emulator",
+    message: `Server started with ${serviceUrls.length} service${serviceUrls.length === 1 ? "" : "s"}`,
+  });
 
   const shutdown = () => {
     console.log(`\n${pc.dim("Shutting down...")}`);

@@ -1,4 +1,5 @@
 import { execSync, spawnSync } from "child_process";
+import { Socket } from "net";
 import { createInterface } from "readline";
 
 function isInteractive(): boolean {
@@ -21,26 +22,59 @@ function promptYesNo(question: string): Promise<boolean> {
   });
 }
 
-function isProxyRunning(): boolean {
-  const result = spawnSync("portless", ["list"], { stdio: "ignore" });
-  return result.status === 0;
+function portlessUrl(name: string): string | null {
+  const result = spawnSync("portless", ["get", name], { encoding: "utf-8" });
+  if (result.status !== 0) return null;
+
+  const url = result.stdout.trim();
+  return url.length > 0 ? url : null;
 }
+
+async function canConnect(port: number): Promise<boolean> {
+  return new Promise((resolve) => {
+    const socket = new Socket();
+    const done = (ok: boolean) => {
+      socket.destroy();
+      resolve(ok);
+    };
+    socket.setTimeout(500);
+    socket.once("connect", () => done(true));
+    socket.once("error", () => done(false));
+    socket.once("timeout", () => done(false));
+    socket.connect(port, "127.0.0.1");
+  });
+}
+
+async function isProxyRunning(): Promise<boolean> {
+  const url = portlessUrl("api-emulator-probe");
+  if (!url) return false;
+
+  try {
+    const parsed = new URL(url);
+    const port = parsed.port ? Number(parsed.port) : parsed.protocol === "http:" ? 80 : 443;
+    return await canConnect(port);
+  } catch {
+    return false;
+  }
+}
+
+const portlessInstallCommand = "bun add --global portless";
 
 export async function ensurePortless(): Promise<void> {
   if (!hasPortless()) {
     if (!isInteractive()) {
-      console.error("portless is required but not installed. Run: npm i -g portless");
+      console.error(`portless is required but not installed. Run: ${portlessInstallCommand}`);
       process.exit(1);
     }
 
-    const yes = await promptYesNo("portless is not installed. Install it now? (npm i -g portless) [Y/n] ");
+    const yes = await promptYesNo(`portless is not installed. Install it now? (${portlessInstallCommand}) [Y/n] `);
     if (!yes) {
       console.error("Cannot continue without portless.");
       process.exit(1);
     }
 
     try {
-      execSync("npm i -g portless", { stdio: "inherit" });
+      execSync(portlessInstallCommand, { stdio: "inherit" });
     } catch {
       console.error("Failed to install portless.");
       process.exit(1);
@@ -52,7 +86,7 @@ export async function ensurePortless(): Promise<void> {
     }
   }
 
-  if (!isProxyRunning()) {
+  if (!(await isProxyRunning())) {
     console.error("portless proxy is not running. Start it with: portless proxy start");
     process.exit(1);
   }
@@ -89,5 +123,5 @@ export function removeAliases(aliases: PortlessAlias[]): void {
 }
 
 export function portlessBaseUrl(serviceName: string): string {
-  return `https://${serviceName}.api-emulator.localhost`;
+  return portlessUrl(`${serviceName}.api-emulator`) ?? `https://${serviceName}.api-emulator.localhost`;
 }
