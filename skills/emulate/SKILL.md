@@ -73,6 +73,8 @@ npx -p api-emulator api init --skills-only --agents user-agents
 | `--seed` | auto-detect | Path to seed config (YAML or JSON) |
 | `--base-url` | none | Override advertised base URL (supports `{service}` template) |
 | `--portless` | off | Serve over HTTPS via portless (auto-registers aliases) |
+| `--no-notify` | off | Disable the macOS notification when the emulator server is ready |
+| `--notify` | off | Show macOS completion notifications for finite commands |
 
 The port can also be set via `API_EMULATOR_PORT` or `PORT` environment variables.
 

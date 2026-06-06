@@ -98,6 +98,11 @@ jobs:
         with:
           node-version: "24"
 
+      - name: Setup npm for trusted publishing
+        run: |
+          npm install -g npm@latest
+          npm --version
+
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
@@ -105,8 +110,6 @@ jobs:
         run: bun run build
 
       - name: Publish packages
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           LOCAL_VERSION="${{ needs.check-release.outputs.version }}"
           DRY_RUN="${{ needs.check-release.outputs.dry_run }}"
@@ -117,9 +120,6 @@ jobs:
           if [ "$DRY_RUN" = "true" ]; then
             PUBLISH_ARGS="--dry-run --access public"
             echo "Dry run enabled; packages will be packed but not published"
-          elif [ -n "${NPM_TOKEN:-}" ]; then
-            npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
-            echo "Using NPM_TOKEN for npm authentication"
           else
             echo "Using npm trusted publishing for authentication"
           fi

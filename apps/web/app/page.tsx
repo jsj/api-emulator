@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GeistPixelSquare } from "geist/font/pixel";
 import { HeroTerminal } from "@/components/hero-terminal";
+import { agentCopyInstruction } from "@/lib/agent-reference";
 
 export default function LandingPage() {
   return (
@@ -127,6 +128,27 @@ stripe.config.host = `}</span>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Agent instructions */}
+      <section className="border-t border-neutral-200 dark:border-neutral-800">
+        <div className="mx-auto max-w-3xl px-6 py-16 sm:py-20">
+          <h2 className="mb-2 text-lg font-semibold text-neutral-900 dark:text-neutral-100">Agent instructions</h2>
+          <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-400">
+            Give coding agents one stable, copyable reference before they set up local API emulation.
+          </p>
+          <div className="overflow-hidden rounded-lg border border-neutral-200 bg-neutral-950 dark:border-neutral-800">
+            <pre className="overflow-x-auto p-4 text-[13px] leading-relaxed text-neutral-300 font-mono">
+              <code>{agentCopyInstruction}</code>
+            </pre>
+          </div>
+          <a
+            href="/agent.txt"
+            className="mt-3 inline-block text-sm text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+          >
+            Open agent.txt
+          </a>
         </div>
       </section>
 

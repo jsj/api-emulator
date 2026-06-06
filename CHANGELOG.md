@@ -1,6 +1,24 @@
 # Changelog
 
 <!-- release:start -->
+## 0.7.0
+
+### New Features
+
+- Add macOS completion notifications for the CLI, including a default server-ready notification and opt-in notifications for finite commands.
+- Add an agent-facing `/agent.txt` reference and surface a copyable agent prompt from the website and README.
+
+### Improvements
+
+- Resolve portless URLs from `portless get` so non-default local proxy ports are advertised correctly.
+- Use `bun add --global portless` in repo-local portless setup guidance.
+
+### Fixes
+
+- Improve portless readiness checks so a route list alone does not count as a running proxy.
+
+<!-- release:end -->
+
 ## 0.6.0
 
 ### Breaking Changes
@@ -12,8 +30,6 @@
 ### Fixes
 
 - Update runtime package READMEs so npm renders api-emulator branding consistently.
-
-<!-- release:end -->
 
 ## 0.5.2
 

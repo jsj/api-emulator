@@ -4,14 +4,14 @@
 
 <h1 align="center">api-emulator</h1>
 
-<p align="center">Fake real APIs locally so your app can test integrations without touching production, sandboxes, or someone else's server.</p>
+<p align="center">Local staging for API integrations, agent runs, and CI without touching production, sandboxes, or someone else's server.</p>
 
-`api-emulator` is a local app store for fake APIs. Run GitHub, Stripe, Resend, and plugin powered providers on localhost, seed state, inspect behavior, reset data, and test your app in one place.
+`api-emulator` is a local app store for stateful API clones. Run GitHub, Stripe, Resend, and plugin powered providers on localhost, seed state, inspect behavior, reset data, and test your app in one place.
 
 ## Why use it?
 
 - Test API integrations locally without real provider credentials.
-- Run multiple fake services together, with shared state, auth, webhooks, seed data, and resets.
+- Run multiple provider clones together, with shared state, auth, webhooks, seed data, and resets.
 - Keep provider behavior in plugins so public, private, and internal APIs can live outside your app.
 
 ## Quick start
@@ -19,6 +19,7 @@
 ```bash
 npx -p api-emulator api
 npx -p api-emulator api --service github,stripe,resend
+npx -p api-emulator api --no-notify
 ```
 
 Then point your app at the local provider URLs:
@@ -48,24 +49,37 @@ npx -p api-emulator api init
 npx -p api-emulator api list
 ```
 
+## Agent instructions
+
+For coding agents, use the short agent-facing reference at <https://api-emulator.jsj.sh/agent.txt>. Copy this into your agent prompt:
+
+<details>
+<summary>Copy agent instruction</summary>
+
+```text
+Read https://api-emulator.jsj.sh/agent.txt before using api-emulator.
+```
+
+</details>
+
 ## Use in tests
 
 ```ts
-import { createEmulator } from 'api-emulator'
+import { createEmulator } from "api-emulator";
 
-const github = await createEmulator({ service: 'github', port: 4001 })
-process.env.GITHUB_API_BASE = github.url
+const github = await createEmulator({ service: "github", port: 4001 });
+process.env.GITHUB_API_BASE = github.url;
 
-afterEach(() => github.reset())
-afterAll(() => github.close())
+afterEach(() => github.reset());
+afterAll(() => github.close());
 ```
 
 Capture and replay a stable fixture after a stochastic or stateful run:
 
 ```ts
-const fixture = github.exportFixture({ metadata: { name: 'pull-request-flow' } })
+const fixture = github.exportFixture({ metadata: { name: "pull-request-flow" } });
 
-github.resetToFixture(fixture)
+github.resetToFixture(fixture);
 ```
 
 ## Plugins
@@ -108,17 +122,19 @@ npx -p api-emulator api init --skills-only --agents agents
 
 Use `--agents user-agents` to install into `~/.agents/skills`.
 
+On macOS, api-emulator shows a best effort notification when the server is ready. Use `--no-notify` to silence it. Add `--notify` to get completion notifications for `init`, `install`, `validate-plugin`, and plugin scaffold commands.
+
 A plugin exports a `ServicePlugin`:
 
 ```ts
-import type { ServicePlugin } from '@api-emulator/core'
+import type { ServicePlugin } from "@api-emulator/core";
 
 export const plugin: ServicePlugin = {
-  name: 'internal-billing',
+  name: "internal-billing",
   register(app) {
-    app.get('/v1/customers', (c) => c.json({ data: [] }))
+    app.get("/v1/customers", (c) => c.json({ data: [] }));
   },
-}
+};
 ```
 
 ## Next.js embedded mode
@@ -128,21 +144,21 @@ npm install @api-emulator/adapter-next @api-emulator/core
 ```
 
 ```ts
-import { createApiEmulatorHandler } from '@api-emulator/adapter-next'
-import type { ServicePlugin } from '@api-emulator/core'
+import { createApiEmulatorHandler } from "@api-emulator/adapter-next";
+import type { ServicePlugin } from "@api-emulator/core";
 
 const internalPlugin: ServicePlugin = {
-  name: 'internal',
+  name: "internal",
   register(app) {
-    app.get('/health', (c) => c.json({ ok: true }))
+    app.get("/health", (c) => c.json({ ok: true }));
   },
-}
+};
 
 export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
   services: {
     internal: { emulator: { plugin: internalPlugin } },
   },
-})
+});
 ```
 
 ## Configuration
