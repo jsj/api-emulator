@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "predev": "command -v portless >/dev/null 2>&1 || { echo '\\nportless is required but not installed.\\nRun: npm install -g portless\\n' >&2; exit 1; }",
+    "predev": "command -v portless >/dev/null 2>&1 || { echo '\\nportless is required but not installed.\\nRun: bun add --global portless\\n' >&2; exit 1; }",
     "dev": "portless api-emulator next dev",
     "dev:vinext": "vinext dev",
     "build:vinext": "vinext build",
