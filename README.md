@@ -49,6 +49,8 @@ npx -p api-emulator api init
 npx -p api-emulator api list
 ```
 
+`api list` shows each provider's fidelity tier: `contract-backed`, `smoke-only`, `stub`, or `generated fallback`.
+
 ## Agent instructions
 
 For coding agents, use the short agent-facing reference at <https://api-emulator.jsj.sh/agent.txt>. Copy this into your agent prompt:
@@ -105,6 +107,8 @@ Sanity check a plugin before installing or loading it:
 npx -p api-emulator api validate-plugin posthog
 npx -p api-emulator api validate-plugin ./api-emulator-plugins/@posthog/api-emulator.mjs
 ```
+
+`api install` records the plugin and prints the fidelity tier when the plugin metadata can be loaded locally.
 
 Scaffold a local provider clone and catalog entry:
 

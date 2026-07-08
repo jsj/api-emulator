@@ -3,6 +3,7 @@ import { existsSync } from "fs";
 import { resolve } from "path";
 import { PLUGIN_LOCK_FILE, readPluginLock, writePluginLock } from "../plugin-lock.js";
 import { resolvePluginSource } from "../plugin-source-registry.js";
+import { loadExternalPluginModule } from "../external-plugin-adapter.js";
 
 export interface InstallOptions {
   packageManager?: string | false;
@@ -59,5 +60,11 @@ export async function installCommand(name: string, options: InstallOptions = {})
   writePluginLock(lock);
 
   console.log(`Installed ${source.name} from ${source.sourceId}`);
+  try {
+    const pluginModule = await loadExternalPluginModule(source.specifier);
+    console.log(`Fidelity: ${pluginModule.fidelityTier}`);
+  } catch {
+    console.log("Fidelity: unknown until the plugin can be loaded locally");
+  }
   console.log(`Recorded plugin in ${PLUGIN_LOCK_FILE}`);
 }

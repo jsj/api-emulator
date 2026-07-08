@@ -27,6 +27,8 @@ npx -p api-emulator api validate-plugin github
 npx -p api-emulator api validate-plugin ./api-emulator-plugins/@github/api-emulator.mjs
 ```
 
+`api list` and `api install` surface provider fidelity as `contract-backed`, `smoke-only`, `stub`, or `generated fallback` when plugin metadata is available.
+
 Use `--skip-build` or `--skip-load` when validating source-only local plugins.
 
 ## Plugin Authoring

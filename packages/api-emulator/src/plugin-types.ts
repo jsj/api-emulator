@@ -12,6 +12,7 @@ export interface PluginModule {
   label: string;
   endpoints: string;
   fidelity: string;
+  fidelityTier: string;
   manifest?: PluginManifest;
   load(): Promise<LoadedPlugin>;
   defaultFallback(svcSeedConfig?: Record<string, unknown>): AuthFallback;

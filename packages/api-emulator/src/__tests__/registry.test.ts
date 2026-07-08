@@ -21,6 +21,7 @@ describe("resolvePluginModules", () => {
       name: "defaulted",
       label: "Default export test plugin",
       endpoints: "ping",
+      fidelityTier: "smoke-only",
       initConfig: { defaulted: { enabled: true } },
     });
 
@@ -31,7 +32,12 @@ describe("resolvePluginModules", () => {
   it("allows external plugins to use provider names", async () => {
     const registry = await resolvePluginModules([resolve(__dirname, "fixtures/github-conflict-plugin.ts")]);
 
-    expect(registry.github.name).toBe("github");
+    expect(registry.github).toMatchObject({
+      name: "github",
+      endpoints: "GitHub OpenAPI fallback",
+      fidelity: "stateful-core-plus-openapi-compatible-generic-fallback",
+      fidelityTier: "generated fallback",
+    });
   });
 
   it("rejects duplicate external plugin names", async () => {

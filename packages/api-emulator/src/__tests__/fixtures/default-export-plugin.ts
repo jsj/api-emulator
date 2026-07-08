@@ -11,6 +11,7 @@ export default plugin;
 export const manifest = {
   label: "Default export test plugin",
   endpoints: "ping",
+  fidelityTier: "smoke-only",
   initConfig: {
     defaulted: {
       enabled: true,
