@@ -31,6 +31,7 @@ export async function loadExternalPluginModule(specifier: string): Promise<Plugi
     name,
     label: manifest.label,
     endpoints: manifest.endpoints,
+    fidelityTier: manifest.fidelityTier,
     fidelity: formatPluginFidelity(manifest.fidelity),
     manifest,
     async load() {

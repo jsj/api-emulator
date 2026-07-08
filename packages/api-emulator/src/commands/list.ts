@@ -16,7 +16,10 @@ export async function listCommand(options: ListOptions = {}): Promise<void> {
   for (const pluginModule of Object.values(pluginModules)) {
     console.log(`  ${pluginModule.name.padEnd(10)}${pluginModule.label}`);
     console.log(`            Endpoints: ${pluginModule.endpoints}`);
-    console.log(`            Fidelity: ${pluginModule.fidelity}`);
+    console.log(`            Fidelity: ${pluginModule.fidelityTier}`);
+    if (pluginModule.fidelity !== "unrated" && pluginModule.fidelity !== pluginModule.fidelityTier) {
+      console.log(`            Detail: ${pluginModule.fidelity}`);
+    }
     console.log();
   }
 }
