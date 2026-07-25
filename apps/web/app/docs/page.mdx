@@ -59,22 +59,41 @@ npx api-emulator list
   </thead>
   <tbody>
     <tr>
-      <td><code>-p, --port</code></td>
-      <td><code>4000</code></td>
+      <td>
+        <code>-p, --port</code>
+      </td>
+      <td>
+        <code>4000</code>
+      </td>
       <td>Base port (auto-increments per service)</td>
     </tr>
     <tr>
-      <td><code>-s, --service</code></td>
+      <td>
+        <code>-s, --service</code>
+      </td>
       <td>all</td>
       <td>Comma-separated services to enable</td>
     </tr>
     <tr>
-      <td><code>--seed</code></td>
+      <td>
+        <code>--grpc-port</code>
+      </td>
+      <td>
+        <code>50051</code>
+      </td>
+      <td>Base native gRPC port for plugins that declare gRPC services</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--seed</code>
+      </td>
       <td>auto-detect</td>
       <td>Path to seed config (YAML or JSON)</td>
     </tr>
     <tr>
-      <td><code>--no-notify</code></td>
+      <td>
+        <code>--no-notify</code>
+      </td>
       <td>off</td>
       <td>Disable the macOS notification when the emulator server is ready</td>
     </tr>

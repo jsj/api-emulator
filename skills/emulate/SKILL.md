@@ -69,6 +69,7 @@ npx -p api-emulator api init --skills-only --agents user-agents
 | Flag | Default | Description |
 |------|---------|-------------|
 | `-p, --port` | `4000` | Base port (auto-increments per service) |
+| `--grpc-port` | `50051` | Base native gRPC port for plugins that declare gRPC services |
 | `-s, --service` | all | Comma-separated services to enable |
 | `--seed` | auto-detect | Path to seed config (YAML or JSON) |
 | `--base-url` | none | Override advertised base URL (supports `{service}` template) |
@@ -108,6 +109,7 @@ await vercel.close()
 | `service` | *(required)* | `'vercel'`, `'github'`, `'google'`, `'slack'`, `'apple'`, `'microsoft'`, or `'aws'` |
 | `port` | `4000` | Port for the HTTP server |
 | `seed` | none | Inline seed data (same shape as YAML config) |
+| `grpcPort` | HTTP port + 10000 | Native gRPC port for a gRPC-capable plugin |
 | `baseUrl` | none | Override advertised base URL. Per-service `baseUrl` in seed config takes highest priority, then this option, then `API_EMULATOR_BASE_URL` env var (supports `{service}`), then `PORTLESS_URL` (supports `{service}`, automatically set by the `portless` CLI wrapper), then `http://localhost:<port>`. |
 
 ### Instance Methods
@@ -115,6 +117,7 @@ await vercel.close()
 | Method | Description |
 |--------|-------------|
 | `url` | Base URL of the running server |
+| `grpcUrl` | Native gRPC address when the plugin declares gRPC services |
 | `snapshot()` | Capture the current store snapshot |
 | `restore(fixture)` | Restore a store snapshot or exported fixture |
 | `exportFixture(options?)` | Export a named fixture envelope with store state and recorded interactions |

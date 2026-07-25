@@ -11,6 +11,9 @@ import {
   type StoreSnapshot,
 } from "@api-emulator/core";
 import { serve } from "@hono/node-server";
+import * as grpcJs from "@grpc/grpc-js";
+import { loadPackageDefinition } from "@grpc/grpc-js";
+import { load as loadProto } from "@grpc/proto-loader";
 import type { LoadedPlugin, PluginModule } from "./registry.js";
 
 export interface SeedConfig {
@@ -28,11 +31,13 @@ export interface ServiceRuntimeOptions {
   baseUrl: string;
   tokens: TokenMap;
   seedConfig?: Record<string, unknown>;
+  grpcPort?: number;
 }
 
 export interface RunningService {
   service: string;
   url: string;
+  grpcUrl?: string;
   store: Store;
   snapshot(): StoreSnapshot;
   restore(fixture: FixtureSource): void;
@@ -55,8 +60,53 @@ export function createAuthTokens(seedConfig?: SeedConfig | null): TokenMap {
   return tokens;
 }
 
-export function createServiceRuntime(options: ServiceRuntimeOptions): RunningService {
-  const { service, pluginModule, loadedPlugin, port, baseUrl, tokens, seedConfig } = options;
+function resolveGrpcService(
+  root: grpcJs.GrpcObject,
+  packageName: string | undefined,
+  serviceName: string,
+): grpcJs.ServiceDefinition<grpcJs.UntypedServiceImplementation> {
+  let current: unknown = root;
+  for (const segment of [...(packageName?.split(".").filter(Boolean) ?? []), serviceName]) {
+    if (typeof current !== "object" || current === null || !(segment in current)) {
+      throw new Error(`gRPC service not found in proto: ${[packageName, serviceName].filter(Boolean).join(".")}`);
+    }
+    current = (current as Record<string, unknown>)[segment];
+  }
+  if (typeof current !== "function" || !("service" in current))
+    throw new Error(`gRPC target is not a service: ${serviceName}`);
+  return (current as grpcJs.ServiceClientConstructor).service;
+}
+
+async function startGrpcServer(loadedPlugin: LoadedPlugin, store: Store, baseUrl: string, grpcPort?: number) {
+  if (!loadedPlugin.grpc || grpcPort === undefined) return undefined;
+  const registrations = await loadedPlugin.grpc({ store, baseUrl });
+  const server = new grpcJs.Server();
+  for (const registration of Array.isArray(registrations) ? registrations : [registrations]) {
+    const definition = await loadProto(registration.protoPath, {
+      keepCase: true,
+      longs: String,
+      enums: String,
+      defaults: true,
+      oneofs: true,
+      ...registration.loaderOptions,
+    });
+    const root = loadPackageDefinition(definition);
+    server.addService(
+      resolveGrpcService(root, registration.packageName, registration.serviceName),
+      registration.implementation,
+    );
+  }
+  const address = `127.0.0.1:${grpcPort}`;
+  await new Promise<void>((resolve, reject) => {
+    server.bindAsync(address, grpcJs.ServerCredentials.createInsecure(), (error) =>
+      error ? reject(error) : resolve(),
+    );
+  });
+  return { server, url: address };
+}
+
+export async function createServiceRuntime(options: ServiceRuntimeOptions): Promise<RunningService> {
+  const { service, pluginModule, loadedPlugin, port, baseUrl, tokens, seedConfig, grpcPort } = options;
 
   const resolverRef: { current?: AppKeyResolver } = {};
   const appKeyResolver: AppKeyResolver | undefined = loadedPlugin.createAppKeyResolver
@@ -82,10 +132,18 @@ export function createServiceRuntime(options: ServiceRuntimeOptions): RunningSer
   seed();
 
   const httpServer = serve({ fetch: app.fetch, port });
+  let grpcRuntime: Awaited<ReturnType<typeof startGrpcServer>>;
+  try {
+    grpcRuntime = await startGrpcServer(loadedPlugin, store, baseUrl, grpcPort);
+  } catch (error) {
+    await new Promise<void>((resolve) => httpServer.close(() => resolve()));
+    throw error;
+  }
 
   return {
     service,
     url: baseUrl,
+    grpcUrl: grpcRuntime?.url,
     store,
     snapshot() {
       return store.snapshot();
@@ -108,13 +166,19 @@ export function createServiceRuntime(options: ServiceRuntimeOptions): RunningSer
       store.reset();
       seed();
     },
-    close(): Promise<void> {
-      return new Promise((resolve, reject) => {
-        httpServer.close((err) => {
-          if (err) reject(err);
-          else resolve();
-        });
-      });
+    async close(): Promise<void> {
+      await Promise.all([
+        new Promise<void>((resolve, reject) => {
+          httpServer.close((err) => {
+            if (err) reject(err);
+            else resolve();
+          });
+        }),
+        new Promise<void>((resolve) => {
+          if (!grpcRuntime) return resolve();
+          grpcRuntime.server.tryShutdown(() => resolve());
+        }),
+      ]);
     },
   };
 }

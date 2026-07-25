@@ -19,6 +19,7 @@ export interface StartOptions {
   portless?: boolean;
   plugin?: string;
   notify?: boolean;
+  grpcPort: number;
 }
 
 interface LoadResult {
@@ -150,7 +151,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
     registerAliases(portlessAliases);
   }
 
-  const serviceUrls: Array<{ name: string; url: string }> = [];
+  const serviceUrls: Array<{ name: string; url: string; grpcUrl?: string }> = [];
   const runningServices: RunningService[] = [];
 
   for (const { svc, pluginModule, loadedPlugin, svcSeedConfig, port } of prepared) {
@@ -163,7 +164,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
 
     serviceUrls.push({ name: svc, url: baseUrl });
 
-    const running = createServiceRuntime({
+    const running = await createServiceRuntime({
       service: svc,
       pluginModule,
       loadedPlugin,
@@ -171,8 +172,10 @@ export async function startCommand(options: StartOptions): Promise<void> {
       baseUrl,
       tokens,
       seedConfig: svcSeedConfig,
+      grpcPort: options.grpcPort + prepared.findIndex((item) => item.svc === svc),
     });
     runningServices.push(running);
+    if (running.grpcUrl) serviceUrls[serviceUrls.length - 1].grpcUrl = running.grpcUrl;
   }
 
   printBanner(serviceUrls, tokens, configSource);
@@ -197,7 +200,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
 }
 
 function printBanner(
-  services: Array<{ name: string; url: string }>,
+  services: Array<{ name: string; url: string; grpcUrl?: string }>,
   tokens: Record<string, { login: string; id: number; scopes?: string[] }>,
   configSource: string | null,
 ): void {
@@ -209,6 +212,11 @@ function printBanner(
   const maxNameLen = Math.max(...services.map((s) => s.name.length));
   for (const { name, url } of services) {
     lines.push(`  ${pc.cyan(name.padEnd(maxNameLen + 2))}${pc.bold(url)}`);
+    if (services.find((service) => service.name === name)?.grpcUrl) {
+      lines.push(
+        `  ${pc.dim("gRPC".padEnd(maxNameLen + 2))}${pc.bold(services.find((service) => service.name === name)!.grpcUrl!)}`,
+      );
+    }
   }
   lines.push("");
 

@@ -11,6 +11,7 @@ declare const PKG_VERSION: string;
 const pkg = { version: PKG_VERSION };
 
 const defaultPort = process.env.API_EMULATOR_PORT ?? process.env.PORT ?? "4000";
+const defaultGrpcPort = process.env.API_EMULATOR_GRPC_PORT ?? "50051";
 
 const program = new Command();
 
@@ -62,6 +63,7 @@ notifyOption(
     .command("start", { isDefault: true })
     .description("Start the emulator server")
     .option("-p, --port <port>", "Base port", defaultPort)
+    .option("--grpc-port <port>", "Base gRPC port for plugins that declare gRPC services", defaultGrpcPort)
     .option("-s, --service <services>", "Comma-separated services to enable")
     .option("--seed <file>", "Path to seed config file")
     .option("--base-url <url>", "Override advertised base URL (supports {service} template)")
@@ -70,12 +72,18 @@ notifyOption(
     .option("--no-notify", "Disable the macOS notification when the emulator server is ready"),
 ).action(async (opts) => {
   const port = parseInt(opts.port, 10);
+  const grpcPort = parseInt(opts.grpcPort, 10);
   if (Number.isNaN(port) || port < 1 || port > 65535) {
     console.error(`Invalid port: ${opts.port}`);
     process.exit(1);
   }
+  if (Number.isNaN(grpcPort) || grpcPort < 1 || grpcPort > 65535) {
+    console.error(`Invalid gRPC port: ${opts.grpcPort}`);
+    process.exit(1);
+  }
   await startCommand({
     port,
+    grpcPort,
     service: opts.service,
     seed: opts.seed,
     baseUrl: opts.baseUrl,
