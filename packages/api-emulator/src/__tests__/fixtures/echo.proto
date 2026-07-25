@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package apiemulator.echo;
+
+service Echo {
+  rpc Ping (PingRequest) returns (PingResponse);
+}
+
+message PingRequest {
+  string message = 1;
+}
+
+message PingResponse {
+  string message = 1;
+  string configured = 2;
+}

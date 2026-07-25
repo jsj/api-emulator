@@ -42,6 +42,14 @@ https://stripe.api-emulator.localhost
 https://resend.api-emulator.localhost
 ```
 
+Plugins can also expose native gRPC services backed by provider `.proto` files. gRPC-capable plugins bind to port `50051` by default:
+
+```bash
+npx -p api-emulator api --service modal --grpc-port 50051
+```
+
+The HTTP inspector and reset routes remain on the regular service URL. The gRPC endpoint uses local insecure credentials for development and CI.
+
 Create starter config and list available services:
 
 ```bash
@@ -74,6 +82,13 @@ process.env.GITHUB_API_BASE = github.url;
 
 afterEach(() => github.reset());
 afterAll(() => github.close());
+```
+
+For a gRPC-capable plugin, pass `grpcPort` and connect to the returned address:
+
+```ts
+const modal = await createEmulator({ service: "modal", port: 4000, grpcPort: 50051 });
+console.log(modal.grpcUrl); // 127.0.0.1:50051
 ```
 
 Capture and replay a stable fixture after a stochastic or stateful run:
@@ -139,6 +154,23 @@ export const plugin: ServicePlugin = {
     app.get("/v1/customers", (c) => c.json({ data: [] }));
   },
 };
+```
+
+A plugin adds native gRPC transport with a `grpc` export:
+
+```ts
+import type { GrpcRegistrationFactory } from "api-emulator";
+
+export const grpc: GrpcRegistrationFactory = ({ store }) => ({
+  protoPath: new URL("./provider.proto", import.meta.url).pathname,
+  packageName: "provider.api",
+  serviceName: "Provider",
+  implementation: {
+    getStatus(_call, callback) {
+      callback(null, { status: store.getData("provider:status") ?? "ready" });
+    },
+  },
+});
 ```
 
 ## Next.js embedded mode

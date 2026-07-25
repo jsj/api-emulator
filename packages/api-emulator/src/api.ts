@@ -6,6 +6,7 @@ import { resolveBaseUrl } from "./base-url.js";
 import { createAuthTokens, createServiceRuntime, type SeedConfig } from "./service-runtime.js";
 
 export type { SeedConfig };
+export type { GrpcPluginContext, GrpcRegistrationFactory, GrpcServiceRegistration } from "./plugin-types.js";
 export type {
   FixtureInteraction,
   FixtureSource,
@@ -20,10 +21,12 @@ export interface EmulatorOptions {
   seed?: SeedConfig;
   baseUrl?: string;
   plugins?: string[];
+  grpcPort?: number;
 }
 
 export interface Emulator {
   url: string;
+  grpcUrl?: string;
   snapshot(): StoreSnapshot;
   restore(fixture: FixtureSource): void;
   exportFixture(options?: StoreFixtureOptions): StoreFixture;
@@ -47,7 +50,7 @@ export async function createEmulator(options: EmulatorOptions): Promise<Emulator
   const seedBaseUrl =
     typeof svcSeedConfig?.baseUrl === "string" && svcSeedConfig.baseUrl.length > 0 ? svcSeedConfig.baseUrl : undefined;
   const baseUrl = resolveBaseUrl({ service, port, baseUrl: options.baseUrl, seedBaseUrl });
-  const running = createServiceRuntime({
+  const running = await createServiceRuntime({
     service,
     pluginModule,
     loadedPlugin,
@@ -55,10 +58,12 @@ export async function createEmulator(options: EmulatorOptions): Promise<Emulator
     baseUrl,
     tokens: createAuthTokens(seedConfig),
     seedConfig: svcSeedConfig,
+    grpcPort: options.grpcPort ?? port + 10_000,
   });
 
   return {
     url: running.url,
+    grpcUrl: running.grpcUrl,
     snapshot: running.snapshot,
     restore: running.restore,
     exportFixture: running.exportFixture,

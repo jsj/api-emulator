@@ -6,7 +6,7 @@ import {
   validatePluginManifest,
   type PluginManifest,
 } from "./plugin-manifest.js";
-import type { PluginModule } from "./plugin-types.js";
+import type { GrpcRegistrationFactory, PluginModule } from "./plugin-types.js";
 
 export interface ExternalPluginModule {
   plugin?: ServicePlugin;
@@ -14,6 +14,7 @@ export interface ExternalPluginModule {
   seedFromConfig?(store: Store, baseUrl: string, config: unknown, webhooks?: WebhookDispatcher): void;
   manifest?: PluginManifest;
   defaultFallback?(svcSeedConfig?: Record<string, unknown>): AuthFallback;
+  grpc?: GrpcRegistrationFactory;
 }
 
 export async function loadExternalPluginModule(specifier: string): Promise<PluginModule> {
@@ -38,6 +39,7 @@ export async function loadExternalPluginModule(specifier: string): Promise<Plugi
       return {
         plugin,
         seedFromConfig: mod.seedFromConfig,
+        grpc: mod.grpc,
       };
     },
     defaultFallback: mod.defaultFallback ?? (() => ({ login: "admin", id: 1, scopes: [] })),

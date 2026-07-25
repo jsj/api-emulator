@@ -1,6 +1,8 @@
 import { afterEach, describe, it, expect } from "vitest";
 import { resolve } from "path";
 import { createEmulator } from "../api.js";
+import * as grpc from "@grpc/grpc-js";
+import { load as loadProto } from "@grpc/proto-loader";
 
 describe("createEmulator", () => {
   const emulators: Array<{ close(): Promise<void> }> = [];
@@ -109,5 +111,36 @@ describe("createEmulator", () => {
 
     const configRes = await fetch(`${echo.url}/config`);
     expect(await configRes.json()).toEqual({ message: "hello" });
+  });
+
+  it("starts a real gRPC listener declared by a plugin", async () => {
+    const echo = await createEmulator({
+      service: "echo",
+      port: 14040,
+      grpcPort: 15040,
+      plugins: [resolve("src/__tests__/fixtures/echo-plugin.ts")],
+      seed: { echo: { message: "seeded" } },
+    });
+    emulators.push(echo);
+    expect(echo.grpcUrl).toBe("127.0.0.1:15040");
+
+    const definition = await loadProto(resolve("src/__tests__/fixtures/echo.proto"), { defaults: true });
+    const root = grpc.loadPackageDefinition(definition) as unknown as {
+      apiemulator: { echo: { Echo: grpc.ServiceClientConstructor } };
+    };
+    const client = new root.apiemulator.echo.Echo(
+      echo.grpcUrl!,
+      grpc.credentials.createInsecure(),
+    ) as unknown as grpc.Client & {
+      ping(request: { message: string }, callback: (error: grpc.ServiceError | null, response: unknown) => void): void;
+    };
+    const response = await new Promise<{ message: string; configured: string }>((resolveResponse, reject) => {
+      client.ping({ message: "hello" }, (error, value) => {
+        if (error) reject(error);
+        else resolveResponse(value as { message: string; configured: string });
+      });
+    });
+    client.close();
+    expect(response).toEqual({ message: "hello", configured: "seeded" });
   });
 });
