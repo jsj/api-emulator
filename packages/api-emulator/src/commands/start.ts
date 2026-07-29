@@ -20,6 +20,7 @@ export interface StartOptions {
   plugin?: string;
   notify?: boolean;
   grpcPort: number;
+  latencyMs: number;
 }
 
 interface LoadResult {
@@ -173,6 +174,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
       tokens,
       seedConfig: svcSeedConfig,
       grpcPort: options.grpcPort + prepared.findIndex((item) => item.svc === svc),
+      latencyMs: options.latencyMs,
     });
     runningServices.push(running);
     if (running.grpcUrl) serviceUrls[serviceUrls.length - 1].grpcUrl = running.grpcUrl;

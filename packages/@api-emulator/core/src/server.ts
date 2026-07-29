@@ -12,6 +12,7 @@ import {
 } from "./middleware/auth.js";
 import type { ServicePlugin } from "./plugin.js";
 import { registerFontRoutes } from "./fonts.js";
+import { latencyMiddleware } from "./middleware/latency.js";
 
 export interface ServerOptions {
   port?: number;
@@ -20,6 +21,7 @@ export interface ServerOptions {
   tokens?: Record<string, { login: string; id: number; scopes?: string[] }>;
   appKeyResolver?: AppKeyResolver;
   fallbackUser?: AuthFallback;
+  latencyMs?: number;
 }
 
 export function createServer(plugin: ServicePlugin, options: ServerOptions = {}) {
@@ -48,6 +50,7 @@ export function createServer(plugin: ServicePlugin, options: ServerOptions = {})
   app.onError(createApiErrorHandler(docsUrl));
   app.use("*", cors());
   app.use("*", createErrorHandler(docsUrl));
+  app.use("*", latencyMiddleware(options.latencyMs ?? 0));
   app.use("*", authMiddleware(tokenMap, options.appKeyResolver, options.fallbackUser));
 
   const rateLimitCounters = new Map<string, { remaining: number; resetAt: number }>();

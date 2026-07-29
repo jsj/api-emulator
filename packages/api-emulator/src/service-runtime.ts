@@ -32,6 +32,7 @@ export interface ServiceRuntimeOptions {
   tokens: TokenMap;
   seedConfig?: Record<string, unknown>;
   grpcPort?: number;
+  latencyMs?: number;
 }
 
 export interface RunningService {
@@ -106,7 +107,7 @@ async function startGrpcServer(loadedPlugin: LoadedPlugin, store: Store, baseUrl
 }
 
 export async function createServiceRuntime(options: ServiceRuntimeOptions): Promise<RunningService> {
-  const { service, pluginModule, loadedPlugin, port, baseUrl, tokens, seedConfig, grpcPort } = options;
+  const { service, pluginModule, loadedPlugin, port, baseUrl, tokens, seedConfig, grpcPort, latencyMs } = options;
 
   const resolverRef: { current?: AppKeyResolver } = {};
   const appKeyResolver: AppKeyResolver | undefined = loadedPlugin.createAppKeyResolver
@@ -120,6 +121,7 @@ export async function createServiceRuntime(options: ServiceRuntimeOptions): Prom
     tokens,
     appKeyResolver,
     fallbackUser,
+    latencyMs,
   });
   resolverRef.current = loadedPlugin.createAppKeyResolver?.(store);
 

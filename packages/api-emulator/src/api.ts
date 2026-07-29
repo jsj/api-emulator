@@ -22,6 +22,7 @@ export interface EmulatorOptions {
   baseUrl?: string;
   plugins?: string[];
   grpcPort?: number;
+  latencyMs?: number;
 }
 
 export interface Emulator {
@@ -59,6 +60,7 @@ export async function createEmulator(options: EmulatorOptions): Promise<Emulator
     tokens: createAuthTokens(seedConfig),
     seedConfig: svcSeedConfig,
     grpcPort: options.grpcPort ?? port + 10_000,
+    latencyMs: options.latencyMs,
   });
 
   return {
