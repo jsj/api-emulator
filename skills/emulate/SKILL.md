@@ -73,6 +73,7 @@ npx -p api-emulator api init --skills-only --agents user-agents
 | `-s, --service` | all | Comma-separated services to enable |
 | `--seed` | auto-detect | Path to seed config (YAML or JSON) |
 | `--base-url` | none | Override advertised base URL (supports `{service}` template) |
+| `--latency` | `0` | Add artificial latency in milliseconds to every HTTP request. |
 | `--portless` | off | Serve over HTTPS via portless (auto-registers aliases) |
 | `--no-notify` | off | Disable the macOS notification when the emulator server is ready |
 | `--notify` | off | Show macOS completion notifications for finite commands |
@@ -80,6 +81,8 @@ npx -p api-emulator api init --skills-only --agents user-agents
 The port can also be set via `API_EMULATOR_PORT` or `PORT` environment variables.
 
 The advertised base URL (used in OAuth redirects, webhook URLs, etc.) can be overridden via `--base-url`, the `API_EMULATOR_BASE_URL` env var (supports `{service}` template), or per-service `baseUrl` in the seed config. When running under portless, the `PORTLESS_URL` env var is also detected automatically.
+
+Artificial latency can also be set with `API_EMULATOR_LATENCY_MS`. The CLI flag takes precedence over the environment default.
 
 ## Programmatic API
 
@@ -111,6 +114,7 @@ await vercel.close()
 | `seed` | none | Inline seed data (same shape as YAML config) |
 | `grpcPort` | HTTP port + 10000 | Native gRPC port for a gRPC-capable plugin |
 | `baseUrl` | none | Override advertised base URL. Per-service `baseUrl` in seed config takes highest priority, then this option, then `API_EMULATOR_BASE_URL` env var (supports `{service}`), then `PORTLESS_URL` (supports `{service}`, automatically set by the `portless` CLI wrapper), then `http://localhost:<port>`. |
+| `latencyMs` | `0` | Add artificial latency in milliseconds to every HTTP request. |
 
 ### Instance Methods
 

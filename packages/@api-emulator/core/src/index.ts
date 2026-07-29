@@ -13,6 +13,7 @@ export {
   deserializeValue,
 } from "./store.js";
 export { createServer, type ServerOptions } from "./server.js";
+export { latencyMiddleware } from "./middleware/latency.js";
 export { type ServicePlugin, type RouteContext } from "./plugin.js";
 export {
   createStoreFixture,

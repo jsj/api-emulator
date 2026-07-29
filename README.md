@@ -20,6 +20,7 @@
 npx -p api-emulator api
 npx -p api-emulator api --service github,stripe,resend
 npx -p api-emulator api --no-notify
+npx -p api-emulator api --latency 1000
 ```
 
 Then point your app at the local provider URLs:
@@ -142,6 +143,8 @@ npx -p api-emulator api init --skills-only --agents agents
 Use `--agents user-agents` to install into `~/.agents/skills`.
 
 On macOS, api-emulator shows a best effort notification when the server is ready. Use `--no-notify` to silence it. Add `--notify` to get completion notifications for `init`, `install`, `validate-plugin`, and plugin scaffold commands.
+
+Use `--latency <milliseconds>` to add deterministic artificial latency to every HTTP request. This is useful for testing loading states and timeout handling. Set `API_EMULATOR_LATENCY_MS` to provide the same default through the environment.
 
 A plugin exports a `ServicePlugin`:
 

@@ -92,6 +92,15 @@ npx api-emulator list
     </tr>
     <tr>
       <td>
+        <code>--latency</code>
+      </td>
+      <td>
+        <code>0</code>
+      </td>
+      <td>Add artificial latency in milliseconds to every HTTP request</td>
+    </tr>
+    <tr>
+      <td>
         <code>--no-notify</code>
       </td>
       <td>off</td>
@@ -100,7 +109,7 @@ npx api-emulator list
   </tbody>
 </table>
 
-The port can also be set via `API_EMULATOR_PORT` or `PORT` environment variables.
+The port can also be set via `API_EMULATOR_PORT` or `PORT` environment variables. Artificial latency can be set via `API_EMULATOR_LATENCY_MS`.
 
 ## Programmatic API
 
