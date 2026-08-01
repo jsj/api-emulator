@@ -4,15 +4,20 @@
 
 <h1 align="center">api-emulator</h1>
 
-<p align="center">Local staging for API integrations, agent runs, and CI without touching production, sandboxes, or someone else's server.</p>
+<p align="center">Run API integrations locally without production credentials or remote sandboxes.</p>
 
-`api-emulator` is a local app store for stateful API clones. Run GitHub, Stripe, Resend, and plugin powered providers on localhost, seed state, inspect behavior, reset data, and test your app in one place.
+`api-emulator` runs stateful copies of APIs on your computer. Use these copies for development, agent runs, and CI.
+
+Run GitHub, Stripe, Resend, or a plugin-based provider. Add test data to the provider.
+
+Examine how the provider behaves. Reset the provider data after each test.
 
 ## Why use it?
 
-- Test API integrations locally without real provider credentials.
-- Run multiple provider clones together, with shared state, auth, webhooks, seed data, and resets.
-- Keep provider behavior in plugins so public, private, and internal APIs can live outside your app.
+- Test an API integration without real provider credentials.
+- Run multiple providers with shared state, authentication, webhooks, and test data.
+- Reset provider data after each test.
+- Keep provider behavior in separate plugins.
 
 ## Quick start
 
@@ -23,7 +28,7 @@ npx -p api-emulator api --no-notify
 npx -p api-emulator api --latency 1000
 ```
 
-Then point your app at the local provider URLs:
+Configure your app to use these local provider URLs:
 
 ```text
 http://localhost:4000/github
@@ -31,7 +36,7 @@ http://localhost:4000/stripe
 http://localhost:4000/resend
 ```
 
-Use trusted local HTTPS names when your app needs browser compatible origins:
+If your browser requires an HTTPS origin, start the providers in portless mode:
 
 ```bash
 npx -p api-emulator api --service github,stripe,resend --portless
@@ -43,15 +48,15 @@ https://stripe.api-emulator.localhost
 https://resend.api-emulator.localhost
 ```
 
-Plugins can also expose native gRPC services backed by provider `.proto` files. gRPC-capable plugins bind to port `50051` by default:
+Plugins can expose native gRPC services from provider `.proto` files. These services use port `50051` by default:
 
 ```bash
 npx -p api-emulator api --service modal --grpc-port 50051
 ```
 
-The HTTP inspector and reset routes remain on the regular service URL. The gRPC endpoint uses local insecure credentials for development and CI.
+The HTTP inspector and reset routes remain on the HTTP service URL. The gRPC endpoint uses insecure local credentials for development and CI.
 
-Create starter config and list available services:
+Create a starter configuration and list the available services:
 
 ```bash
 npx -p api-emulator api init
@@ -62,7 +67,7 @@ npx -p api-emulator api list
 
 ## Agent instructions
 
-For coding agents, use the short agent-facing reference at <https://api-emulator.jsj.sh/agent.txt>. Copy this into your agent prompt:
+Coding agents can use the short reference at <https://api-emulator.jsj.sh/agent.txt>. Add this instruction to the agent prompt:
 
 <details>
 <summary>Copy agent instruction</summary>
@@ -85,14 +90,14 @@ afterEach(() => github.reset());
 afterAll(() => github.close());
 ```
 
-For a gRPC-capable plugin, pass `grpcPort` and connect to the returned address:
+For a gRPC plugin, set `grpcPort`. Then connect to the returned address:
 
 ```ts
 const modal = await createEmulator({ service: "modal", port: 4000, grpcPort: 50051 });
 console.log(modal.grpcUrl); // 127.0.0.1:50051
 ```
 
-Capture and replay a stable fixture after a stochastic or stateful run:
+Export a stable fixture after a stateful or nondeterministic run. Restore the fixture before another test:
 
 ```ts
 const fixture = github.exportFixture({ metadata: { name: "pull-request-flow" } });
@@ -102,22 +107,24 @@ github.resetToFixture(fixture);
 
 ## Plugins
 
-Install more providers from a public or internal plugin shelf:
+Install a provider from a public or internal plugin catalog:
 
 ```bash
 npx -p api-emulator api install posthog
 npx -p api-emulator api install pepper --no-package-manager
 ```
 
-Or load a plugin file directly:
+To load a plugin file directly, use `--plugin`:
 
 ```bash
 npx -p api-emulator api --plugin ./api-emulator-plugins/@posthog/api-emulator.mjs --service posthog
 ```
 
-The installer auto discovers sibling `api-emulator-plugins` and `api-emulator-internal` checkouts. Set `API_EMULATOR_PLUGIN_CATALOGS=/path/to/shelf,/path/to/internal` to add more shelves.
+The installer finds sibling `api-emulator-plugins` and `api-emulator-internal` repositories automatically.
 
-Sanity check a plugin before installing or loading it:
+Set `API_EMULATOR_PLUGIN_CATALOGS=/path/to/shelf,/path/to/internal` to add more plugin catalogs.
+
+Validate a plugin before you install or load it:
 
 ```bash
 npx -p api-emulator api validate-plugin posthog
@@ -132,7 +139,13 @@ Scaffold a local provider clone and catalog entry:
 npx -p api-emulator api clone create internal-billing
 ```
 
-The scaffold includes starter fidelity metadata so `api list` can show whether a provider is still a stub, partially covered, or contract-backed. `api plugin create` remains available as a compatibility alias. Generated scaffolds and agent skills are tracked in `.api-emulator/manifest.json` so reruns avoid overwriting local edits unless you pass `--yes`.
+The generated files include starter fidelity metadata. The `api list` command shows one of four fidelity tiers.
+
+The tiers are `stub`, `smoke-only`, `contract-backed`, and `generated fallback`.
+
+The `api plugin create` command remains available as a compatibility alias.
+
+The manifest records generated files and agent skills in `.api-emulator/manifest.json`. A subsequent run preserves local changes unless you use `--yes`.
 
 Install local agent skills for plugin authoring and runtime workflows:
 
@@ -142,9 +155,13 @@ npx -p api-emulator api init --skills-only --agents agents
 
 Use `--agents user-agents` to install into `~/.agents/skills`.
 
-On macOS, api-emulator shows a best effort notification when the server is ready. Use `--no-notify` to silence it. Add `--notify` to get completion notifications for `init`, `install`, `validate-plugin`, and plugin scaffold commands.
+On macOS, `api-emulator` sends a notification when the server is ready. Use `--no-notify` to disable this notification.
 
-Use `--latency <milliseconds>` to add deterministic artificial latency to every HTTP request. This is useful for testing loading states and timeout handling. Set `API_EMULATOR_LATENCY_MS` to provide the same default through the environment.
+Use `--notify` with `init`, `install`, `validate-plugin`, or a plugin scaffold command. The notification reports when the command finishes.
+
+Use `--latency <milliseconds>` to add a fixed delay to each HTTP request. This delay helps you test loading states and timeouts.
+
+Set `API_EMULATOR_LATENCY_MS` to define the same delay through the environment.
 
 A plugin exports a `ServicePlugin`:
 
