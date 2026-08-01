@@ -23,31 +23,31 @@ tokens:
 Check a plugin shelf entry or direct plugin file before installing or loading it:
 
 ```bash
-npx -p api-emulator api validate-plugin github
-npx -p api-emulator api validate-plugin ./api-emulator-plugins/@github/api-emulator.mjs
+npx -p api-emulator api plugin validate github
+npx -p api-emulator api plugin validate ./api-emulator-plugins/@github/api-emulator.mjs
 ```
 
-`api list` and `api install` surface provider fidelity as `contract-backed`, `smoke-only`, `stub`, or `generated fallback` when plugin metadata is available.
+`api list` and `api plugin install` show provider fidelity when plugin metadata is available.
 
 Use `--skip-build` or `--skip-load` when validating source-only local plugins.
 
 ## Plugin Authoring
 
-Scaffold a local provider clone and catalog entry:
+Create starter files and a catalog entry for a local plugin:
 
 ```bash
-npx -p api-emulator api clone create internal-billing
+npx -p api-emulator api plugin create internal-billing
 ```
 
-The scaffold includes starter fidelity metadata and is tracked in `.api-emulator/manifest.json` so reruns do not overwrite local edits unless you pass `--yes`. `api plugin create` remains available as a compatibility alias.
+The starter files include fidelity metadata. The CLI does not replace changed generated files unless you use `--yes`.
 
 Install local agent skills for plugin authoring and runtime workflows:
 
 ```bash
-npx -p api-emulator api init --skills-only --agents agents
+npx -p api-emulator api skills install
 ```
 
-Use `--agents user-agents` to install into `~/.agents/skills`.
+Use `--target user-agents` to install into `~/.agents/skills`.
 
 ## Vercel Seed Config
 

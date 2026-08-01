@@ -41,7 +41,7 @@ npx -p api-emulator api --port 3000
 # Use a seed config file
 npx -p api-emulator api --seed config.yaml
 
-# Generate a starter config
+# Create a starter configuration file
 npx -p api-emulator api init
 
 # Generate config for a specific service
@@ -51,29 +51,29 @@ npx -p api-emulator api init --service vercel
 npx -p api-emulator api list
 
 # Validate a plugin shelf entry or plugin file
-npx -p api-emulator api validate-plugin github
-npx -p api-emulator api validate-plugin ./api-emulator-plugins/@github/api-emulator.mjs
+npx -p api-emulator api plugin validate github
+npx -p api-emulator api plugin validate ./api-emulator-plugins/@github/api-emulator.mjs
 
-# Scaffold a provider clone and catalog entry
-npx -p api-emulator api clone create github
+# Create starter plugin files and a catalog entry
+npx -p api-emulator api plugin create github
 
 # Install local agent skills
-npx -p api-emulator api init --skills-only --agents agents
+npx -p api-emulator api skills install
 
 # Install user agent skills
-npx -p api-emulator api init --skills-only --agents user-agents
+npx -p api-emulator api skills install --target user-agents
 ```
 
 ### Options
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `-p, --port` | `4000` | Base port (auto-increments per service) |
+| `-p, --port` | `4000` | Port for the first service. Other service ports increase from this value. |
 | `--grpc-port` | `50051` | Base native gRPC port for plugins that declare gRPC services |
 | `-s, --service` | all | Comma-separated services to enable |
 | `--seed` | auto-detect | Path to seed config (YAML or JSON) |
-| `--base-url` | none | Override advertised base URL (supports `{service}` template) |
-| `--latency` | `0` | Add artificial latency in milliseconds to every HTTP request. |
+| `--base-url` | none | Use this public URL for generated links. Supports the `{service}` template. |
+| `--latency` | `0` | Delay each HTTP response by this many milliseconds. |
 | `--portless` | off | Serve over HTTPS via portless (auto-registers aliases) |
 | `--no-notify` | off | Disable the macOS notification when the emulator server is ready |
 | `--notify` | off | Show macOS completion notifications for finite commands |
@@ -114,7 +114,7 @@ await vercel.close()
 | `seed` | none | Inline seed data (same shape as YAML config) |
 | `grpcPort` | HTTP port + 10000 | Native gRPC port for a gRPC-capable plugin |
 | `baseUrl` | none | Override advertised base URL. Per-service `baseUrl` in seed config takes highest priority, then this option, then `API_EMULATOR_BASE_URL` env var (supports `{service}`), then `PORTLESS_URL` (supports `{service}`, automatically set by the `portless` CLI wrapper), then `http://localhost:<port>`. |
-| `latencyMs` | `0` | Add artificial latency in milliseconds to every HTTP request. |
+| `latencyMs` | `0` | Delay each HTTP response by this many milliseconds. |
 
 ### Instance Methods
 

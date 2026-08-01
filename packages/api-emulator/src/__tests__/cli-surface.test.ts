@@ -26,11 +26,14 @@ describe("cli surface", () => {
     expect(source).toContain('.command("start"');
     expect(source).toContain('.command("init")');
     expect(source).toContain('.command("list")');
-    expect(source).toContain('.command("install <plugin>")');
-    expect(source).toContain('.command("validate-plugin <plugin>")');
     expect(source).toContain('.command("plugin")');
-    expect(source).toContain('.command("clone")');
     expect(source).toContain('.command("create <name>")');
+    expect(source).toContain('.command("install <plugin>")');
+    expect(source).toContain('.command("validate <plugin>")');
+    expect(source).toContain('.command("skills")');
+    expect(source).toContain('.command("install")');
+    expect(source).not.toContain('.command("validate-plugin <plugin>")');
+    expect(source).not.toContain('.command("clone")');
     expect(source).toContain('.option("--notify"');
     expect(source).toContain('.option("--no-notify"');
   });

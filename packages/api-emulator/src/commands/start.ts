@@ -32,7 +32,7 @@ function loadSeedConfig(seedPath?: string): LoadResult | null {
   if (seedPath) {
     const fullPath = resolve(seedPath);
     if (!existsSync(fullPath)) {
-      console.error(`Seed file not found: ${fullPath}`);
+      console.error(`The seed file does not exist: ${fullPath}`);
       process.exit(1);
     }
     const content = readFileSync(fullPath, "utf-8");
@@ -73,7 +73,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
   const { port: basePort } = options;
 
   if (options.portless && options.baseUrl) {
-    console.error("--portless and --base-url are mutually exclusive.");
+    console.error("Do not use --portless with --base-url.");
     process.exit(1);
   }
 
@@ -111,7 +111,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
 
   for (const svc of services) {
     if (!allPluginModules[svc]) {
-      console.error(`Unknown service: ${svc}`);
+      console.error(`Service "${svc}" does not exist. Run 'npx -p api-emulator api list' to list services.`);
       process.exit(1);
     }
   }
@@ -232,10 +232,10 @@ function printBanner(
   }
 
   if (configSource) {
-    lines.push(`  ${pc.dim("Config:")} ${configSource}`);
+    lines.push(`  ${pc.dim("Configuration:")} ${configSource}`);
   } else {
     lines.push(
-      `  ${pc.dim("Config:")} defaults ${pc.dim("(run")} npx -p api-emulator api init ${pc.dim("to customize)")}`,
+      `  ${pc.dim("Configuration:")} defaults ${pc.dim("(run")} npx -p api-emulator api init ${pc.dim("to customize)")}`,
     );
   }
   lines.push("");

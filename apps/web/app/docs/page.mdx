@@ -5,7 +5,7 @@ Local drop-in replacement for Vercel, GitHub, Google, Slack, Apple, Microsoft, A
 ## Quick Start
 
 ```bash
-npx api-emulator
+npx -p api-emulator api
 ```
 
 All services start with sensible defaults. No config file needed:
@@ -26,25 +26,25 @@ All services start with sensible defaults. No config file needed:
 
 ```bash
 # Start all services (zero-config)
-npx api-emulator
+npx -p api-emulator api
 
 # Start specific services
-npx api-emulator --service vercel,github
+npx -p api-emulator api --service vercel,github
 
 # Custom port
-npx api-emulator --port 3000
+npx -p api-emulator api --port 3000
 
 # Use a seed config file
-npx api-emulator --seed config.yaml
+npx -p api-emulator api --seed config.yaml
 
-# Generate a starter config
-npx api-emulator init
+# Create a starter configuration file
+npx -p api-emulator api init
 
 # Generate config for a specific service
-npx api-emulator init --service github
+npx -p api-emulator api init --service github
 
 # List available services
-npx api-emulator list
+npx -p api-emulator api list
 ```
 
 ## Options
@@ -65,7 +65,7 @@ npx api-emulator list
       <td>
         <code>4000</code>
       </td>
-      <td>Base port (auto-increments per service)</td>
+      <td>Port for the first service. Other service ports increase from this value.</td>
     </tr>
     <tr>
       <td>
@@ -97,7 +97,7 @@ npx api-emulator list
       <td>
         <code>0</code>
       </td>
-      <td>Add artificial latency in milliseconds to every HTTP request</td>
+      <td>Delay each HTTP response by this many milliseconds.</td>
     </tr>
     <tr>
       <td>

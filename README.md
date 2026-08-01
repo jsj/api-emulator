@@ -110,8 +110,8 @@ github.resetToFixture(fixture);
 Install a provider from a public or internal plugin catalog:
 
 ```bash
-npx -p api-emulator api install posthog
-npx -p api-emulator api install pepper --no-package-manager
+npx -p api-emulator api plugin install posthog
+npx -p api-emulator api plugin install pepper --no-package-manager
 ```
 
 To load a plugin file directly, use `--plugin`:
@@ -127,37 +127,35 @@ Set `API_EMULATOR_PLUGIN_CATALOGS=/path/to/shelf,/path/to/internal` to add more 
 Validate a plugin before you install or load it:
 
 ```bash
-npx -p api-emulator api validate-plugin posthog
-npx -p api-emulator api validate-plugin ./api-emulator-plugins/@posthog/api-emulator.mjs
+npx -p api-emulator api plugin validate posthog
+npx -p api-emulator api plugin validate ./api-emulator-plugins/@posthog/api-emulator.mjs
 ```
 
-`api install` records the plugin and prints the fidelity tier when the plugin metadata can be loaded locally.
+`api plugin install` records the plugin and prints its fidelity tier when the CLI can load the plugin metadata.
 
-Scaffold a local provider clone and catalog entry:
+Create starter files and a catalog entry for a local plugin:
 
 ```bash
-npx -p api-emulator api clone create internal-billing
+npx -p api-emulator api plugin create internal-billing
 ```
 
 The generated files include starter fidelity metadata. The `api list` command shows one of four fidelity tiers.
 
 The tiers are `stub`, `smoke-only`, `contract-backed`, and `generated fallback`.
 
-The `api plugin create` command remains available as a compatibility alias.
-
 The manifest records generated files and agent skills in `.api-emulator/manifest.json`. A subsequent run preserves local changes unless you use `--yes`.
 
 Install local agent skills for plugin authoring and runtime workflows:
 
 ```bash
-npx -p api-emulator api init --skills-only --agents agents
+npx -p api-emulator api skills install
 ```
 
-Use `--agents user-agents` to install into `~/.agents/skills`.
+Use `--target user-agents` to install into `~/.agents/skills`.
 
 On macOS, `api-emulator` sends a notification when the server is ready. Use `--no-notify` to disable this notification.
 
-Use `--notify` with `init`, `install`, `validate-plugin`, or a plugin scaffold command. The notification reports when the command finishes.
+Use `--notify` with `init`, `plugin install`, `plugin validate`, `plugin create`, or `skills install`.
 
 Use `--latency <milliseconds>` to add a fixed delay to each HTTP request. This delay helps you test loading states and timeouts.
 

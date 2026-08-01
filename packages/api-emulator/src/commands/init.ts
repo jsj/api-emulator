@@ -8,10 +8,12 @@ import { DEFAULT_TOKENS, resolvePluginModules } from "../registry.js";
 interface InitOptions {
   service: string;
   plugin?: string;
-  agents?: string;
-  skillsOnly?: boolean;
   yes?: boolean;
-  nonInteractive?: boolean;
+}
+
+export interface InstallSkillsOptions {
+  targets?: string;
+  yes?: boolean;
 }
 
 const AGENT_SKILL_DIRS: Record<string, string> = {
@@ -25,14 +27,14 @@ const AGENT_SKILL_DIRS: Record<string, string> = {
   windsurf: ".windsurf/skills",
 };
 
-function parseAgentTargets(input?: string, nonInteractive?: boolean): string[] {
+function parseAgentTargets(input?: string): string[] {
   const values =
     input
       ?.split(",")
       .map((value) => value.trim())
       .filter(Boolean) ?? [];
   if (values.length > 0) return values;
-  return nonInteractive ? ["agents"] : ["agents"];
+  return ["agents"];
 }
 
 function pluginAuthoringSkill(): string {
@@ -47,9 +49,9 @@ Use this skill when adding or validating a provider plugin for api-emulator.
 
 ## Workflow
 
-1. Create a provider clone scaffold with \`npx -p api-emulator api clone create <provider>\`.
+1. Create a plugin with \`npx -p api-emulator api plugin create <provider>\`.
 2. Add provider-shaped routes, deterministic seed state, and manifest fidelity metadata.
-3. Run \`npx -p api-emulator api validate-plugin <provider>\`.
+3. Run \`npx -p api-emulator api plugin validate <provider>\`.
 4. Run the relevant smoke or test command before calling the plugin done.
 
 ## Safety
@@ -74,16 +76,16 @@ Use this skill when running local API replacements for development or tests.
 
 - \`npx -p api-emulator api list\`
 - \`npx -p api-emulator api init\`
-- \`npx -p api-emulator api install <plugin>\`
-- \`npx -p api-emulator api clone create <provider>\`
+- \`npx -p api-emulator api plugin install <plugin>\`
+- \`npx -p api-emulator api plugin create <provider>\`
 - \`npx -p api-emulator api --service <service>\`
 
 Keep seed data deterministic and reset emulator state between tests.
 `;
 }
 
-function installAgentSkills(options: Pick<InitOptions, "agents" | "yes" | "nonInteractive">): void {
-  for (const target of parseAgentTargets(options.agents, options.nonInteractive)) {
+export function installAgentSkills(options: InstallSkillsOptions): void {
+  for (const target of parseAgentTargets(options.targets)) {
     const dir = AGENT_SKILL_DIRS[target];
     if (!dir) {
       throw new Error(`Unknown agent target: ${target}. Available: ${Object.keys(AGENT_SKILL_DIRS).join(", ")}`);
@@ -100,18 +102,11 @@ function installAgentSkills(options: Pick<InitOptions, "agents" | "yes" | "nonIn
 }
 
 export async function initCommand(options: InitOptions): Promise<void> {
-  if (options.agents || options.skillsOnly) {
-    installAgentSkills(options);
-    console.log("Installed api-emulator agent skills");
-  }
-
-  if (options.skillsOnly) return;
-
   const filename = "api-emulator.config.yaml";
   const fullPath = resolve(filename);
 
-  if (existsSync(fullPath)) {
-    console.error(`Config file already exists: ${filename}`);
+  if (existsSync(fullPath) && !options.yes) {
+    console.error(`The configuration file already exists: ${filename}. Use --yes to replace it.`);
     process.exit(1);
   }
 
@@ -132,7 +127,9 @@ export async function initCommand(options: InitOptions): Promise<void> {
   } else {
     const pluginModule = pluginModules[options.service];
     if (!pluginModule) {
-      console.error(`Unknown service: ${options.service}. Available: ${availableServices.join(", ")}, all`);
+      console.error(
+        `Service "${options.service}" does not exist. Available services: ${availableServices.join(", ")}, all.`,
+      );
       process.exit(1);
     }
     config = { ...DEFAULT_TOKENS, ...pluginModule.initConfig };

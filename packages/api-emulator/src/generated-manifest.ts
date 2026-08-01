@@ -57,7 +57,7 @@ export function writeGeneratedFile(relativePath: string, content: string, option
       return;
     }
     if (!options.yes && (!existing || existing.checksum !== checksum(current))) {
-      throw new Error(`Refusing to overwrite user-edited file: ${relativePath}. Re-run with --yes to overwrite.`);
+      throw new Error(`The generated file contains changes: ${relativePath}. Use --yes to replace it.`);
     }
   }
 

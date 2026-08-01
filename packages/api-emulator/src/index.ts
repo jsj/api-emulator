@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { startCommand } from "./commands/start.js";
-import { initCommand } from "./commands/init.js";
+import { initCommand, installAgentSkills } from "./commands/init.js";
 import { listCommand } from "./commands/list.js";
 import { installCommand } from "./commands/install.js";
 import { validatePluginCommand } from "./commands/validate-plugin.js";
@@ -63,12 +63,12 @@ notifyOption(
   program
     .command("start", { isDefault: true })
     .description("Start the emulator server")
-    .option("-p, --port <port>", "Base port", defaultPort)
+    .option("-p, --port <port>", "Port for the first service", defaultPort)
     .option("--grpc-port <port>", "Base gRPC port for plugins that declare gRPC services", defaultGrpcPort)
     .option("-s, --service <services>", "Comma-separated services to enable")
-    .option("--seed <file>", "Path to seed config file")
-    .option("--base-url <url>", "Override advertised base URL (supports {service} template)")
-    .option("--latency <milliseconds>", "Add artificial latency to every HTTP request", defaultLatency)
+    .option("--seed <file>", "Load seed data from this file")
+    .option("--base-url <url>", "Use this public URL for generated links (supports {service})")
+    .option("--latency <milliseconds>", "Delay each HTTP response by this many milliseconds", defaultLatency)
     .option("--portless", "Serve over HTTPS via portless (auto-registers aliases)")
     .option("--plugin <plugins>", "Comma-separated external plugin paths or package names")
     .option("--no-notify", "Disable the macOS notification when the emulator server is ready"),
@@ -77,15 +77,15 @@ notifyOption(
   const grpcPort = parseInt(opts.grpcPort, 10);
   const latencyMs = Number(opts.latency);
   if (Number.isNaN(port) || port < 1 || port > 65535) {
-    console.error(`Invalid port: ${opts.port}`);
+    console.error(`Port ${opts.port} is invalid. Use a number from 1 through 65535.`);
     process.exit(1);
   }
   if (Number.isNaN(grpcPort) || grpcPort < 1 || grpcPort > 65535) {
-    console.error(`Invalid gRPC port: ${opts.grpcPort}`);
+    console.error(`gRPC port ${opts.grpcPort} is invalid. Use a number from 1 through 65535.`);
     process.exit(1);
   }
   if (!Number.isInteger(latencyMs) || latencyMs < 0) {
-    console.error(`Invalid latency: ${opts.latency}`);
+    console.error(`Latency ${opts.latency} is invalid. Use a whole number that is 0 or more.`);
     process.exit(1);
   }
   await startCommand({
@@ -104,22 +104,16 @@ notifyOption(
 notifyOption(
   program
     .command("init")
-    .description("Generate a starter config file")
-    .option("-s, --service <service>", "Service to generate config for", "all")
+    .description("Create a starter configuration file")
+    .option("-s, --service <service>", "Create configuration for this service", "all")
     .option("--plugin <plugins>", "Comma-separated external plugin paths or package names")
-    .option("--agents <targets>", "Install agent skills for agents,user-agents,claude,codex,cursor,windsurf")
-    .option("--skills-only", "Only install agent skills")
-    .option("--yes", "Overwrite generated files that changed")
-    .option("--non-interactive", "Use defaults suitable for agents and CI"),
+    .option("--yes", "Replace an existing configuration file"),
 ).action(async (opts, command) => {
   await runCommandWithNotification("init", wantsNotify(command, opts), async () => {
     await initCommand({
       service: opts.service,
       plugin: opts.plugin,
-      agents: opts.agents,
-      skillsOnly: opts.skillsOnly,
       yes: opts.yes,
-      nonInteractive: opts.nonInteractive,
     });
   });
 });
@@ -128,10 +122,10 @@ function addPluginCreateCommand(command: Command): void {
   notifyOption(
     command
       .command("create <name>")
-      .description("Scaffold a provider clone")
-      .option("--dir <dir>", "Directory to create the clone in")
-      .option("--fidelity <level>", "Initial fidelity level", "stub")
-      .option("--yes", "Overwrite generated files that changed"),
+      .description("Create starter files for a plugin")
+      .option("--dir <dir>", "Create the plugin in this directory")
+      .option("--fidelity <level>", "Set the initial fidelity level", "stub")
+      .option("--yes", "Replace changed generated files"),
   ).action(async (name, opts, actionCommand) => {
     await runCommandWithNotification("plugin create", wantsNotify(actionCommand, opts), async () => {
       await pluginCreateCommand(name, {
@@ -146,8 +140,48 @@ function addPluginCreateCommand(command: Command): void {
 const plugin = program.command("plugin").description("Create and manage provider plugins");
 addPluginCreateCommand(plugin);
 
-const clone = program.command("clone").description("Create and manage provider clones");
-addPluginCreateCommand(clone);
+notifyOption(
+  plugin
+    .command("install <plugin>")
+    .description("Install a plugin")
+    .option("--package-manager <name>", "Use this package manager")
+    .option("--no-package-manager", "Record the plugin without installing its package"),
+).action(async (pluginName, opts, command) => {
+  await runCommandWithNotification("plugin install", wantsNotify(command, opts), async () => {
+    await installCommand(pluginName, {
+      packageManager: opts.packageManager === false ? false : opts.packageManager,
+    });
+  });
+});
+
+notifyOption(
+  plugin
+    .command("validate <plugin>")
+    .description("Validate a plugin by name, path, or package")
+    .option("--skip-build", "Do not build the plugin entry")
+    .option("--skip-load", "Do not load the plugin module"),
+).action(async (pluginName, opts, command) => {
+  await runCommandWithNotification("plugin validate", wantsNotify(command, opts), async () => {
+    await validatePluginCommand(pluginName, {
+      skipBuild: opts.skipBuild,
+      skipLoad: opts.skipLoad,
+    });
+  });
+});
+
+const skills = program.command("skills").description("Manage agent skills");
+notifyOption(
+  skills
+    .command("install")
+    .description("Install agent skills")
+    .option("--target <targets>", "Install for these comma-separated targets", "agents")
+    .option("--yes", "Replace changed generated files"),
+).action(async (opts, command) => {
+  await runCommandWithNotification("skills install", wantsNotify(command, opts), async () => {
+    installAgentSkills({ targets: opts.target, yes: opts.yes });
+    console.log("Installed api-emulator agent skills.");
+  });
+});
 
 program
   .command("list")
@@ -157,34 +191,5 @@ program
   .action(async (opts) => {
     await listCommand({ plugin: opts.plugin });
   });
-
-notifyOption(
-  program
-    .command("install <plugin>")
-    .description("Install a provider plugin by name")
-    .option("--package-manager <name>", "Package manager to use")
-    .option("--no-package-manager", "Only record the plugin in api-emulator.lock"),
-).action(async (plugin, opts, command) => {
-  await runCommandWithNotification("install", wantsNotify(command, opts), async () => {
-    await installCommand(plugin, {
-      packageManager: opts.packageManager === false ? false : opts.packageManager,
-    });
-  });
-});
-
-notifyOption(
-  program
-    .command("validate-plugin <plugin>")
-    .description("Validate a provider plugin by name, path, or package")
-    .option("--skip-build", "Skip entrypoint build validation")
-    .option("--skip-load", "Skip runtime module loading validation"),
-).action(async (plugin, opts, command) => {
-  await runCommandWithNotification("validate-plugin", wantsNotify(command, opts), async () => {
-    await validatePluginCommand(plugin, {
-      skipBuild: opts.skipBuild,
-      skipLoad: opts.skipLoad,
-    });
-  });
-});
 
 program.parse();

@@ -37,7 +37,7 @@ Each service is a plugin that:
 
 Multiple services can run simultaneously, each on its own port (auto-incremented from the base port).
 
-`api clone create <provider>` scaffolds a local provider clone and catalog entry. Generated files are tracked in `.api-emulator/manifest.json` so the CLI can distinguish safe reruns from user-edited files.
+`api plugin create <provider>` creates starter plugin files and a catalog entry. The CLI tracks generated files in `.api-emulator/manifest.json`.
 
 ## In-Memory State
 
