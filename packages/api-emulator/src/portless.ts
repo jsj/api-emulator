@@ -63,7 +63,7 @@ const portlessInstallCommand = "bun add --global portless";
 export async function ensurePortless(): Promise<void> {
   if (!hasPortless()) {
     if (!isInteractive()) {
-      console.error(`portless is required but not installed. Run: ${portlessInstallCommand}`);
+      console.error(`portless is not installed. Run '${portlessInstallCommand}', then run this command again.`);
       process.exit(1);
     }
 
@@ -76,7 +76,7 @@ export async function ensurePortless(): Promise<void> {
     try {
       execSync(portlessInstallCommand, { stdio: "inherit" });
     } catch {
-      console.error("Failed to install portless.");
+      console.error(`The portless installation failed. Run '${portlessInstallCommand}', then run this command again.`);
       process.exit(1);
     }
 
@@ -87,7 +87,7 @@ export async function ensurePortless(): Promise<void> {
   }
 
   if (!(await isProxyRunning())) {
-    console.error("portless proxy is not running. Start it with: portless proxy start");
+    console.error("The portless proxy is not running. Run 'portless proxy start', then run this command again.");
     process.exit(1);
   }
 }

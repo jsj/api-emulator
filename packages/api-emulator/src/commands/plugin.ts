@@ -62,19 +62,19 @@ export async function pluginCreateCommand(input: string, options: PluginCreateOp
   const catalogSpecifier = `./${entryPath}`;
 
   writeGeneratedFile(entryPath, pluginEntry(name, options.fidelity ?? "stub"), {
-    source: "api clone create",
+    source: "api plugin create",
     yes: options.yes,
   });
   writeGeneratedFile(
     "api-emulator.catalog.json",
     catalogContent(name, catalogSpecifier, `${name} API emulator plugin`),
     {
-      source: "api clone create",
+      source: "api plugin create",
       yes: options.yes,
     },
   );
 
   console.log(`Created ${entryPath}`);
   console.log(`Recorded ${name} in api-emulator.catalog.json`);
-  console.log(`Run 'npx -p api-emulator api validate-plugin ${name}' to check the clone.`);
+  console.log(`Run 'npx -p api-emulator api plugin validate ${name}' to validate the plugin.`);
 }

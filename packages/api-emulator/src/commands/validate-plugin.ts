@@ -44,7 +44,7 @@ function buildEntry(specifier: string): void {
     });
     if (result.error) {
       if ((result.error as NodeJS.ErrnoException).code === "ENOENT") {
-        console.log("  build: skipped (bun not found)");
+        console.log("Skipped the build because bun is not installed.");
         return;
       }
       throw result.error;
@@ -52,7 +52,7 @@ function buildEntry(specifier: string): void {
     if (result.status !== 0) {
       throw new Error((result.stderr || result.stdout || "Plugin build failed").trim());
     }
-    console.log("  build: ok");
+    console.log("Built the plugin.");
   } finally {
     rmSync(outdir, { recursive: true, force: true });
   }
@@ -64,28 +64,28 @@ async function loadPlugin(specifier: string, expectedName: string): Promise<void
     throw new Error(`Plugin exported name "${module.name}" does not match requested plugin "${expectedName}"`);
   }
   await module.load();
-  console.log("  load: ok");
+  console.log("Loaded the plugin.");
 }
 
 export async function validatePluginCommand(input: string, options: ValidatePluginOptions = {}): Promise<void> {
   const source = resolveSource(input);
 
-  console.log(`Validating ${source.name} from ${source.sourceId}`);
-  console.log(`  specifier: ${source.specifier}`);
-  if (source.packageName) console.log(`  package: ${source.packageName}`);
+  console.log(`Validating plugin "${source.name}" from ${source.sourceId}.`);
+  console.log(`Plugin path: ${source.specifier}`);
+  if (source.packageName) console.log(`Package: ${source.packageName}`);
 
   assertLocalFile(source.specifier);
-  console.log("  entry: ok");
+  console.log("Found the plugin entry.");
 
   if (!options.skipBuild) {
     buildEntry(source.specifier);
   }
 
   if (options.skipLoad) {
-    console.log("  load: skipped");
+    console.log("Skipped plugin loading because you used --skip-load.");
   } else {
     await loadPlugin(source.specifier, source.name);
   }
 
-  console.log(`Plugin ${source.name} is valid`);
+  console.log(`Plugin "${source.name}" is valid.`);
 }

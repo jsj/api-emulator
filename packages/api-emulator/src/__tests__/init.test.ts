@@ -3,7 +3,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "fs
 import { tmpdir } from "os";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
-import { initCommand } from "../commands/init.js";
+import { initCommand, installAgentSkills } from "../commands/init.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,14 +35,10 @@ describe("initCommand", () => {
   });
 
   it("installs agent skills with a generated manifest", async () => {
-    await initCommand({
-      service: "all",
-      agents: "agents",
-      skillsOnly: true,
-    });
+    installAgentSkills({ targets: "agents" });
 
     const skillPath = join(tempDir, ".agents/skills/api-emulator-plugin-authoring/SKILL.md");
-    expect(readFileSync(skillPath, "utf-8")).toContain("api clone create <provider>");
+    expect(readFileSync(skillPath, "utf-8")).toContain("api plugin create <provider>");
 
     const manifest = JSON.parse(readFileSync(join(tempDir, ".api-emulator/manifest.json"), "utf-8")) as {
       files: Record<string, unknown>;
@@ -51,27 +47,14 @@ describe("initCommand", () => {
   });
 
   it("refuses to overwrite user-edited generated skills without yes", async () => {
-    await initCommand({
-      service: "all",
-      agents: "codex",
-      skillsOnly: true,
-    });
+    installAgentSkills({ targets: "codex" });
     writeFileSync(join(tempDir, ".codex/skills/api-emulator-plugin-authoring/SKILL.md"), "local edits\n");
 
     await expect(
-      initCommand({
-        service: "all",
-        agents: "codex",
-        skillsOnly: true,
-      }),
-    ).rejects.toThrow("Refusing to overwrite user-edited file");
+      Promise.resolve().then(() => installAgentSkills({ targets: "codex" })),
+    ).rejects.toThrow("The generated file contains changes");
 
-    await initCommand({
-      service: "all",
-      agents: "codex",
-      skillsOnly: true,
-      yes: true,
-    });
+    installAgentSkills({ targets: "codex", yes: true });
     expect(existsSync(join(tempDir, ".codex/skills/api-emulator-plugin-authoring/SKILL.md"))).toBe(true);
   });
 });

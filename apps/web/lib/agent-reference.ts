@@ -6,7 +6,7 @@ api-emulator runs local, stateful API emulators so agents can build and test int
 
 - You need local provider-like APIs for integration tests or development.
 - You need seeded state, resettable stores, local auth tokens, OAuth flows, or webhook behavior.
-- You need to run multiple provider clones together on localhost.
+- You need to run multiple provider services together on localhost.
 - You need to create, install, load, or validate emulator plugins.
 
 ## Start an emulator
@@ -21,9 +21,9 @@ On macOS, the CLI sends a best effort notification when the server is ready. Use
 
 npx -p api-emulator api init
 npx -p api-emulator api list
-npx -p api-emulator api install <plugin>
-npx -p api-emulator api validate-plugin <plugin>
-npx -p api-emulator api clone create <provider>
+npx -p api-emulator api plugin install <plugin>
+npx -p api-emulator api plugin validate <plugin>
+npx -p api-emulator api plugin create <provider>
 
 ## Programmatic API
 
@@ -41,7 +41,7 @@ afterAll(() => github.close());
 
 ## Seed config
 
-Run this to create a starter config:
+Run this command to create a starter configuration file:
 
 npx -p api-emulator api init
 
@@ -61,13 +61,13 @@ bun add --global portless
 
 ## Plugin workflow
 
-Create a provider clone:
+Create starter files for a plugin:
 
-npx -p api-emulator api clone create internal-billing
+npx -p api-emulator api plugin create internal-billing
 
 Validate it:
 
-npx -p api-emulator api validate-plugin internal-billing
+npx -p api-emulator api plugin validate internal-billing
 
 Load a plugin file directly:
 
