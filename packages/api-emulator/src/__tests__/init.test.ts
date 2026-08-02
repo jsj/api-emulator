@@ -50,9 +50,9 @@ describe("initCommand", () => {
     installAgentSkills({ targets: "codex" });
     writeFileSync(join(tempDir, ".codex/skills/api-emulator-plugin-authoring/SKILL.md"), "local edits\n");
 
-    await expect(
-      Promise.resolve().then(() => installAgentSkills({ targets: "codex" })),
-    ).rejects.toThrow("The generated file contains changes");
+    await expect(Promise.resolve().then(() => installAgentSkills({ targets: "codex" }))).rejects.toThrow(
+      "The generated file contains changes",
+    );
 
     installAgentSkills({ targets: "codex", yes: true });
     expect(existsSync(join(tempDir, ".codex/skills/api-emulator-plugin-authoring/SKILL.md"))).toBe(true);
