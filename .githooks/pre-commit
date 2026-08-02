@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+files=()
+while IFS= read -r -d '' file; do
+  case "$file" in
+    *.ts|*.tsx) files+=("$file") ;;
+  esac
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+if ((${#files[@]})); then
+  bunx prettier --check "${files[@]}"
+fi

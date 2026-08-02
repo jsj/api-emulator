@@ -11,6 +11,7 @@
     "type-check": "turbo type-check",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
+    "prepare": "git config core.hooksPath .githooks",
     "sync-versions": "node scripts/sync-versions.mjs"
   },
   "devDependencies": {
