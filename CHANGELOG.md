@@ -1,6 +1,22 @@
 # Changelog
 
 <!-- release:start -->
+## 0.8.0
+
+### New Features
+
+- Add native gRPC transport for provider plugins.
+- Add a configuration option for response latency.
+
+### Improvements
+
+- Show the fidelity tier for each provider plugin.
+- Simplify the CLI commands and plugin setup.
+- Improve the README, website, and agent instructions.
+- Add a Git hook that checks TypeScript formatting before each commit.
+
+<!-- release:end -->
+
 ## 0.7.0
 
 ### New Features
@@ -16,8 +32,6 @@
 ### Fixes
 
 - Improve portless readiness checks so a route list alone does not count as a running proxy.
-
-<!-- release:end -->
 
 ## 0.6.0
 
