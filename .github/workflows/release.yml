@@ -157,7 +157,7 @@ jobs:
           }
           fs.writeFileSync(file, `${JSON.stringify(pkg, null, 2)}\n`);
           NODE
-            TARBALL=$(cd "$TMP_DIR" && npm pack --pack-destination /tmp --json | node -e 'let input = ""; process.stdin.on("data", chunk => input += chunk); process.stdin.on("end", () => process.stdout.write(`/tmp/${JSON.parse(input)[0].filename}`));')
+          TARBALL=$(cd "$TMP_DIR" && npm pack --pack-destination /tmp --json | node -e 'let input = ""; process.stdin.on("data", chunk => input += chunk); process.stdin.on("end", () => { const result = JSON.parse(input); const pack = Array.isArray(result) ? result[0] : Object.values(result)[0]; if (!pack?.filename) throw new Error("npm pack did not return a filename"); process.stdout.write(`/tmp/${pack.filename}`); });')
             if ! npm publish "$TARBALL" $PUBLISH_ARGS; then
               FAILED="$FAILED $name"
             fi
