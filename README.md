@@ -2,9 +2,33 @@
   <img src="https://raw.githubusercontent.com/jsj/api-emulator/main/.README/cover.png" alt="api-emulator" width="1024" />
 </p>
 
-<h1 align="center">api-emulator</h1>
+<h1 align="center">API sandboxes for coding agents</h1>
 
-<p align="center">Run API integrations locally without production credentials or remote sandboxes.</p>
+<p align="center">
+  Create the stateful API sandbox that your agent needs.<br>
+  Run the same workflow 1,000 times without test accounts, rate limits, or stale data.
+</p>
+
+<details open>
+<summary><span><img src=".README/agent-icons/claude.svg" alt="Claude Code" width="20" height="20"> <img src=".README/agent-icons/cursor.svg" alt="Cursor" width="20" height="20"> <img src=".README/agent-icons/github-copilot.svg" alt="GitHub Copilot" width="20" height="20"> <img src=".README/agent-icons/openai.svg" alt="OpenAI Codex" width="20" height="20"> <strong>Copy this prompt to your coding agent</strong></span></summary>
+
+```text
+Set up api-emulator for this repository.
+First, read https://api-emulator.jsj.sh/agent.txt.
+Inspect the repository and identify the external APIs that its tests use.
+Before you edit files, describe the smallest setup plan.
+Keep the existing provider SDKs.
+Change only their base URLs and test credentials.
+Start only the providers that the repository needs.
+Add or update one representative integration test.
+Run that test against the local emulator.
+Do not use production credentials or change production configuration.
+Reset emulator state after the test.
+If the required provider behavior is unavailable, stop and report the missing behavior.
+Report the changed files, local URLs, test command, test result, and remaining gaps.
+```
+
+</details>
 
 `api-emulator` runs stateful copies of APIs on your computer. Use these copies for development, agent runs, and CI.
 
@@ -64,19 +88,6 @@ npx -p api-emulator api list
 ```
 
 `api list` shows each provider's fidelity tier: `contract-backed`, `smoke-only`, `stub`, or `generated fallback`.
-
-## Agent instructions
-
-Coding agents can use the short reference at <https://api-emulator.jsj.sh/agent.txt>. Add this instruction to the agent prompt:
-
-<details>
-<summary>Copy agent instruction</summary>
-
-```text
-Read https://api-emulator.jsj.sh/agent.txt before using api-emulator.
-```
-
-</details>
 
 ## Use in tests
 
@@ -255,6 +266,36 @@ bun run test
 
 - [`jsj/api-emulator-plugins`](https://github.com/jsj/api-emulator-plugins)
 - [`api-emulator` on npm](https://www.npmjs.com/package/api-emulator)
+
+<hr>
+
+<h1 align="center">API sandboxes for coding agents</h1>
+
+<p align="center">
+  Create the stateful API sandbox that your agent needs.<br>
+  Run the same workflow 1,000 times without test accounts, rate limits, or stale data.
+</p>
+
+<details open>
+<summary><span><img src=".README/agent-icons/claude.svg" alt="Claude Code" width="20" height="20"> <img src=".README/agent-icons/cursor.svg" alt="Cursor" width="20" height="20"> <img src=".README/agent-icons/github-copilot.svg" alt="GitHub Copilot" width="20" height="20"> <img src=".README/agent-icons/openai.svg" alt="OpenAI Codex" width="20" height="20"> <strong>Copy this prompt to your coding agent</strong></span></summary>
+
+```text
+Set up api-emulator for this repository.
+First, read https://api-emulator.jsj.sh/agent.txt.
+Inspect the repository and identify the external APIs that its tests use.
+Before you edit files, describe the smallest setup plan.
+Keep the existing provider SDKs.
+Change only their base URLs and test credentials.
+Start only the providers that the repository needs.
+Add or update one representative integration test.
+Run that test against the local emulator.
+Do not use production credentials or change production configuration.
+Reset emulator state after the test.
+If the required provider behavior is unavailable, stop and report the missing behavior.
+Report the changed files, local URLs, test command, test result, and remaining gaps.
+```
+
+</details>
 
 ## License
 
