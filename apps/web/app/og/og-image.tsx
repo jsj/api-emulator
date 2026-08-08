@@ -1,24 +1,8 @@
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
 export { getPageTitle } from "@/lib/page-titles";
 
-let fontCache: { geistRegular: Buffer; geistPixelSquare: Buffer } | null = null;
-
-async function loadFonts() {
-  if (fontCache) return fontCache;
-  const [geistRegular, geistPixelSquare] = await Promise.all([
-    readFile(join(process.cwd(), "public/Geist-Regular.ttf")),
-    readFile(join(process.cwd(), "public/GeistPixel-Square.ttf")),
-  ]);
-  fontCache = { geistRegular, geistPixelSquare };
-  return fontCache;
-}
-
 export async function renderOgImage(title: string) {
-  const { geistRegular, geistPixelSquare } = await loadFonts();
-
   return new ImageResponse(
     <div
       style={{
@@ -44,7 +28,7 @@ export async function renderOgImage(title: string) {
           style={{
             fontSize: 36,
             color: "#666",
-            fontFamily: "Geist",
+            fontFamily: "sans-serif",
             fontWeight: 400,
           }}
         >
@@ -53,7 +37,7 @@ export async function renderOgImage(title: string) {
         <span
           style={{
             fontSize: 36,
-            fontFamily: "GeistPixelSquare",
+            fontFamily: "monospace",
             fontWeight: 400,
             color: "white",
           }}
@@ -76,7 +60,7 @@ export async function renderOgImage(title: string) {
             key={i}
             style={{
               fontSize: 72,
-              fontFamily: "Geist",
+              fontFamily: "sans-serif",
               fontWeight: 400,
               color: "white",
               letterSpacing: "-0.02em",
@@ -92,20 +76,6 @@ export async function renderOgImage(title: string) {
     {
       width: 1200,
       height: 630,
-      fonts: [
-        {
-          name: "Geist",
-          data: geistRegular.buffer as ArrayBuffer,
-          style: "normal",
-          weight: 400,
-        },
-        {
-          name: "GeistPixelSquare",
-          data: geistPixelSquare.buffer as ArrayBuffer,
-          style: "normal",
-          weight: 400,
-        },
-      ],
     },
   );
 }
