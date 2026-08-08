@@ -31,6 +31,7 @@
   "workspaces": [
     "packages/*",
     "packages/@api-emulator/adapter-next",
+    "packages/@api-emulator/adapter-cloudflare",
     "packages/@api-emulator/core",
     "apps/*",
     "examples/*"

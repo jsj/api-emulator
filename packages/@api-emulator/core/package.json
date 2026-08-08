@@ -9,6 +9,10 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./worker-runtime": {
+      "import": "./dist/worker-runtime.js",
+      "types": "./dist/worker-runtime.d.ts"
     }
   },
   "homepage": "https://api-emulator.jsj.sh",

@@ -3,7 +3,7 @@ import { cpSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
 export default defineConfig({
-  entry: ["src/index.ts"],
+  entry: ["src/index.ts", "src/worker-runtime.ts"],
   format: ["esm"],
   dts: true,
   sourcemap: true,
