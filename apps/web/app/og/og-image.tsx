@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export { getPageTitle } from "@/lib/page-titles";
 
-export async function renderOgImage(title: string) {
+function createOgImage(title: string) {
   return new ImageResponse(
     <div
       style={{
@@ -78,4 +78,26 @@ export async function renderOgImage(title: string) {
       height: 630,
     },
   );
+}
+
+export async function renderOgImage(title: string) {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const image = createOgImage(title);
+      const body = await image.arrayBuffer();
+
+      return new Response(body, {
+        headers: {
+          "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=2592000",
+          "Content-Type": "image/png",
+        },
+      });
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError;
 }
