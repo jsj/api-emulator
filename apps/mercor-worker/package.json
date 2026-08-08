@@ -1,0 +1,19 @@
+{
+  "name": "mercor-worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@api-emulator/adapter-cloudflare": "workspace:*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260519.1",
+    "typescript": "^5.7",
+    "wrangler": "^4.93.0"
+  }
+}

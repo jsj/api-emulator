@@ -1,0 +1,32 @@
+{
+  "name": "@api-emulator/adapter-cloudflare",
+  "version": "0.8.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "publishConfig": { "access": "public" },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup --clean",
+    "test": "vitest run",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@api-emulator/core": "workspace:*",
+    "hono": "^4.13.0"
+  },
+  "devDependencies": {
+    "tsup": "^8",
+    "typescript": "^5.7",
+    "vitest": "^4.1.0"
+  }
+}

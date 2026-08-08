@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mercor-api",
+  "account_id": "ca84c3344d0e4226633468f23f8bcb77",
+  "compatibility_date": "2026-08-06",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "src/index.ts",
+  "observability": { "enabled": true },
+  "kv_namespaces": [
+    {
+      "binding": "MERCOR_STATE",
+      "id": "aa7b097f99ca4de4aa7148913b6dd14c"
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "mercor-api.jsj.sh",
+      "custom_domain": true
+    }
+  ]
+}

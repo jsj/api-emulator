@@ -15,6 +15,18 @@
         "vitest": "^4.1.0",
       },
     },
+    "apps/mercor-worker": {
+      "name": "mercor-worker",
+      "version": "0.0.0",
+      "dependencies": {
+        "@api-emulator/adapter-cloudflare": "workspace:*",
+      },
+      "devDependencies": {
+        "@cloudflare/workers-types": "^4.20260519.1",
+        "typescript": "^5.7",
+        "wrangler": "^4.93.0",
+      },
+    },
     "apps/web": {
       "name": "web",
       "version": "0.2.0",
@@ -173,9 +185,22 @@
         "typescript": "^5",
       },
     },
+    "packages/@api-emulator/adapter-cloudflare": {
+      "name": "@api-emulator/adapter-cloudflare",
+      "version": "0.8.0",
+      "dependencies": {
+        "@api-emulator/core": "workspace:*",
+        "hono": "^4.13.0",
+      },
+      "devDependencies": {
+        "tsup": "^8",
+        "typescript": "^5.7",
+        "vitest": "^4.1.0",
+      },
+    },
     "packages/@api-emulator/adapter-next": {
       "name": "@api-emulator/adapter-next",
-      "version": "0.7.0",
+      "version": "0.8.0",
       "dependencies": {
         "@api-emulator/core": "workspace:*",
       },
@@ -187,7 +212,7 @@
     },
     "packages/@api-emulator/core": {
       "name": "@api-emulator/core",
-      "version": "0.7.0",
+      "version": "0.8.0",
       "dependencies": {
         "hono": "^4",
         "jose": "^6.2.2",
@@ -200,7 +225,7 @@
     },
     "packages/api-emulator": {
       "name": "api-emulator",
-      "version": "0.7.0",
+      "version": "0.8.0",
       "bin": {
         "api": "./dist/index.js",
       },
@@ -231,6 +256,8 @@
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
 
     "@antfu/install-pkg": ["@antfu/install-pkg@1.1.0", "", { "dependencies": { "package-manager-detector": "^1.3.0", "tinyexec": "^1.0.1" } }, "sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ=="],
+
+    "@api-emulator/adapter-cloudflare": ["@api-emulator/adapter-cloudflare@workspace:packages/@api-emulator/adapter-cloudflare"],
 
     "@api-emulator/adapter-next": ["@api-emulator/adapter-next@workspace:packages/@api-emulator/adapter-next"],
 
@@ -1752,7 +1779,7 @@
 
     "hex-rgb": ["hex-rgb@4.3.0", "", {}, "sha512-Ox1pJVrDCyGHMG9CFg1tmrRUMRPRsAWYc/PinY0XzJU4K7y7vjNoLKIQ7BR5UJMCxNN8EM1MNDmHWA/B3aZUuw=="],
 
-    "hono": ["hono@4.12.18", "", {}, "sha512-RWzP96k/yv0PQfyXnWjs6zot20TqfpfsNXhOnev8d1InAxubW93L11/oNUc3tQqn2G0bSdAOBpX+2uDFHV7kdQ=="],
+    "hono": ["hono@4.13.0", "", {}, "sha512-jhunvfHWxd7J5EFfSgH4xsYJzSe/lfqbUCxiyyeaQasUsXeEHXtzVid+7EOGByc5JnFa23SSFL3Y2RV/z1T+eQ=="],
 
     "html-url-attributes": ["html-url-attributes@3.0.1", "", {}, "sha512-ol6UPyBWqsrO6EJySPz2O7ZSr856WDrEzM5zMqp+FJJLGMW35cLYmmZnl0vztAZxRUoNZJFTCohfjuIJ8I4QBQ=="],
 
@@ -2035,6 +2062,8 @@
     "mdast-util-to-string": ["mdast-util-to-string@4.0.0", "", { "dependencies": { "@types/mdast": "^4.0.0" } }, "sha512-0H44vDimn51F0YwvxSJSm0eCDOJTRlmN0R1yBh4HLj9wiV1Dn0QoXGbvFAWj2hSItVTlCmBF1hqKlIyUBVFLPg=="],
 
     "media-typer": ["media-typer@1.1.0", "", {}, "sha512-aisnrDP4GNe06UcKFnV5bfMNPBUw4jsLGaWwWfnH3v02GnBuXX2MCVn5RbrWo0j3pczUilYblq7fQ7Nw2t5XKw=="],
+
+    "mercor-worker": ["mercor-worker@workspace:apps/mercor-worker"],
 
     "merge-descriptors": ["merge-descriptors@2.0.0", "", {}, "sha512-Snk314V5ayFLhp3fkUREub6WtjBfPdCPY1Ln8/8munuLuiYhsABgBVWsozAG+MWMbVEvcdcpbi9R7ww22l9Q3g=="],
 
@@ -2865,6 +2894,8 @@
     "@eslint/eslintrc/globals": ["globals@14.0.0", "", {}, "sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ=="],
 
     "@modelcontextprotocol/sdk/ajv": ["ajv@8.20.0", "", { "dependencies": { "fast-deep-equal": "^3.1.3", "fast-uri": "^3.0.1", "json-schema-traverse": "^1.0.0", "require-from-string": "^2.0.2" } }, "sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA=="],
+
+    "@modelcontextprotocol/sdk/hono": ["hono@4.12.18", "", {}, "sha512-RWzP96k/yv0PQfyXnWjs6zot20TqfpfsNXhOnev8d1InAxubW93L11/oNUc3tQqn2G0bSdAOBpX+2uDFHV7kdQ=="],
 
     "@mswjs/interceptors/@open-draft/deferred-promise": ["@open-draft/deferred-promise@2.2.0", "", {}, "sha512-CecwLWx3rhxVQF6V4bAgPS5t+So2sTbPgAzafKkVizyi7tlwpcFpdFqq+wqF2OwNBmqFuu6tOyouTuxgpMfzmA=="],
 
