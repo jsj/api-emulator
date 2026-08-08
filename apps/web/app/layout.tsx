@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     template: "%s | api-emulator",
   },
   description: "Local API emulators you can run, share, and extend with plugins.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
