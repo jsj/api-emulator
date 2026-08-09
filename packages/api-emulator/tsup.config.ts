@@ -11,6 +11,11 @@ const copyFonts = async () => {
   cpSync(src, dest, { recursive: true });
 };
 
+const copyNotificationIdentity = async () => {
+  cpSync(resolve(__dirname, "cli-notify.json"), resolve(__dirname, "dist/cli-notify.json"));
+  cpSync(resolve(__dirname, ".cli-notify"), resolve(__dirname, "dist/.cli-notify"), { recursive: true });
+};
+
 const addShebang = async () => {
   const entry = resolve(__dirname, "dist/index.js");
   const content = readFileSync(entry, "utf-8");
@@ -34,6 +39,7 @@ export default defineConfig([
     sourcemap: true,
     async onSuccess() {
       await copyFonts();
+      await copyNotificationIdentity();
       await addShebang();
     },
   },
@@ -45,6 +51,9 @@ export default defineConfig([
     clean: false,
     splitting: true,
     sourcemap: true,
-    onSuccess: copyFonts,
+    async onSuccess() {
+      await copyFonts();
+      await copyNotificationIdentity();
+    },
   },
 ]);

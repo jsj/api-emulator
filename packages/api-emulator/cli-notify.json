@@ -1,0 +1,8 @@
+{
+  "bundleIdentifier": "sh.jsj.api-emulator",
+  "displayName": "API Emulator",
+  "icon": ".cli-notify/AppIcon.icon",
+  "key": "api-emulator",
+  "policy": ["action-required", "failed", "ready"],
+  "version": 1
+}

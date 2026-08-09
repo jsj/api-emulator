@@ -230,10 +230,11 @@
         "api": "./dist/index.js",
       },
       "dependencies": {
-        "@api-emulator/core": "0.7.0",
+        "@api-emulator/core": "0.8.0",
         "@grpc/grpc-js": "^1.14.4",
         "@grpc/proto-loader": "^0.8.1",
         "@hono/node-server": "^1",
+        "@jsjackson/cli-notify": "^0.1.0",
         "commander": "^14",
         "picocolors": "^1.1.1",
         "yaml": "^2",
@@ -550,6 +551,18 @@
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
     "@js-sdsl/ordered-map": ["@js-sdsl/ordered-map@4.4.2", "", {}, "sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw=="],
+
+    "@jsjackson/cli-notify": ["@jsjackson/cli-notify@0.1.0", "", { "optionalDependencies": { "@jsjackson/cli-notify-darwin-universal": "0.1.0", "@jsjackson/cli-notify-linux-arm64": "0.1.0", "@jsjackson/cli-notify-linux-x64": "0.1.0", "@jsjackson/cli-notify-win32-arm64": "0.1.0", "@jsjackson/cli-notify-win32-x64": "0.1.0" } }, "sha512-F4BulixeT7BD5hgM+1fqPxM1+qpZrY+IGA1MWwoz1Uqm7omf49NhtNYAvR63S9JrwwpRryGt+XLSJoBOLWD0rw=="],
+
+    "@jsjackson/cli-notify-darwin-universal": ["@jsjackson/cli-notify-darwin-universal@0.1.0", "", { "os": "darwin", "cpu": [ "x64", "arm64", ], "bin": { "cli-notify": "bin/cli-notify", "cli-notify-guide": "bin/cli-notify-guide" } }, "sha512-/hGP3lq0ElyV86vVPjwxH+LKDX5fOWS+rhLM9JUYwQUlMcOclven9YrKtSFjACYD9u2o/vSbUlqX1+mATxmrHQ=="],
+
+    "@jsjackson/cli-notify-linux-arm64": ["@jsjackson/cli-notify-linux-arm64@0.1.0", "", { "os": "linux", "cpu": "arm64", "bin": { "cli-notify": "bin/cli-notify" } }, "sha512-vhnByy7luhsfOPN0F2iURf4eyOZsmjX+cB7SsY8juba6jLCMY4gsSLWHPUnXXIpgdL7rPp7/h5rXYppE3iyQlg=="],
+
+    "@jsjackson/cli-notify-linux-x64": ["@jsjackson/cli-notify-linux-x64@0.1.0", "", { "os": "linux", "cpu": "x64", "bin": { "cli-notify": "bin/cli-notify" } }, "sha512-tL6lOjZ/VNoDuUBVs9PyEQz1n7oBN8KoOB1RhMIPG5CEY5sZAmu0BZH/pJUIvk4Y4xprcF0Vz5uv3nqe69byRA=="],
+
+    "@jsjackson/cli-notify-win32-arm64": ["@jsjackson/cli-notify-win32-arm64@0.1.0", "", { "os": "win32", "cpu": "arm64", "bin": { "cli-notify": "bin/cli-notify.exe" } }, "sha512-svuxhPWRAFmMc3qvw7E6e/AluDm0fv/1EeP6vr1ehSyiWupb8PaFvJJe+LfpTvqkeENz5nq96Xo/KLacFt4u+Q=="],
+
+    "@jsjackson/cli-notify-win32-x64": ["@jsjackson/cli-notify-win32-x64@0.1.0", "", { "os": "win32", "cpu": "x64", "bin": { "cli-notify": "bin/cli-notify.exe" } }, "sha512-Iit8ZOUn7UT2diBnSdH5GLkrOIDwfU0UuCjWA6z45SJ4yEa4VBAXXwLsriT0cw09rl846gL0pqU2q5sp0JcaAg=="],
 
     "@mdx-js/loader": ["@mdx-js/loader@3.1.1", "", { "dependencies": { "@mdx-js/mdx": "^3.0.0", "source-map": "^0.7.0" }, "peerDependencies": { "webpack": ">=5" }, "optionalPeers": ["webpack"] }, "sha512-0TTacJyZ9mDmY+VefuthVshaNIyCGZHJG2fMnGaDttCt8HmjUF7SizlHJpaCDoGnN635nK1wpzfpx/Xx5S4WnQ=="],
 
