@@ -43,9 +43,14 @@ npx -p api-emulator api init
 # Generate config for a specific service
 npx -p api-emulator api init --service github
 
+# Generate config and set up native notifications
+npx -p api-emulator api init --notifications
+
 # List available services
 npx -p api-emulator api list
 ```
+
+Interactive initialization offers notification setup as an optional step. On macOS, setup requests notification permission and opens the API Emulator settings guide if permission was previously denied.
 
 ## Options
 
@@ -104,7 +109,7 @@ npx -p api-emulator api list
         <code>--no-notify</code>
       </td>
       <td>off</td>
-      <td>Disable the macOS notification when the emulator server is ready</td>
+      <td>Disable the native notification when the emulator server is ready</td>
     </tr>
   </tbody>
 </table>

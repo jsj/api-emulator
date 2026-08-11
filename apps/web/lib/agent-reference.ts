@@ -15,7 +15,7 @@ npx -p api-emulator api
 npx -p api-emulator api --service github,stripe,resend
 npx -p api-emulator api --seed api-emulator.config.yaml
 
-On macOS, the CLI sends a best effort notification when the server is ready. Use \`--no-notify\` to silence it.
+The CLI sends a best effort native notification when the server is ready. Use \`--no-notify\` to silence it.
 
 ## Common commands
 

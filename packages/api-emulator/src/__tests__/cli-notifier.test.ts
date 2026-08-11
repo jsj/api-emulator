@@ -1,14 +1,33 @@
-import { describe, expect, it } from "vitest";
-import { appleScriptNotification, escapeAppleScript } from "../cli-notifier.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { notifyFromManifest } from "@jsjackson/cli-notify";
+import { notifyIfRequested } from "../cli-notifier.js";
+
+vi.mock("@jsjackson/cli-notify", () => ({
+  notifyFromManifest: vi.fn(),
+}));
 
 describe("cli notifier", () => {
-  it("escapes AppleScript string values", () => {
-    expect(escapeAppleScript('api "server" \\ done')).toBe('api \\"server\\" \\\\ done');
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it("builds an AppleScript notification", () => {
-    expect(appleScriptNotification({ title: "api-emulator", message: "Server started" })).toBe(
-      'display notification "Server started" with title "api-emulator"',
+  it("sends the milestone through the package manifest", () => {
+    notifyIfRequested({ enabled: true, title: "api-emulator", message: "Server started", milestone: "ready" });
+
+    expect(notifyFromManifest).toHaveBeenCalledWith(
+      expect.objectContaining({ pathname: expect.stringContaining("/cli-notify.json") }),
+      {
+        title: "api-emulator",
+        message: "Server started",
+        milestone: "ready",
+        override: "notify",
+      },
     );
+  });
+
+  it("does nothing when notifications are disabled", () => {
+    notifyIfRequested({ enabled: false, title: "api-emulator", message: "Server started", milestone: "ready" });
+
+    expect(notifyFromManifest).not.toHaveBeenCalled();
   });
 });

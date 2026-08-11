@@ -20,10 +20,10 @@ program
   .name("api")
   .description("Local API emulators you can run, share, and extend with plugins")
   .version(pkg.version)
-  .option("--notify", "Show a macOS notification for useful command milestones");
+  .option("--notify", "Show a native notification for useful command milestones");
 
 function notifyOption(command: Command): Command {
-  return command.option("--notify", "Show a macOS notification for useful command milestones");
+  return command.option("--notify", "Show a native notification for useful command milestones");
 }
 
 function wantsNotify(command: Command, opts: { notify?: boolean }): boolean {
@@ -47,12 +47,14 @@ async function runCommandWithNotification(label: string, enabled: boolean, fn: (
       enabled,
       title: "api-emulator",
       message: `${label} finished in ${formatDuration(Date.now() - startedAt)}`,
+      milestone: "finished",
     });
   } catch (err) {
     notifyIfRequested({
       enabled,
       title: "api-emulator",
       message: `${label} failed after ${formatDuration(Date.now() - startedAt)}`,
+      milestone: "failed",
     });
     console.error(err instanceof Error ? err.message : err);
     process.exit(1);
@@ -71,7 +73,7 @@ notifyOption(
     .option("--latency <milliseconds>", "Delay each HTTP response by this many milliseconds", defaultLatency)
     .option("--portless", "Serve over HTTPS via portless (auto-registers aliases)")
     .option("--plugin <plugins>", "Comma-separated external plugin paths or package names")
-    .option("--no-notify", "Disable the macOS notification when the emulator server is ready"),
+    .option("--no-notify", "Disable the native notification when the emulator server is ready"),
 ).action(async (opts) => {
   const port = parseInt(opts.port, 10);
   const grpcPort = parseInt(opts.grpcPort, 10);
@@ -107,12 +109,14 @@ notifyOption(
     .description("Create a starter configuration file")
     .option("-s, --service <service>", "Create configuration for this service", "all")
     .option("--plugin <plugins>", "Comma-separated external plugin paths or package names")
+    .option("--notifications", "Set up native notifications during onboarding")
     .option("--yes", "Replace an existing configuration file"),
 ).action(async (opts, command) => {
   await runCommandWithNotification("init", wantsNotify(command, opts), async () => {
     await initCommand({
       service: opts.service,
       plugin: opts.plugin,
+      notifications: opts.notifications,
       yes: opts.yes,
     });
   });

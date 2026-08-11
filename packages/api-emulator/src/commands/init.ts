@@ -1,14 +1,17 @@
 import { writeFileSync, existsSync } from "fs";
 import { homedir } from "os";
 import { resolve } from "path";
+import { createInterface } from "node:readline/promises";
 import { stringify as yamlStringify } from "yaml";
 import { writeGeneratedFile } from "../generated-manifest.js";
 import { DEFAULT_TOKENS, resolvePluginModules } from "../registry.js";
+import { setUpNotifications } from "../cli-notifier.js";
 
 interface InitOptions {
   service: string;
   plugin?: string;
   yes?: boolean;
+  notifications?: boolean;
 }
 
 export interface InstallSkillsOptions {
@@ -139,5 +142,15 @@ export async function initCommand(options: InitOptions): Promise<void> {
   writeFileSync(fullPath, content, "utf-8");
 
   console.log(`Created ${filename}`);
+
+  let configureNotifications = options.notifications === true;
+  if (options.notifications === undefined && !options.yes && process.stdin.isTTY && process.stdout.isTTY) {
+    const prompt = createInterface({ input: process.stdin, output: process.stdout });
+    const answer = await prompt.question("Set up native notifications for server readiness? [y/N] ");
+    prompt.close();
+    configureNotifications = ["y", "yes"].includes(answer.trim().toLowerCase());
+  }
+  if (configureNotifications) await setUpNotifications();
+
   console.log(`\nRun 'npx -p api-emulator api' to start the emulator.`);
 }

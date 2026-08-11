@@ -47,6 +47,9 @@ npx -p api-emulator api init
 # Generate config for a specific service
 npx -p api-emulator api init --service vercel
 
+# Generate config and set up native notifications
+npx -p api-emulator api init --notifications
+
 # List available services
 npx -p api-emulator api list
 
@@ -75,10 +78,12 @@ npx -p api-emulator api skills install --target user-agents
 | `--base-url` | none | Use this public URL for generated links. Supports the `{service}` template. |
 | `--latency` | `0` | Delay each HTTP response by this many milliseconds. |
 | `--portless` | off | Serve over HTTPS via portless (auto-registers aliases) |
-| `--no-notify` | off | Disable the macOS notification when the emulator server is ready |
-| `--notify` | off | Show macOS completion notifications for finite commands |
+| `--no-notify` | off | Disable the native notification when the emulator server is ready |
+| `--notify` | off | Show native completion notifications for finite commands |
 
 The port can also be set via `API_EMULATOR_PORT` or `PORT` environment variables.
+
+Interactive initialization offers notification setup as an optional step. On macOS, setup requests notification permission and opens the API Emulator settings guide if permission was previously denied.
 
 The advertised base URL (used in OAuth redirects, webhook URLs, etc.) can be overridden via `--base-url`, the `API_EMULATOR_BASE_URL` env var (supports `{service}` template), or per-service `baseUrl` in the seed config. When running under portless, the `PORTLESS_URL` env var is also detected automatically.
 

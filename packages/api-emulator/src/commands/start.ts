@@ -185,6 +185,7 @@ export async function startCommand(options: StartOptions): Promise<void> {
     enabled: options.notify,
     title: "api-emulator",
     message: `Server started with ${serviceUrls.length} service${serviceUrls.length === 1 ? "" : "s"}`,
+    milestone: "ready",
   });
 
   const shutdown = () => {

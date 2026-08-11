@@ -1,6 +1,20 @@
 # Changelog
 
 <!-- release:start -->
+## 0.9.0
+
+### New Features
+
+- Add native notifications on macOS, Linux, and Windows.
+- Add optional notification setup to `api init`, including the macOS permission recovery flow.
+
+### Improvements
+
+- Give API Emulator notifications a dedicated identity and cover-inspired icon.
+- Preserve `--notify` and `--no-notify` behavior across native notification platforms.
+
+<!-- release:end -->
+
 ## 0.8.0
 
 ### New Features
@@ -14,8 +28,6 @@
 - Simplify the CLI commands and plugin setup.
 - Improve the README, website, and agent instructions.
 - Add a Git hook that checks TypeScript formatting before each commit.
-
-<!-- release:end -->
 
 ## 0.7.0
 

@@ -1,0 +1,32 @@
+{
+  "color-space-for-untagged-svg-colors" : "display-p3",
+  "fill" : {
+    "solid" : "display-p3:0.10196,0.12549,0.17255,1.00000"
+  },
+  "groups" : [
+    {
+      "hidden" : false,
+      "layers" : [
+        {
+          "glass" : false,
+          "hidden" : false,
+          "image-name" : "api-emulator.png",
+          "name" : "connected emulator cubes",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "specular" : false
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}

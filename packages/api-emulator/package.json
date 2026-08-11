@@ -1,6 +1,6 @@
 {
   "name": "api-emulator",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "You can run, share, and extend local API emulators with provider plugins.",
   "license": "MIT",
   "type": "module",
@@ -55,10 +55,11 @@
     "lint": "eslint src"
   },
   "dependencies": {
-    "@api-emulator/core": "0.8.0",
+    "@api-emulator/core": "0.9.0",
     "@grpc/grpc-js": "^1.14.4",
     "@grpc/proto-loader": "^0.8.1",
     "@hono/node-server": "^1",
+    "@jsjackson/cli-notify": "^0.1.0",
     "commander": "^14",
     "picocolors": "^1.1.1",
     "yaml": "^2"

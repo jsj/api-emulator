@@ -36,5 +36,6 @@ describe("cli surface", () => {
     expect(source).not.toContain('.command("clone")');
     expect(source).toContain('.option("--notify"');
     expect(source).toContain('.option("--no-notify"');
+    expect(source).toContain('.option("--notifications"');
   });
 });

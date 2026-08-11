@@ -87,6 +87,8 @@ npx -p api-emulator api init
 npx -p api-emulator api list
 ```
 
+Interactive setup offers native server-ready notifications as an optional step. Use `api init --notifications` to select this step in a non-interactive run. On macOS, setup requests notification permission and opens the API Emulator settings guide if permission was previously denied.
+
 `api list` shows each provider's fidelity tier: `contract-backed`, `smoke-only`, `stub`, or `generated fallback`.
 
 ## Use in tests
@@ -164,7 +166,7 @@ npx -p api-emulator api skills install
 
 Use `--target user-agents` to install into `~/.agents/skills`.
 
-On macOS, `api-emulator` sends a notification when the server is ready. Use `--no-notify` to disable this notification.
+`api-emulator` sends a native notification when the server is ready. Use `--no-notify` to disable this notification.
 
 Use `--notify` with `init`, `plugin install`, `plugin validate`, `plugin create`, or `skills install`.
 
@@ -229,6 +231,8 @@ export const { GET, POST, PUT, PATCH, DELETE } = createApiEmulatorHandler({
 ## Configuration
 
 `npx -p api-emulator api init` creates `api-emulator.config.yaml`.
+
+Add `--notifications` to set up native notifications during onboarding.
 
 ```yaml
 tokens:
