@@ -4,6 +4,7 @@ import type { ServiceName } from "./registry.js";
 import type { FixtureSource, StoreFixture, StoreFixtureOptions, StoreSnapshot } from "@api-emulator/core";
 import { resolveBaseUrl } from "./base-url.js";
 import { createAuthTokens, createServiceRuntime, type SeedConfig } from "./service-runtime.js";
+import { materializeSeedConfig } from "./plugin-types.js";
 
 export type { SeedConfig };
 export type { GrpcPluginContext, GrpcRegistrationFactory, GrpcServiceRegistration } from "./plugin-types.js";
@@ -47,7 +48,8 @@ export async function createEmulator(options: EmulatorOptions): Promise<Emulator
 
   const loadedPlugin = await pluginModule.load();
 
-  const svcSeedConfig = seedConfig?.[service] as Record<string, unknown> | undefined;
+  const configuredSeed = seedConfig?.[service] as Record<string, unknown> | undefined;
+  const svcSeedConfig = await materializeSeedConfig(loadedPlugin, configuredSeed);
   const seedBaseUrl =
     typeof svcSeedConfig?.baseUrl === "string" && svcSeedConfig.baseUrl.length > 0 ? svcSeedConfig.baseUrl : undefined;
   const baseUrl = resolveBaseUrl({ service, port, baseUrl: options.baseUrl, seedBaseUrl });

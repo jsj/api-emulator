@@ -18,6 +18,10 @@ export function seedFromConfig(store: Store, _baseUrl: string, config: unknown):
   store.setData("echo:config", config);
 }
 
+export async function materializeSeedConfig(config: Record<string, unknown>): Promise<Record<string, unknown>> {
+  return config.materialize ? { ...config, message: `${String(config.message)} materialized` } : config;
+}
+
 export function grpc({ store }: { store: Store }) {
   return {
     protoPath: fileURLToPath(new URL("./echo.proto", import.meta.url)),

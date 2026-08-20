@@ -1,5 +1,4 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { createHmac } from "crypto";
 import { WebhookDispatcher } from "../webhooks.js";
 
 describe("WebhookDispatcher", () => {
@@ -245,27 +244,27 @@ describe("WebhookDispatcher", () => {
       expect(deliveries[0]!.duration).not.toBeNull();
     });
 
-    it("sets X-Hub-Signature-256 from HMAC-SHA256 when secret is set", async () => {
+    it("uses subscription-specific headers", async () => {
       const d = new WebhookDispatcher();
-      const secret = "my-secret";
       d.register({
-        url: "https://hooks.example/signed",
+        url: "https://hooks.example/custom",
         events: ["push"],
         active: true,
         owner: "o",
-        secret,
+        headerFactory: ({ event, deliveryId }) => ({
+          "X-Custom-Event": event,
+          "X-Custom-Delivery": String(deliveryId),
+        }),
       });
 
-      const payload = { action: "opened", number: 1 };
-      await d.dispatch("push", undefined, payload, "o");
+      await d.dispatch("push", undefined, {}, "o");
 
-      expect(mockFetch).toHaveBeenCalledTimes(1);
       const [, init] = mockFetch.mock.calls[0]!;
-      const body = (init as RequestInit).body as string;
       const headers = (init as RequestInit).headers as Record<string, string>;
-      const expectedHmac = createHmac("sha256", secret).update(JSON.stringify(payload)).digest("hex");
-      expect(headers["X-Hub-Signature-256"]).toBe(`sha256=${expectedHmac}`);
-      expect(body).toBe(JSON.stringify(payload));
+      expect(headers).toMatchObject({
+        "X-Custom-Event": "push",
+        "X-Custom-Delivery": "1",
+      });
     });
 
     it("matches repo only when owner and repo align with the dispatch call", async () => {

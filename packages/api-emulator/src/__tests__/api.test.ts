@@ -57,6 +57,19 @@ describe("createEmulator", () => {
     expect(await resetConfigRes.json()).toEqual({ message: "hello" });
   });
 
+  it("materializes plugin seed config before seeding", async () => {
+    const echo = await createEmulator({
+      service: "echo",
+      port: 14021,
+      plugins: [resolve("src/__tests__/fixtures/echo-plugin.ts")],
+      seed: { echo: { message: "hello", materialize: true } },
+    });
+    emulators.push(echo);
+
+    const configRes = await fetch(`${echo.url}/config`);
+    expect(await configRes.json()).toMatchObject({ message: "hello materialized" });
+  });
+
   it("exports and restores fixtures", async () => {
     const echo = await createEmulator({
       service: "echo",

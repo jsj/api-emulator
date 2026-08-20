@@ -1,5 +1,3 @@
-import { createHmac } from "crypto";
-
 export interface WebhookSubscription {
   id: number;
   url: string;
@@ -8,6 +6,7 @@ export interface WebhookSubscription {
   secret?: string;
   owner: string;
   repo?: string;
+  headerFactory?: WebhookHeaderFactory;
 }
 
 export interface WebhookDelivery {
@@ -21,6 +20,16 @@ export interface WebhookDelivery {
   duration: number | null;
   success: boolean;
 }
+
+export interface WebhookHeaderContext {
+  event: string;
+  action?: string;
+  body: string;
+  subscription: Readonly<WebhookSubscription>;
+  deliveryId: number;
+}
+
+export type WebhookHeaderFactory = (context: WebhookHeaderContext) => Record<string, string>;
 
 const MAX_DELIVERIES = 1000;
 
@@ -103,22 +112,14 @@ export class WebhookDispatcher {
 
       const body = JSON.stringify(payload);
 
-      const signatureHeaders: Record<string, string> = {};
-      if (sub.secret) {
-        const hmac = createHmac("sha256", sub.secret).update(body).digest("hex");
-        signatureHeaders["X-Hub-Signature-256"] = `sha256=${hmac}`;
-      }
-
       try {
+        const headers = sub.headerFactory
+          ? sub.headerFactory({ event, action, body, subscription: sub, deliveryId: delivery.id })
+          : { "Content-Type": "application/json" };
         const start = Date.now();
         const response = await fetch(sub.url, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-GitHub-Event": event,
-            "X-GitHub-Delivery": String(delivery.id),
-            ...signatureHeaders,
-          },
+          headers,
           body,
           signal: AbortSignal.timeout(10000),
         });

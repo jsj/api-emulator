@@ -7,6 +7,7 @@ import { ensurePortless, registerAliases, removeAliases, portlessBaseUrl, type P
 import { resolveBaseUrl } from "../base-url.js";
 import { createAuthTokens, createServiceRuntime, type RunningService, type SeedConfig } from "../service-runtime.js";
 import { notifyIfRequested } from "../cli-notifier.js";
+import { materializeSeedConfig } from "../plugin-types.js";
 
 declare const PKG_VERSION: string;
 const pkg = { version: PKG_VERSION };
@@ -138,7 +139,8 @@ export async function startCommand(options: StartOptions): Promise<void> {
     const pluginModule = allPluginModules[svc];
     const loadedPlugin = await pluginModule.load();
 
-    const svcSeedConfig = seedConfig?.[svc] as Record<string, unknown> | undefined;
+    const configuredSeed = seedConfig?.[svc] as Record<string, unknown> | undefined;
+    const svcSeedConfig = await materializeSeedConfig(loadedPlugin, configuredSeed);
     const port = (svcSeedConfig?.port as number | undefined) ?? basePort + i;
 
     if (options.portless) {

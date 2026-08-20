@@ -4,8 +4,16 @@ import type { PluginManifest } from "./plugin-manifest.js";
 export interface LoadedPlugin {
   plugin: ServicePlugin;
   grpc?: GrpcRegistrationFactory;
+  materializeSeedConfig?(config: Record<string, unknown>): Promise<Record<string, unknown>>;
   seedFromConfig?(store: Store, baseUrl: string, config: unknown, webhooks?: WebhookDispatcher): void;
   createAppKeyResolver?(store: Store): AppKeyResolver;
+}
+
+export async function materializeSeedConfig(
+  plugin: LoadedPlugin,
+  config: Record<string, unknown> | undefined,
+): Promise<Record<string, unknown> | undefined> {
+  return config && plugin.materializeSeedConfig ? plugin.materializeSeedConfig(config) : config;
 }
 
 export interface GrpcPluginContext {

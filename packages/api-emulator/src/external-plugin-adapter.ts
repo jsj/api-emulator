@@ -1,4 +1,4 @@
-import type { ServicePlugin, Store, AuthFallback, WebhookDispatcher } from "@api-emulator/core";
+import type { ServicePlugin, Store, AppKeyResolver, AuthFallback, WebhookDispatcher } from "@api-emulator/core";
 import { isAbsolute, resolve } from "path";
 import {
   formatPluginFidelity,
@@ -11,6 +11,8 @@ import type { GrpcRegistrationFactory, PluginModule } from "./plugin-types.js";
 export interface ExternalPluginModule {
   plugin?: ServicePlugin;
   default?: ServicePlugin;
+  materializeSeedConfig?(config: Record<string, unknown>): Promise<Record<string, unknown>>;
+  createAppKeyResolver?(store: Store): AppKeyResolver;
   seedFromConfig?(store: Store, baseUrl: string, config: unknown, webhooks?: WebhookDispatcher): void;
   manifest?: PluginManifest;
   defaultFallback?(svcSeedConfig?: Record<string, unknown>): AuthFallback;
@@ -38,6 +40,8 @@ export async function loadExternalPluginModule(specifier: string): Promise<Plugi
     async load() {
       return {
         plugin,
+        materializeSeedConfig: mod.materializeSeedConfig,
+        createAppKeyResolver: mod.createAppKeyResolver,
         seedFromConfig: mod.seedFromConfig,
         grpc: mod.grpc,
       };
